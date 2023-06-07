@@ -24,3 +24,9 @@ mixin EquatableProps {
     return false;
   }
 }
+
+class EquatableObject with EquatableProps {
+  EquatableObject(Iterable<Object?> equatableProps) {
+    this.equatableProps.addAll(equatableProps);
+  }
+}

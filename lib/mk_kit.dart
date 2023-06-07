@@ -5,3 +5,5 @@ export 'src/column.dart';
 export 'src/multi_child_layout.dart';
 export 'src/equatable.dart';
 export 'src/disposable.dart';
+export 'src/description.dart';
+export 'src/misc.dart';

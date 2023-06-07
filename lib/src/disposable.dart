@@ -9,7 +9,8 @@ abstract class Disposable {
 
 class DisposeBag with DescriptionProvider implements Disposable {
   final _items = <_Item>[];
-  final String? name;
+
+  String? name;
 
   static bool get isLogEnabled => _logger.isEnabled;
   static set isLogEnabled(bool value) => _logger.isEnabled = value;
@@ -31,7 +32,7 @@ class DisposeBag with DescriptionProvider implements Disposable {
   @override
   void configureDescription(DescriptionBuilder db) {
     db.addValue(name, quote: true);
-  }  
+  }
 
   @override
   void dispose() {

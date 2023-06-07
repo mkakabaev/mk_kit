@@ -45,6 +45,8 @@ bool isEmpty(Object? value) {
   return false;
 }
 
+bool isNotEmpty(Object? value) => !isEmpty(value);
+
 abstract class CanBeEmpty {
   bool get isEmpty;
   bool get isNotEmpty => !isEmpty;
