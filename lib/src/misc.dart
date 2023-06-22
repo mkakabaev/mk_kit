@@ -1,3 +1,5 @@
+import 'package:mk_kit/mk_kit.dart';
+
 class CWValue<T extends Object> {
   final T? value;
   CWValue(this.value);
@@ -66,4 +68,32 @@ String? stringify(Object? value) {
   }
 
   return '$value';
+}
+
+///
+/// Tagged (or branded) type concept, similar to TypeScript's branded types.
+///
+abstract class TaggedType<T extends Object> with DescriptionProvider {
+  final T value;
+
+  const TaggedType(this.value);
+
+  @override
+  int get hashCode => value.hashCode;
+
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType == runtimeType) {
+      return other.value == value;
+    }
+    return false;
+  }
+
+  @override
+  void configureDescription(DescriptionBuilder db) {
+    db.addValue(value, quote: T is String);
+  }
 }
