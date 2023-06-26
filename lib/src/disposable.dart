@@ -1,14 +1,19 @@
-import 'dart:developer' as dev;
 import 'dart:async';
+import 'dart:developer' as dev;
+
+import 'package:flutter/foundation.dart';
 
 import './description.dart';
+
+// cSpell: words Diagnosticable
 
 abstract class Disposable {
   void dispose();
 }
 
-class DisposeBag with DescriptionProvider implements Disposable {
+class DisposeBag with DescriptionProvider, Diagnosticable implements Disposable {
   final _items = <_Item>[];
+  var _disposed = false;
 
   String? name;
 
@@ -36,6 +41,11 @@ class DisposeBag with DescriptionProvider implements Disposable {
 
   @override
   void dispose() {
+    if (_disposed) {
+        assert(false, '$this has already been disposed');
+        return;
+    }
+    _disposed = true;
     _logger(() => 'Disposing $this...');
     _logger.level += 1;
     try {
@@ -47,10 +57,17 @@ class DisposeBag with DescriptionProvider implements Disposable {
     } finally {
       _logger.level -= 1;
     }
+    _items.clear();
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty('items', _items));
+  } 
 }
 
-mixin DisposeBagHolder {
+mixin DisposeBagHolder implements Disposable {
   final disposeBag = DisposeBag();
 
   T autoDispose<T extends Disposable>(T disposable) {
@@ -67,6 +84,65 @@ mixin DisposeBagHolder {
     disposeBag.addSubscription(subscription);
     return subscription;
   }
+
+  @override
+  @mustCallSuper
+  void dispose() {
+    disposeBag.dispose();
+  }
+}
+
+abstract class _Item<T extends Object> with Diagnosticable {
+  final T object;
+  _Item(this.object);
+
+  void disposeAction();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('object', object));
+  }   
+}
+
+class _DisposableItem extends _Item {
+  _DisposableItem(super.object);
+
+  @override
+  void disposeAction() {
+    _logger(() => 'Disposing $object...');
+    try {
+      (object as dynamic).dispose();
+    } on NoSuchMethodError catch (e) {
+      _logger(() => "The '${object.runtimeType}' type has no dispose() method: $e");
+    }
+  }
+}
+
+class _SubscriptionItem extends _Item<StreamSubscription> {
+
+  _SubscriptionItem(super.object);
+
+  @override
+  void disposeAction() {
+    _logger(() => 'Canceling $object...');
+    object.cancel();
+  }
+}
+
+class _ClosableItem extends _Item {
+
+  _ClosableItem(super.object);
+
+  @override
+  void disposeAction() {
+    _logger(() => 'Closing $object...');
+    try {
+      (object as dynamic).close();
+    } on NoSuchMethodError catch (e) {
+      _logger(() => "The '${object.runtimeType}' type has no close() method: $e");
+    }
+  }
 }
 
 class _DisposeBagLogger {
@@ -82,51 +158,3 @@ class _DisposeBagLogger {
 }
 
 final _logger = _DisposeBagLogger();
-
-abstract class _Item {
-  void disposeAction();
-}
-
-class _DisposableItem extends _Item {
-  final Object disposable;
-
-  _DisposableItem(this.disposable);
-
-  @override
-  void disposeAction() {
-    _logger(() => 'Disposing $disposable...');
-    try {
-      (disposable as dynamic).dispose();
-    } on NoSuchMethodError catch (e) {
-      _logger(() => "The '${disposable.runtimeType}' type has no dispose() method: $e");
-    }
-  }
-}
-
-class _SubscriptionItem extends _Item {
-  final StreamSubscription subscription;
-
-  _SubscriptionItem(this.subscription);
-
-  @override
-  void disposeAction() {
-    _logger(() => 'Canceling $subscription...');
-    subscription.cancel();
-  }
-}
-
-class _ClosableItem extends _Item {
-  final Object closable;
-
-  _ClosableItem(this.closable);
-
-  @override
-  void disposeAction() {
-    _logger(() => 'Closing $closable...');
-    try {
-      (closable as dynamic).close();
-    } on NoSuchMethodError catch (e) {
-      _logger(() => "The '${closable.runtimeType}' type has no close() method: $e");
-    }
-  }
-}

@@ -1,10 +1,13 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import './multi_child_layout.dart';
 import './spacer.dart';
+
+// cSpell: words Diagnosticable
 
 @immutable
 class MKColumn extends StatelessWidget {
@@ -49,7 +52,7 @@ class MKColumn extends StatelessWidget {
 }
 
 @immutable
-class _Data {
+class _Data with Diagnosticable {
   final double height;
   final double minHeight;
   final bool isExpandable;
@@ -58,6 +61,17 @@ class _Data {
     required this.minHeight,
     required this.isExpandable,
   });
+
+  @override
+  String toStringShort() => '_MKColumnData';
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('height', height));
+    properties.add(DoubleProperty('minHeight', minHeight));
+    properties.add(DiagnosticsProperty<bool>('expandable', isExpandable));
+  }
 }
 
 class _LayoutInfo {
@@ -69,7 +83,7 @@ class _LayoutInfo {
 }
 
 @immutable
-class _LayoutDelegate implements MKMultiChildLayoutDelegate<int, _Data> {
+class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<int, _Data> {
   final double viewportHeight;
 
   const _LayoutDelegate({
@@ -78,13 +92,13 @@ class _LayoutDelegate implements MKMultiChildLayoutDelegate<int, _Data> {
 
   @override
   Size performLayout(Map<int, MKChildLayout<int, _Data>> children, BoxConstraints constraints) {
-    // If we has at least one expandable item then all non-expandable spacers
-    // will have minimum height (i.e. they can be considered as regular 'fixed-size' elements)
-    final hasExpandable = children.values.firstWhereOrNull((e) => e.data?.isExpandable == true) != null;
+    // If we have at least one expandable item then all non-expandable spacers have
+    // minimum height (i.e. they can be considered as regular 'fixed-size' elements)
+    final expandableEnvironment = children.values.firstWhereOrNull((e) => e.data?.isExpandable == true) != null;
 
     // Enumerate items, layout fixed ones and collect spacers (expandable and not)
     final allLayouts = <_LayoutInfo>[];
-    final spacers = <_LayoutInfo>[];
+    final spacerLayouts = <_LayoutInfo>[];
     var fixedHeight = 0.0;
     var spacerHeight = 0.0;
     children.forEach((index, child) {
@@ -92,7 +106,7 @@ class _LayoutDelegate implements MKMultiChildLayoutDelegate<int, _Data> {
       final layout = _LayoutInfo(child);
       allLayouts.add(layout);
 
-      // Regular widget, not a spacer. Layout Immediately,
+      // Regular widget (not a spacer). Layout immediately,
       if (data == null) {
         final sz = child.layout(maxWidth: constraints.maxWidth);
         layout.height = sz.height;
@@ -100,8 +114,10 @@ class _LayoutDelegate implements MKMultiChildLayoutDelegate<int, _Data> {
         return;
       }
 
-      // Spacer. Consider it as a regular widget with a fixed height (and layout)
-      if (hasExpandable && !data.isExpandable) {
+      // Non-expandable spacer in expandable environment (there are expandable spacers in the column).
+      // Consider it as a regular widget with a fixed height (and layout).
+      // Min height is used have because we are in expandable environment and have to be compacted
+      if (expandableEnvironment && !data.isExpandable) {
         final sz = child.layout(
           maxWidth: constraints.maxWidth,
           minHeight: data.minHeight,
@@ -112,16 +128,19 @@ class _LayoutDelegate implements MKMultiChildLayoutDelegate<int, _Data> {
         return;
       }
 
+      // Starting from here we have only expandable spacers OR only non-expandable spacers
+      // in non-expandable environment.
+      assert(expandableEnvironment ^ !data.isExpandable, 'assertion_20230601_501183');
+
       // Spacer with adjustable (later) height. Just collect it for now.
-      assert(hasExpandable ^ !data.isExpandable, 'assertion_20230601_501183');
-      if (hasExpandable) {
+      if (expandableEnvironment) {
         layout.height = max(1, data.height) * viewportHeight;
       } else {
         layout.height = data.height;
       }
       layout.minHeight = data.minHeight;
       spacerHeight += layout.height;
-      spacers.add(layout);
+      spacerLayouts.add(layout);
     });
 
     // Calculate adjusting (if needed) for spacer heights to fit the viewport.
@@ -129,12 +148,12 @@ class _LayoutDelegate implements MKMultiChildLayoutDelegate<int, _Data> {
     // for non-expandable spacers we can only scale down.
     if (spacerHeight > 0) {
       var viewportSpacerHeight = viewportHeight - fixedHeight;
-      var hasUnhandled = spacers.isNotEmpty;
+      var hasUnhandled = spacerLayouts.isNotEmpty;
       if (spacerHeight > viewportSpacerHeight && hasUnhandled) {
         while (spacerHeight > viewportSpacerHeight && hasUnhandled) {
           hasUnhandled = false;
           final scale = viewportSpacerHeight / spacerHeight;
-          for (final layout in spacers) {
+          for (final layout in spacerLayouts) {
             if (layout.isHandled) {
               continue;
             }
@@ -152,18 +171,18 @@ class _LayoutDelegate implements MKMultiChildLayoutDelegate<int, _Data> {
           }
         }
 
-        // Now we can have some space left (because we rounded down). Distribute it between all spacers
+        // Now we may have some space left (because we rounded down). Distribute it between all spacers
         var index = 0;
         while (spacerHeight < viewportSpacerHeight) {
-          spacers[index].height += 1;
+          spacerLayouts[index].height += 1;
           spacerHeight += 1;
-          index = (index + 1) % spacers.length;
+          index = (index + 1) % spacerLayouts.length;
         }
       }
     }
 
     // Layout spacers finally
-    for (final layout in spacers) {
+    for (final layout in spacerLayouts) {
       layout.child.layout(
         maxWidth: constraints.maxWidth,
         minHeight: layout.height,
@@ -183,5 +202,14 @@ class _LayoutDelegate implements MKMultiChildLayoutDelegate<int, _Data> {
   @override
   bool shouldRelayout(_LayoutDelegate oldDelegate) {
     return viewportHeight != oldDelegate.viewportHeight;
+  }
+
+  @override
+  String toStringShort() => '_MKColumnLayoutDelegate';
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('viewportHeight', viewportHeight));
   }
 }

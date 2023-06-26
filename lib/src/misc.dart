@@ -9,6 +9,11 @@ class CWValue<T extends Object> {
   }
 }
 
+class ValueRef<T> {
+    T value;
+    ValueRef(this.value);
+}
+
 T safe<T>(dynamic v, T defaultValue) {
   return v is T ? v : defaultValue;
 }

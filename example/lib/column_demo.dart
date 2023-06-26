@@ -31,48 +31,46 @@ class _ColumnDemoState extends State<ColumnDemo> {
       ),
       body: Splitter(
         top: MKColumn(
-          // mainAxisSize: MainAxisSize.min,
-          // mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             FixedChild(
-              color: Colors.green, // Green
+              color: Colors.green,
               height: 120.0,
             ),
 
             MKSpacer(
               minHeight: 20,
-              height: 75,
+              height: 40,
               isExpandable: true,
-              child: SpacerChild(color: Colors.red),
+              child: SpacerChild(color: Colors.red, label: 'Expandable 40(>=20)'),
             ),
 
             MKSpacer(
               height: 80,
               minHeight: 40,
               isExpandable: true,
-              child: SpacerChild(color: Colors.yellow),
+              child: SpacerChild(color: Colors.yellow, label: 'Expandable 80(>=40)'),
             ),
 
             MKSpacer(
               height: 100,
               minHeight: 0,
               isExpandable: true,
-              child: SpacerChild(color: Colors.lightBlue),
+              child: SpacerChild(color: Colors.lightBlue, label: '100(>=0)'),
             ),
 
             MKSpacer(
               height: 60,
               minHeight: 60,
-              child: SpacerChild(color: Colors.amber),
+              child: SpacerChild(color: Colors.amber, label: '==60'),
             ),
 
             FixedChild(
-              color: Colors.green, // Green
+              color: Colors.green,
               height: 120.0,
             ),
             // const MKSpacer(height: 50, minHeight: 16,),
             FixedChild(
-              color: Colors.orange, // Green
+              color: Colors.orange,
               height: 20.0,
             ),
           ],
@@ -85,6 +83,9 @@ class _ColumnDemoState extends State<ColumnDemo> {
   }
 }
 
+///
+/// Fixed size component.
+///
 class FixedChild extends StatelessWidget {
   final Color color;
   final double height;
@@ -101,28 +102,33 @@ class FixedChild extends StatelessWidget {
       color: color,
       height: height,
       alignment: Alignment.center,
-      child: Text('Fixed Height Content $height'),
+      child: Text('Fixed $height'),
     );
   }
 }
 
+///
+/// Spacer content. MKSpace does not require a child, this is just for demo purposes
+/// to show the height of the spacer.
+///
 class SpacerChild extends StatelessWidget {
   final Color color;
+  final String label;
 
   const SpacerChild({
     super.key,
     required this.color,
+    required this.label,
   });
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (ctx, constraints) {
-        final text = 'h: ${constraints.minHeight} ${constraints.maxHeight}';
         return Container(
           color: color,
           alignment: Alignment.center,
-          child: Text(text),
+          child: Text('$label | ${constraints.maxHeight}'),
         );
       },
     );

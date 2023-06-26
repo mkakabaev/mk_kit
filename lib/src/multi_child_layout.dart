@@ -23,6 +23,12 @@ class MKMultiChildLayout<ID extends Object, DATA extends Object> extends MultiCh
   void updateRenderObject(BuildContext context, RenderObject renderObject) {
     (renderObject as _RenderLayout).setDelegate(delegate);
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('delegate', delegate));
+  }  
 }
 
 abstract class MKMultiChildLayoutDelegate<ID extends Object, DATA extends Object> {
@@ -78,6 +84,14 @@ class MKLayoutId<ID extends Object, DATA extends Object> extends ParentDataWidge
 
   @override
   Type get debugTypicalAncestorWidgetClass => MKMultiChildLayout<ID, DATA>;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('id', id));
+    properties.add(DiagnosticsProperty<DATA>('data', data));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
+  }  
 }
 
 class MKChildLayout<ID extends Object, DATA extends Object> {
