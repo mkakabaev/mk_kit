@@ -1,4 +1,4 @@
-import 'package:mk_kit/mk_kit.dart';
+import './description.dart';
 
 class CWValue<T extends Object> {
   final T? value;
@@ -100,5 +100,77 @@ abstract class TaggedType<T extends Object> with DescriptionProvider {
   @override
   void configureDescription(DescriptionBuilder db) {
     db.addValue(value, quote: T is String);
+  }
+}
+
+///  Returns a new list with the elements of [items] flattened.
+/// 
+///  If [toElement] is specified, then it is used to transform each element of
+///  [items] to an element of type [T]. If [toElement] is not specified, then
+///  each element of [items] must be assignable to [T].
+/// 
+/// ```dart
+/// void f() {
+///   final list = [
+///     "String",
+///     1,
+///     null,
+///     [2, 2],
+///     [
+///       3,
+///       "Another String",
+///       3,
+///       3,
+///       [4, 4, 4, 4]
+///     ],
+///     [4, 4, 4, 4]
+///   ];
+///
+///   final flattened = flatList<int>(list, (v) => int.tryParse("$v")); 
+///   final flattenedNullable = flatList<int?>(list, (v) => int.tryParse("$v")); 
+///   print(flattened);         // [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4]
+///   print(flattenedNullable); // [null, 1, null, 2, 2, 3, null, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4]
+/// }
+///
+/// ``` 
+List<T> flatList<T>(Iterable<dynamic>? items, [T? Function(dynamic)? toElement]) {
+  final result = <T>[];
+  _flatList(items, toElement, result);
+  return result;
+}
+
+void _flatList<T>(Iterable<dynamic>? items, T? Function(dynamic)? toElement, List<T> result) {
+  if (items == null) {
+    return;
+  }
+
+  if (toElement == null) {
+    for (final item in items) {
+      if (item is T) {
+        result.add(item);
+        continue;
+      }
+      if (item == null) {
+        continue;
+      }
+      if (item is Iterable) {
+        _flatList(item, null, result);
+        continue;
+      }
+      assert(false, "flatList(): An object of type <$T> is expected: <$item> is not one");
+    }
+    return;
+  }
+
+  for (final item in items) {
+    if (item is Iterable) {
+      _flatList(item, toElement, result);
+      continue;
+    }
+    final transformed = toElement(item);
+    if (transformed is T) {
+      result.add(transformed);
+      continue;
+    }
   }
 }

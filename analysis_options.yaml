@@ -39,5 +39,6 @@ dart_code_metrics:
     - no-equal-then-else
     # - avoid-unnecessary-setstate
     - avoid-wrapping-in-padding
+    - prefer_relative_imports
     # - avoid-ignoring-return-values
     # - no-object-declaration

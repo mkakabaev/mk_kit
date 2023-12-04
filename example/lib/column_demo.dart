@@ -109,7 +109,7 @@ class FixedChild extends StatelessWidget {
 
 ///
 /// Spacer content. MKSpace does not require a child, this is just for demo purposes
-/// to show the height of the spacer.
+/// to show real height of the spacer.
 ///
 class SpacerChild extends StatelessWidget {
   final Color color;
@@ -128,6 +128,7 @@ class SpacerChild extends StatelessWidget {
         return Container(
           color: color,
           alignment: Alignment.center,
+        //   decoration: BoxDecoration1(),
           child: Text('$label | ${constraints.maxHeight}'),
         );
       },

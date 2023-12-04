@@ -1,7 +1,5 @@
 import './misc.dart';
 
-// ------------------------------------------------------------------------------------------------
-
 class DescriptionBuilder {
   final _items = <String>[];
   String? targetName;
@@ -76,8 +74,6 @@ class DescriptionBuilder {
 
   String call() => toString();
 }
-
-// ------------------------------------------------------------------------------------------------
 
 mixin DescriptionProvider {
   @override

@@ -1,4 +1,5 @@
 import 'package:example/column_demo.dart';
+import 'package:example/mdi_demo.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -41,6 +42,7 @@ class MyHomePage extends StatelessWidget {
       body: ListView(
         children: [
           MyListTile(title: 'MKColumn', screenBuilder: (_) => const ColumnDemo()),
+          MyListTile(title: 'MDI', screenBuilder: (_) => const MDIDemo()),
         ],
       ),
     );
