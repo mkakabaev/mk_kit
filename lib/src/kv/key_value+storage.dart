@@ -61,19 +61,27 @@ class KeyValueStorage with DescriptionProvider {
         }
     }
 
+    Future<int?> getInt(String key) async {
+        return await getValue<int>(key, (value) => parser.parseInt(value));
+    }
+
+    Future<void> setInt(String key, int? value) async {
+        await setValue(key, value);
+    }
+
     Future<bool?> getBool(String key) async {
         return await getValue<bool>(key, (value) => parser.parseBool(value));
     }
 
-    Future<void> setBool(String key, bool value) async {
-        await setValue(key, value ? "1" : "0");
+    Future<void> setBool(String key, bool? value) async {
+        await setValue(key, value);
     }
 
     Future<String?> getString(String key) async {
         return await getValue<String>(key, (value) => parser.parseString(value));
     }
 
-    Future<void> setString(String key, String value) async {
+    Future<void> setString(String key, String? value) async {
         await setValue(key, value);
     }
 

@@ -2,10 +2,14 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import './key_value+provider.dart';
 
-// ------------------------------------------------------------------------------------------------
-
 class SecureStorageProvider implements KeyValueStorageProvider {
-    final _backedStorage = const FlutterSecureStorage();
+    final FlutterSecureStorage _backedStorage;
+
+    SecureStorageProvider({
+        String? accountName, // Mac OS only
+    }): _backedStorage = FlutterSecureStorage(
+            mOptions: MacOsOptions.defaultOptions.copyWith(accountName: accountName),
+        );
 
     @override
     Future<dynamic> getValueForKey(String key) async {
@@ -19,7 +23,15 @@ class SecureStorageProvider implements KeyValueStorageProvider {
 
     @override
     Future<void> setValueForKey(String key, dynamic value) async {
-        await _backedStorage.write(key: key, value: value is String ? value : "$value");
+        String v;
+        if (value is String) {
+            v = value;
+        } else if (value is int || value is bool || value is double) {
+            v = "$value";
+        } else {
+            throw UnsupportedError("Unable to store value of type ${value.runtimeType}");
+        }
+        await _backedStorage.write(key: key, value: v);
     }
 
     @override

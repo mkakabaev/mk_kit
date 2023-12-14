@@ -54,7 +54,7 @@ bool isEmpty(Object? value) {
 
 bool isNotEmpty(Object? value) => !isEmpty(value);
 
-abstract class CanBeEmpty {
+abstract interface class CanBeEmpty {
   bool get isEmpty;
   bool get isNotEmpty => !isEmpty;
 }

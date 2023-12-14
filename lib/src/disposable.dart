@@ -7,12 +7,21 @@ import './description.dart';
 
 // cSpell: words Diagnosticable
 
-abstract class Disposable {
+abstract interface class Disposable {
     void dispose();
 }
 
+class DisposableBagEntryAdapter<T> {
+    final void Function(T) _onAdd; 
+    DisposableBagEntryAdapter(this._onAdd);
+
+    void operator << (T object) {
+        _onAdd(object);        
+    }
+}
+
 class DisposeBag with DescriptionProvider, Diagnosticable implements Disposable {
-    final _items = <_Item>[];
+    final List<_Item> _items;
     var _disposed = false;
 
     String? name;
@@ -20,7 +29,15 @@ class DisposeBag with DescriptionProvider, Diagnosticable implements Disposable 
     static bool get isLogEnabled => _logger.isEnabled;
     static set isLogEnabled(bool value) => _logger.isEnabled = value;
 
-    DisposeBag({this.name});
+    factory DisposeBag({String? name}) {
+        final items = <_Item>[];
+        final subscriptions = DisposableBagEntryAdapter<StreamSubscription>((v) => items.add(_SubscriptionItem(v)));
+        return DisposeBag._(name, items, subscriptions);
+    }
+
+    DisposeBag._(this.name, this._items, this.subscriptions);
+
+    final DisposableBagEntryAdapter<StreamSubscription> subscriptions;
 
     void addDisposable(Object object) {
         _items.add(_DisposableItem(object));
@@ -30,8 +47,8 @@ class DisposeBag with DescriptionProvider, Diagnosticable implements Disposable 
         _items.add(_SubscriptionItem(subscription));
     }
 
-    void addClosable(Object stream) {
-        _items.add(_ClosableItem(stream));
+    void addClosable(Object closable) {
+        _items.add(_ClosableItem(closable));
     }
 
     @override
