@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
 
 import 'window.dart';
-import 'window_state.dart';
+// import 'window_state.dart';
 
 sealed class MDIControllerCommand {}
 
@@ -11,7 +11,7 @@ class MDIController {
     // extends ValueNotifier<CValue> {
 //   MDIController() : super(CValue());
 
-    final List<MDIWindowState> _windows = [];
+//    final List<MDIWindowState> _windows = [];
 
 //   CValue get cValue => value;
 
@@ -20,11 +20,11 @@ class MDIController {
 //   }
 
     MDIController({List<MDIWindow>? initialWindows}) {
-        if (initialWindows != null) {
-            for (final window in initialWindows) {
-                // addWindows(window);
-            }
-        }
+        //if (initialWindows != null) {
+        //    for (final window in initialWindows) {
+        //        // addWindows(window);
+        //    }
+        // }
     }
 
     void dispose() {}

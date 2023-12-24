@@ -7,10 +7,10 @@ class MKMultiChildLayout<ID extends Object, DATA extends Object> extends MultiCh
     final MKMultiChildLayoutDelegate<ID, DATA> delegate;
 
     const MKMultiChildLayout({
-        Key? key,
+        super.key,
         required this.delegate,
-        required List<MKLayoutId<ID, DATA>> children,
-    }): super(key: key, children: children);
+        required List<MKLayoutId<ID, DATA>> super.children,
+    });
 
     @override
     RenderObject createRenderObject(BuildContext context) {
