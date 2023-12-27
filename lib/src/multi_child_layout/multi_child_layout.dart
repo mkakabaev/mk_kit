@@ -222,12 +222,13 @@ class _RenderLayout<ID extends Object, DATA extends Object> extends RenderBox
         final calculatedSize = delegate.performLayout(childMap, constraints);
 
         // Checking for missed layouts
+        // MKTODO: remove this check? Allow to skip some layouts?
         assert(() {
             final missedLayouts = childMap.keys.where((key) => childMap[key]?._layedOut == false);
             if (missedLayouts.isNotEmpty) {
                 throw FlutterError.fromParts(<DiagnosticsNode>[
                     ErrorSummary('Inconsistent MKMultiChildLayout children layout.'),
-                    ErrorDescription('Few widgets have not been layed out while running $delegate.performLayout(). Their identifiers are .\n'),
+                    ErrorDescription('Few widgets have not been laid out while running $delegate.performLayout(). Their identifiers are:\n'),
                     ...missedLayouts.map((e) => ErrorDescription('- $e\n')),
                 ]);
             }

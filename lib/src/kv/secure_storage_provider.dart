@@ -26,10 +26,10 @@ class SecureStorageProvider implements KeyValueStorageProvider {
         String v;
         if (value is String) {
             v = value;
-        } else if (value is int || value is bool || value is double) {
-            v = "$value";
+        } else if (value is num || value is bool) {
+            v = '$value';
         } else {
-            throw UnsupportedError("Unable to store value of type ${value.runtimeType}");
+            throw UnsupportedError('Unable to store value of type ${value.runtimeType}');
         }
         await _backedStorage.write(key: key, value: v);
     }

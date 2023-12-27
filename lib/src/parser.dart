@@ -56,12 +56,12 @@ class Parser {
         }
         if (value is String) {
             const boolMap = <String, bool>{
-                "t": true,
-                "true": true,
-                "1": true,
-                "f": false,
-                "false": false,
-                "0": false,
+                't': true,
+                'true': true,
+                '1': true,
+                'f': false,
+                'false': false,
+                '0': false,
             };
             result = boolMap[value.toLowerCase()];
         } else if (value is int) {
@@ -128,10 +128,10 @@ class Parser {
             throw MKFormatException("Wrong value '$value': an integer is expected", tag: tag);
         }
         if (minValue != null && result < minValue) {
-            throw MKFormatException("Wrong integer value $result: must be less than $minValue", tag: tag);
+            throw MKFormatException('Wrong integer value $result: must be less than $minValue', tag: tag);
         }
         if (maxValue != null && result > maxValue) {
-            throw MKFormatException("Wrong integer value $result: must be greater than $maxValue", tag: tag);
+            throw MKFormatException('Wrong integer value $result: must be greater than $maxValue', tag: tag);
         }
         return result;
     }
@@ -158,10 +158,10 @@ class Parser {
             throw MKFormatException("Wrong value '$value': a double is expected", tag: tag);
         }
         if (minValue != null && result < minValue) {
-            throw MKFormatException("Wrong double value $result: must be less than $minValue", tag: tag);
+            throw MKFormatException('Wrong double value $result: must be less than $minValue', tag: tag);
         }
         if (maxValue != null && result > maxValue) {
-            throw MKFormatException("Wrong double value $result: must be greater than $maxValue", tag: tag);
+            throw MKFormatException('Wrong double value $result: must be greater than $maxValue', tag: tag);
         }
         return result;
     }
@@ -174,9 +174,9 @@ class MKFormatException extends FormatException {
     @override
     String get message {
         var s = originalMessage;
-        final tag = tags.reversed.join(".");
+        final tag = tags.reversed.join('.');
         if (tag.isNotEmpty) {
-            s += " (tag: $tag)";
+            s += ' (tag: $tag)';
         }
         return s;
     }
@@ -192,6 +192,6 @@ class MKFormatException extends FormatException {
             }
             return error;
         }
-        return MKFormatException("$error", tag: tag);
+        return MKFormatException('$error', tag: tag);
     }
 }

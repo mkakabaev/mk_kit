@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import '../parser.dart';
 import '../description.dart';
-import './key_value+provider.dart';
+import '../parser.dart';
 import './key_value+other.dart';
+import './key_value+provider.dart';
 
 class KeyValueStorage with DescriptionProvider {
     final KeyValueStorageProvider provider;
@@ -13,7 +13,7 @@ class KeyValueStorage with DescriptionProvider {
     KeyValueStorage({required this.provider, this.parser = Parser.instance, this.onError});
 
     void _onError(String message, Object error, StackTrace stackTrace) {
-        final e = KeyValueStorageException("$this: $message: $error");
+        final e = KeyValueStorageException('$this: $message: $error');
         final onError = this.onError;
         if (onError != null) {
             onError(e, stackTrace);
@@ -33,7 +33,7 @@ class KeyValueStorage with DescriptionProvider {
     Future<void> setValue(String key, Object? value) async {
         try {
             if (key.isEmpty) {
-                throw "Empty key passed";
+                throw 'Empty key passed';
             }
             if (value == null) {
                 await provider.removeValueForKey(key);
@@ -48,7 +48,7 @@ class KeyValueStorage with DescriptionProvider {
     Future<R?> getValue<R>(String key, KVStorageValueMapper<R> mapper) async {
         try {
             if (key.isEmpty) {
-                throw "Empty key passed";
+                throw 'Empty key passed';
             }
             final value = await provider.getValueForKey(key);
             if (value == null) {
@@ -56,41 +56,21 @@ class KeyValueStorage with DescriptionProvider {
             }
             return mapper(value!);
         } catch (e, stack) {
-            _onError("Failed to restore value for key $key as $R", e, stack);
+            _onError('Failed to restore value for key $key as $R', e, stack);
             return null;
         }
     }
 
-    Future<int?> getInt(String key) async {
-        return await getValue<int>(key, (value) => parser.parseInt(value));
-    }
+    Future<int?> getInt(String key) => getValue<int>(key, (value) => parser.parseInt(value));
+    Future<void> setInt(String key, int? value) => setValue(key, value);
 
-    Future<void> setInt(String key, int? value) async {
-        await setValue(key, value);
-    }
+    Future<bool?> getBool(String key) => getValue<bool>(key, (value) => parser.parseBool(value));
+    Future<void> setBool(String key, bool? value) => setValue(key, value);
 
-    Future<bool?> getBool(String key) async {
-        return await getValue<bool>(key, (value) => parser.parseBool(value));
-    }
+    Future<String?> getString(String key) => getValue<String>(key, (value) => parser.parseString(value));
+    Future<void> setString(String key, String? value) => setValue(key, value);
 
-    Future<void> setBool(String key, bool? value) async {
-        await setValue(key, value);
-    }
-
-    Future<String?> getString(String key) async {
-        return await getValue<String>(key, (value) => parser.parseString(value));
-    }
-
-    Future<void> setString(String key, String? value) async {
-        await setValue(key, value);
-    }
-
-    Future<Object?> getJson(String key) async {
-        return await getValue<dynamic>(key, (value) {
-            return jsonDecode(value);
-        });
-    }
-
+    Future<Object?> getJson(String key) => getValue<dynamic>(key, (value) => jsonDecode(value));
     Future<void> setJson(String key, Object? value) async {
         try {
             if (value != null) {
@@ -107,12 +87,12 @@ class KeyValueStorage with DescriptionProvider {
         try {
             await provider.clear();
         } catch (e, stack) {
-            _onError("Failed to clean", e, stack);
+            _onError('Failed to clean', e, stack);
         }
     }
 
     @override
     void configureDescription(DescriptionBuilder db) {
-        db.addValue("${provider.runtimeType}");
+        db.addValue('${provider.runtimeType}');
     }
 }

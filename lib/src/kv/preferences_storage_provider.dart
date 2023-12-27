@@ -41,7 +41,7 @@ class PreferencesStorageProvider implements KeyValueStorageProvider {
             await bs.setDouble(key, value);
             return;
         }
-        throw UnsupportedError("Unable to store value of type ${value.runtimeType}");
+        throw UnsupportedError('Unable to store value of type ${value.runtimeType}');
     }
 
     @override

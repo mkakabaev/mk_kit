@@ -1,5 +1,6 @@
 include: package:flutter_lints/flutter.yaml
 
+# cSpell: disable
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 
@@ -9,7 +10,7 @@ analyzer:
 
 linter:
   rules:
-    # prefer_single_quotes: false
+    prefer_single_quotes: true
     # use_rethrow_when_possible: true
     unnecessary_this: false
     use_key_in_widget_constructors: false
@@ -18,9 +19,10 @@ linter:
     use_full_hex_values_for_flutter_colors: true
     always_declare_return_types: true
     sort_child_properties_last: true
-    # unawaited_futures: true
+    unawaited_futures: true
     unsafe_html: true
     file_names: false
+    directives_ordering: true
 
 dart_code_metrics:
   metrics:
