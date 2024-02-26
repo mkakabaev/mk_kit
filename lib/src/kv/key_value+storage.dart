@@ -5,10 +5,12 @@ import '../parser.dart';
 import './key_value+other.dart';
 import './key_value+provider.dart';
 
+typedef KeyValueStorageErrorHandler = void Function(KeyValueStorageException error, StackTrace stackTrace);
+
 class KeyValueStorage with DescriptionProvider {
     final KeyValueStorageProvider provider;
     final Parser parser;
-    final void Function(KeyValueStorageException error, StackTrace stackTrace)? onError;
+    KeyValueStorageErrorHandler? onError;
 
     KeyValueStorage({required this.provider, this.parser = Parser.instance, this.onError});
 
@@ -70,7 +72,10 @@ class KeyValueStorage with DescriptionProvider {
     Future<String?> getString(String key) => getValue<String>(key, (value) => parser.parseString(value));
     Future<void> setString(String key, String? value) => setValue(key, value);
 
-    Future<Object?> getJson(String key) => getValue<dynamic>(key, (value) => jsonDecode(value));
+    /// Most common way to organize json objects. This way we move all possible typecasting errors into parsing 
+    Future<Map<String, dynamic>?> getJsonMap(String key) =>
+        getValue(key, (value) => jsonDecode(value) as Map<String, dynamic>?);
+    Future<Object?> getJson(String key) => getValue(key, (value) => jsonDecode(value));
     Future<void> setJson(String key, Object? value) async {
         try {
             if (value != null) {

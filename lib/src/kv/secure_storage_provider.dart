@@ -6,7 +6,7 @@ class SecureStorageProvider implements KeyValueStorageProvider {
     final FlutterSecureStorage _backedStorage;
 
     SecureStorageProvider({
-        String? accountName, // Mac OS only
+        String? accountName, // macOS only
     }): _backedStorage = FlutterSecureStorage(
             mOptions: MacOsOptions.defaultOptions.copyWith(accountName: accountName),
         );

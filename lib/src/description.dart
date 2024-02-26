@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import './misc.dart';
 
 class DescriptionBuilder {
@@ -77,7 +79,7 @@ class DescriptionBuilder {
 
 mixin DescriptionProvider {
     @override
-    String toString() {
+    String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
         final sb = DescriptionBuilder(this);
         configureDescription(sb);
         return sb();
