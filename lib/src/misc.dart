@@ -26,8 +26,8 @@ import './description.dart';
 ///
 /// Starting Dart 3.3 implemented using 'extension type'
 
-extension type CWValue2<T extends Object>(T? value) {
-    static T? resolve<T extends Object>(CWValue2<T>? v, T? originalValue) => v == null ? originalValue : v.value;
+extension type CWValue<T extends Object>(T? value) {
+    static T? resolve<T extends Object>(CWValue<T>? v, T? originalValue) => v == null ? originalValue : v.value;
 }
 
 /* old, pre-Dart 3.3 implementation
