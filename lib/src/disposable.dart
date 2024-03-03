@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 
 import './description.dart';
 
+// cSpell: ignore closable, Diagnosticable, closables
+
 abstract interface class Disposable {
     void dispose();
 }

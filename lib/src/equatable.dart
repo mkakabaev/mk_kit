@@ -13,12 +13,12 @@ mixin EquatableProps {
     }
 
     @override
-    bool operator ==(dynamic other) {
+    bool operator ==(Object other) {
         if (identical(this, other)) {
             return true;
         }
-        if (other.runtimeType == runtimeType) {
-            return _equality.equals(other.equatableProps, equatableProps);
+        if (other is EquatableProps) {
+            return other.runtimeType == runtimeType && _equality.equals(other.equatableProps, equatableProps);
         }
         return false;
     }

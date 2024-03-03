@@ -1,5 +1,36 @@
+import 'package:mk_kit/mk_kit.dart';
+
 import './description.dart';
 
+///
+/// Helper to pass nullable value to copyWith() method oif a class.
+/// Works better than sentinels because it is type-safe.
+///
+/// ```
+/// class MyClass {
+///    final int? a;
+///
+///    MyClass({
+///        required this.a,
+///    });
+///
+///    MyClass copyWith({
+///        CWValue<int>? a,
+///    }) {
+///        return MyClass(
+///           a: CWValue.resolve(a, this.a),
+///        );
+///    }
+/// }
+/// ```
+///
+/// Starting Dart 3.3 implemented using 'extension type'
+
+extension type CWValue2<T extends Object>(T? value) {
+    static T? resolve<T extends Object>(CWValue2<T>? v, T? originalValue) => v == null ? originalValue : v.value;
+}
+
+/* old, pre-Dart 3.3 implementation
 class CWValue<T extends Object> {
     final T? value;
     CWValue(this.value);
@@ -8,7 +39,13 @@ class CWValue<T extends Object> {
         return v == null ? originalValue : v.value;
     }
 }
+*/
 
+///
+/// A simple wrapper to hold (and change) value. Use to mimic 'out' function parameters in Dart:
+/// an ability to change the value of a parameter inside a function by reference. Mostly
+/// useless nowadays, can be replaced with a function that returns record with multiple values.
+///
 class ValueRef<T> {
     T value;
     ValueRef(this.value);
@@ -78,6 +115,13 @@ String? stringify(Object? value) {
 ///
 /// Tagged (or branded) type concept, similar to TypeScript's branded types.
 ///
+/// In most cases it is better to use the new 'extension type' feature (Dart 3.3+)
+/// ```
+///     extension type MyType(T id) {
+///
+///     }
+/// ```
+///
 abstract class TaggedType<T extends Object> with DescriptionProvider {
     final T value;
 
@@ -87,11 +131,13 @@ abstract class TaggedType<T extends Object> with DescriptionProvider {
     int get hashCode => value.hashCode;
 
     @override
-    bool operator ==(dynamic other) {
+    bool operator ==(Object other) {
         if (identical(this, other)) {
             return true;
         }
-        if (other.runtimeType == runtimeType) {
+        if (other is TaggedType) {
+            assert(other.runtimeType == runtimeType,
+                'An attempt to compare using different types: $runtimeType vs ${other.runtimeType}');
             return other.value == value;
         }
         return false;
@@ -103,74 +149,3 @@ abstract class TaggedType<T extends Object> with DescriptionProvider {
     }
 }
 
-///  Returns a new list with the elements of [items] flattened.
-///
-///  If [toElement] is specified, then it is used to transform each element of
-///  [items] to an element of type [T]. If [toElement] is not specified, then
-///  each element of [items] must be assignable to [T].
-///
-/// ```dart
-/// void f() {
-///   final list = [
-///     "String",
-///     1,
-///     null,
-///     [2, 2],
-///     [
-///       3,
-///       "Another String",
-///       3,
-///       3,
-///       [4, 4, 4, 4]
-///     ],
-///     [4, 4, 4, 4]
-///   ];
-///
-///   final flattened = flatList<int>(list, (v) => int.tryParse("$v"));
-///   final flattenedNullable = flatList<int?>(list, (v) => int.tryParse("$v"));
-///   print(flattened);         // [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4]
-///   print(flattenedNullable); // [null, 1, null, 2, 2, 3, null, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4]
-/// }
-///
-/// ```
-List<T> flatList<T>(Iterable<dynamic>? items, [T? Function(dynamic)? toElement]) {
-    final result = <T>[];
-    _flatList(items, toElement, result);
-    return result;
-}
-
-void _flatList<T>(Iterable<dynamic>? items, T? Function(dynamic)? toElement, List<T> result) {
-    if (items == null) {
-        return;
-    }
-
-    if (toElement == null) {
-        for (final item in items) {
-            if (item is T) {
-                result.add(item);
-                continue;
-            }
-            if (item == null) {
-                continue;
-            }
-            if (item is Iterable) {
-                _flatList(item, null, result);
-                continue;
-            }
-            assert(false, 'flatList(): An object of type <$T> is expected: <$item> is not one');
-        }
-        return;
-    }
-
-    for (final item in items) {
-        if (item is Iterable) {
-            _flatList(item, toElement, result);
-            continue;
-        }
-        final transformed = toElement(item);
-        if (transformed is T) {
-            result.add(transformed);
-            continue;
-        }
-    }
-}
