@@ -1,5 +1,3 @@
-library mk_kit;
-
 export 'src/description.dart';
 export 'src/disposable.dart';
 export 'src/equatable.dart';

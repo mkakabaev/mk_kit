@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
-const _equality = DeepCollectionEquality();
+const _kEquality = DeepCollectionEquality();
 
 mixin EquatableProps {
     @protected
@@ -9,7 +9,7 @@ mixin EquatableProps {
 
     @override
     int get hashCode {
-        return _equality.hash(equatableProps);
+        return _kEquality.hash(equatableProps);
     }
 
     @override
@@ -18,7 +18,7 @@ mixin EquatableProps {
             return true;
         }
         if (other is EquatableProps) {
-            return other.runtimeType == runtimeType && _equality.equals(other.equatableProps, equatableProps);
+            return other.runtimeType == runtimeType && _kEquality.equals(other.equatableProps, equatableProps);
         }
         return false;
     }

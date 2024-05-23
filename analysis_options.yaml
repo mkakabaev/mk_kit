@@ -1,46 +1,30 @@
-include: package:flutter_lints/flutter.yaml
+include: package:lint/analysis_options.yaml
 
 # cSpell: disable
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 
-analyzer:
-  plugins:
-    - dart_code_metrics
-
-linter:
-  rules:
-    prefer_single_quotes: true
-    # use_rethrow_when_possible: true
-    unnecessary_this: false
-    use_key_in_widget_constructors: false
-    avoid_function_literals_in_foreach_calls: false
-    # prefer_function_declarations_over_variables: false 
-    use_full_hex_values_for_flutter_colors: true
-    always_declare_return_types: true
-    sort_child_properties_last: true
-    unawaited_futures: true
-    unsafe_html: true
-    file_names: false
-    directives_ordering: true
+# analyzer:
+#   plugins:
 
 dart_code_metrics:
+  extends:
+    - recommended
   metrics:
     cyclomatic-complexity: 20
     maximum-nesting-level: 5
     number-of-parameters: 4
     source-lines-of-code: 50
-  metrics-exclude:
-    - test/**
   rules:
-    # - newline-before-return
-    - no-boolean-literal-compare
-    # - no-empty-block
-    # - prefer-trailing-comma
-    # - prefer-conditional-expressions
-    - no-equal-then-else
-    # - avoid-unnecessary-setstate
-    - avoid-wrapping-in-padding
-    - prefer_relative_imports
-    # - avoid-ignoring-return-values
-    # - no-object-declaration
+    avoid-nullable-interpolation: false
+    unnecessary-trailing-comma: false
+    no-empty-block: false
+    prefer-match-file-name: false
+    avoid-renaming-representation-getters: false
+    prefer-correct-callback-field-name: false
+    prefer-single-widget-per-file: false
+
+linter:
+  rules:
+    always_use_package_imports: false
+    file_names: false

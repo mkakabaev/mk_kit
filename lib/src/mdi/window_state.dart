@@ -1,9 +1,9 @@
 import 'window.dart';
 
 class MDIWindowState {
-    final MDIWindow window;
+  final MDIWindow window;
 
-    MDIWindowState({
-      required this.window,
-    });
+  const MDIWindowState({
+    required this.window,
+  });
 }

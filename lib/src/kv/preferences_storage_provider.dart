@@ -11,7 +11,7 @@ class PreferencesStorageProvider implements KeyValueStorageProvider {
     }
 
     @override
-    Future<dynamic> getValueForKey(String key) async {
+    Future<Object?> getValueForKey(String key) async {
         final bs = _backedStorage ?? await _getInstance();
         return bs.get(key);
     }
@@ -23,7 +23,7 @@ class PreferencesStorageProvider implements KeyValueStorageProvider {
     }
 
     @override
-    Future<void> setValueForKey(String key, dynamic value) async {
+    Future<void> setValueForKey(String key, Object? value) async {
         final bs = _backedStorage ?? await _getInstance();
         if (value is String) {
             await bs.setString(key, value);

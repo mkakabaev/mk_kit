@@ -23,6 +23,7 @@ class MDIController {
 //     value = newValue;
 //   }
 
+    // ignore: avoid_unused_constructor_parameters
     MDIController({List<MDIWindow>? initialWindows}) {
         //if (initialWindows != null) {
         //    for (final window in initialWindows) {

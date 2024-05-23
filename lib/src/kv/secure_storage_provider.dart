@@ -12,7 +12,7 @@ class SecureStorageProvider implements KeyValueStorageProvider {
         );
 
     @override
-    Future<dynamic> getValueForKey(String key) async {
+    Future<Object?> getValueForKey(String key) async {
         return await _backedStorage.read(key: key);
     }
 
@@ -22,7 +22,7 @@ class SecureStorageProvider implements KeyValueStorageProvider {
     }
 
     @override
-    Future<void> setValueForKey(String key, dynamic value) async {
+    Future<void> setValueForKey(String key, Object? value) async {
         String v;
         if (value is String) {
             v = value;

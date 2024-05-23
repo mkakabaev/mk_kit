@@ -28,17 +28,17 @@ import './description.dart';
 /// Due type unsafety of 'extension type' I had to use pseudo-typing record (T?, Type) to hold the value
 /// Without it CWValue(null) interpret as null,
 /// Instead (T?, Type) record (T?, String) can be used as well and event (T?,)
-/// After all it gives type checking on CWValue(null) 
+/// After all it gives type checking on CWValue(null)
 
 extension type const CWValue<T extends Object>._((T?, Type) _value) {
-  CWValue(T? value) : this._((value, T));
+  const CWValue(T? value) : this._((value, T));
 
   static T? resolve<T extends Object>(CWValue<T>? v, T? originalValue) => v == null ? originalValue : v._value.$1;
 
   T? get value => _value.$1;
 
   static CWValue<T>? diffOnly<T extends Object>(T? valueFrom, T? valueTo) {
-    return valueFrom == valueTo ? null : CWValue<T>(valueTo);
+    return valueFrom == valueTo ? null : CWValue(valueTo);
   }
 }
 
@@ -67,11 +67,11 @@ class ValueRef<T> {
   ValueRef(this.value);
 }
 
-T safe<T>(dynamic v, T defaultValue) {
+T safe<T>(Object? v, T defaultValue) {
   return v is T ? v : defaultValue;
 }
 
-T safeMapValue<T>(dynamic map, String key, T defaultValue) {
+T safeMapValue<T>(Object? map, String key, T defaultValue) {
   if (map is Map) {
     final v = map[key];
     if (v is T) {
@@ -152,8 +152,10 @@ abstract class TaggedType<T extends Object> with DescriptionProvider {
       return true;
     }
     if (other is TaggedType) {
-      assert(other.runtimeType == runtimeType,
-          'An attempt to compare using different types: $runtimeType vs ${other.runtimeType}');
+      assert(
+        other.runtimeType == runtimeType,
+        'An attempt to compare using different types: $runtimeType vs ${other.runtimeType}',
+      );
       return other.value == value;
     }
     return false;
@@ -161,6 +163,6 @@ abstract class TaggedType<T extends Object> with DescriptionProvider {
 
   @override
   void configureDescription(DescriptionBuilder db) {
-    db.addValue(value, quote: T is String);
+    db.addValue(value, quote: value is String);
   }
 }
