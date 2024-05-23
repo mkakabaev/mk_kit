@@ -25,9 +25,21 @@ import './description.dart';
 /// ```
 ///
 /// Starting Dart 3.3 implemented using 'extension type'
+/// Due type unsafety of 'extension type' I had to use pseudo-typing record (T?, Type) to hold the value
+/// Without it CWValue(null) interpret as null,
+/// Instead (T?, Type) record (T?, String) can be used as well and event (T?,)
+/// After all it gives type checking on CWValue(null) 
 
-extension type CWValue<T extends Object>(T? value) {
-    static T? resolve<T extends Object>(CWValue<T>? v, T? originalValue) => v == null ? originalValue : v.value;
+extension type const CWValue<T extends Object>._((T?, Type) _value) {
+  CWValue(T? value) : this._((value, T));
+
+  static T? resolve<T extends Object>(CWValue<T>? v, T? originalValue) => v == null ? originalValue : v._value.$1;
+
+  T? get value => _value.$1;
+
+  static CWValue<T>? diffOnly<T extends Object>(T? valueFrom, T? valueTo) {
+    return valueFrom == valueTo ? null : CWValue<T>(valueTo);
+  }
 }
 
 /* old, pre-Dart 3.3 implementation
@@ -38,6 +50,10 @@ class CWValue<T extends Object> {
     static T? resolve<T extends Object>(CWValue<T>? v, T? originalValue) {
         return v == null ? originalValue : v.value;
     }
+
+    static CWValue<T>? diffOnly<T extends Object>(T? valueFrom, T? valueTo) {
+      return valueFrom == valueTo ? null : CWValue<T>(valueTo);
+    }  
 }
 */
 
@@ -47,69 +63,69 @@ class CWValue<T extends Object> {
 /// useless nowadays, can be replaced with a function that returns record with multiple values.
 ///
 class ValueRef<T> {
-    T value;
-    ValueRef(this.value);
+  T value;
+  ValueRef(this.value);
 }
 
 T safe<T>(dynamic v, T defaultValue) {
-    return v is T ? v : defaultValue;
+  return v is T ? v : defaultValue;
 }
 
 T safeMapValue<T>(dynamic map, String key, T defaultValue) {
-    if (map is Map) {
-        final v = map[key];
-        if (v is T) {
-            return v;
-        }
+  if (map is Map) {
+    final v = map[key];
+    if (v is T) {
+      return v;
     }
-    return defaultValue;
+  }
+  return defaultValue;
 }
 
 bool isEmpty(Object? value) {
-    if (value == null) {
-        return true;
-    }
+  if (value == null) {
+    return true;
+  }
 
-    if (value is String) {
-        return value.isEmpty;
-    }
+  if (value is String) {
+    return value.isEmpty;
+  }
 
-    if (value is Iterable) {
-        return value.isEmpty;
-    }
+  if (value is Iterable) {
+    return value.isEmpty;
+  }
 
-    if (value is Map) {
-        return value.isEmpty;
-    }
+  if (value is Map) {
+    return value.isEmpty;
+  }
 
-    if (value is CanBeEmpty) {
-        return value.isEmpty;
-    }
+  if (value is CanBeEmpty) {
+    return value.isEmpty;
+  }
 
-    return false;
+  return false;
 }
 
 bool isNotEmpty(Object? value) => !isEmpty(value);
 
 abstract interface class CanBeEmpty {
-    bool get isEmpty;
-    bool get isNotEmpty => !isEmpty;
+  bool get isEmpty;
+  bool get isNotEmpty => !isEmpty;
 }
 
 String? stringify(Object? value) {
-    if (value == null) {
-        return null;
-    }
+  if (value == null) {
+    return null;
+  }
 
-    if (value is String) {
-        return value;
-    }
+  if (value is String) {
+    return value;
+  }
 
-    if (value is Enum) {
-        return value.name;
-    }
+  if (value is Enum) {
+    return value.name;
+  }
 
-    return '$value';
+  return '$value';
 }
 
 ///
@@ -123,29 +139,28 @@ String? stringify(Object? value) {
 /// ```
 ///
 abstract class TaggedType<T extends Object> with DescriptionProvider {
-    final T value;
+  final T value;
 
-    const TaggedType(this.value);
+  const TaggedType(this.value);
 
-    @override
-    int get hashCode => value.hashCode;
+  @override
+  int get hashCode => value.hashCode;
 
-    @override
-    bool operator ==(Object other) {
-        if (identical(this, other)) {
-            return true;
-        }
-        if (other is TaggedType) {
-            assert(other.runtimeType == runtimeType,
-                'An attempt to compare using different types: $runtimeType vs ${other.runtimeType}');
-            return other.value == value;
-        }
-        return false;
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
     }
-
-    @override
-    void configureDescription(DescriptionBuilder db) {
-        db.addValue(value, quote: T is String);
+    if (other is TaggedType) {
+      assert(other.runtimeType == runtimeType,
+          'An attempt to compare using different types: $runtimeType vs ${other.runtimeType}');
+      return other.value == value;
     }
+    return false;
+  }
+
+  @override
+  void configureDescription(DescriptionBuilder db) {
+    db.addValue(value, quote: T is String);
+  }
 }
-
