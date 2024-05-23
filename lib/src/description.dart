@@ -85,7 +85,8 @@ mixin DescriptionProvider {
     return sb();
   }
 
-  void configureDescription(DescriptionBuilder _) {
+  // ignore: avoid-unused-parameters
+  void configureDescription(DescriptionBuilder db) {
     // nothing in the base
   }
 }
