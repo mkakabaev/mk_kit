@@ -17,11 +17,11 @@ class KeyValueStorage with DescriptionProvider {
   void _onError(String message, Object error, StackTrace stackTrace) {
     final e = KeyValueStorageException('$this: $message: $error');
     final onError = this.onError;
-    if (onError != null) {
-      onError(e, stackTrace);
-    } else {
+    if (onError == null) {
       throw e;
     }
+
+    onError(e, stackTrace);
   }
 
   Future<void> removeValueForKey(String key) async {
@@ -35,7 +35,7 @@ class KeyValueStorage with DescriptionProvider {
   Future<void> setValue(String key, Object? value) async {
     try {
       if (key.isEmpty) {
-        throw 'Empty key passed';
+        throw ArgumentError('Empty key passed');
       }
       if (value == null) {
         await provider.removeValueForKey(key);
@@ -50,7 +50,7 @@ class KeyValueStorage with DescriptionProvider {
   Future<R?> getValue<R>(String key, KVStorageValueMapper<R> mapper) async {
     try {
       if (key.isEmpty) {
-        throw 'Empty key passed';
+        throw ArgumentError('Empty key passed');
       }
       final value = await provider.getValueForKey(key);
       if (value == null) {
@@ -73,15 +73,28 @@ class KeyValueStorage with DescriptionProvider {
   Future<void> setString(String key, String? value) => setValue(key, value);
 
   /// Most common way to organize json objects. This way we move all possible typecasting errors into parsing
-  Future<Map<String, dynamic>?> getJsonMap(String key) =>
-      getValue(key, (value) => jsonDecode(value! as String) as Map<String, dynamic>?);
-  Future<Object?> getJson(String key) => getValue(key, (value) => jsonDecode(value! as String));
+  Future<Map<String, dynamic>?> getJsonMap(String key) => getValue(
+        key,
+        (value) {
+          final s = Parser.instance.parseString(value);
+          final result = jsonDecode(s);
+          return Parser.instance.parseMap(result) as Map<String, dynamic>?;
+        },
+      );
+
+  Future<Object?> getJson(String key) => getValue(
+        key,
+        (value) {
+          return jsonDecode(Parser.instance.parseString(value));
+        },
+      );
+
   Future<void> setJson(String key, Object? value) async {
     try {
-      if (value != null) {
-        await setString(key, jsonEncode(value));
-      } else {
+      if (value == null) {
         await setValue(key, value); // this will remove the key
+      } else {
+        await setString(key, jsonEncode(value));
       }
     } catch (e, stack) {
       _onError("Failed to encode value to JSON for key '$key'", e, stack);

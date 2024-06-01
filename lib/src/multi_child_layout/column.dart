@@ -38,6 +38,8 @@ class MKColumn extends StatelessWidget {
               delegate: _LayoutDelegate(
                 viewportHeight: constraints.maxHeight,
               ),
+              // Does not worth to optimize these little lists
+              // ignore: avoid-slow-collection-methods
               children: children.mapIndexed((index, child) {
                 if (child is MKSpacer) {
                   return MKLayoutId(
@@ -114,11 +116,11 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
     var fixedHeight = 0.0;
     var spacerHeight = 0.0;
     children.forEach((index, child) {
-      final data = child.data;
       final layout = _LayoutInfo(child);
       allLayouts.add(layout);
 
       // Regular widget (not a spacer). Layout immediately,
+      final data = child.data;
       if (data == null) {
         final sz = child.layout(maxWidth: constraints.maxWidth);
         layout.height = sz.height;
@@ -126,14 +128,18 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
         return;
       }
 
+      final _Data(:minHeight, :isExpandable, :height) = data;
+
       // Non-expandable spacer in expandable environment (there are expandable spacers in the column).
       // Consider it as a regular widget with a fixed height (and layout).
       // Min height is used have because we are in expandable environment and have to be compacted
-      if (expandableEnvironment && !data.isExpandable) {
+      if (expandableEnvironment && !isExpandable) {
         final sz = child.layout(
           maxWidth: constraints.maxWidth,
-          minHeight: data.minHeight,
-          maxHeight: data.minHeight,
+          minHeight: minHeight,
+          // Not an error
+          // ignore: no-equal-arguments
+          maxHeight: minHeight,
         );
         layout.height = sz.height;
         fixedHeight += sz.height;
@@ -142,15 +148,15 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
 
       // Starting from here we have only expandable spacers OR only non-expandable spacers
       // in non-expandable environment.
-      assert(expandableEnvironment ^ !data.isExpandable, 'assertion_20230601_501183');
+      assert(expandableEnvironment ^ !isExpandable, 'assertion_20230601_501183');
 
       // Spacer with adjustable (later) height. Just collect it for now.
       if (expandableEnvironment) {
-        layout.height = max(1, data.height) * viewportHeight;
+        layout.height = max(1, height) * viewportHeight;
       } else {
-        layout.height = data.height;
+        layout.height = height;
       }
-      layout.minHeight = data.minHeight;
+      layout.minHeight = minHeight;
       spacerHeight += layout.height;
       spacerLayouts.add(layout);
     });
@@ -195,9 +201,11 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
 
     // Layout spacers finally
     for (final layout in spacerLayouts) {
-      layout.child.layout(
+      final _ = layout.child.layout(
         maxWidth: constraints.maxWidth,
         minHeight: layout.height,
+        // Not an error
+        // ignore: no-equal-arguments
         maxHeight: layout.height,
       );
     }

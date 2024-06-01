@@ -6,10 +6,12 @@ class MKSpacer extends StatelessWidget {
     final bool isExpandable;
     final Widget? child;
 
+    static const defaultMinHeight = 8.0;
+
     const MKSpacer({
         super.key,
         required this.height,
-        this.minHeight = 8.0,
+        this.minHeight = defaultMinHeight,
         this.isExpandable = false,
         this.child,
     }): assert(minHeight >= 0),

@@ -11,8 +11,10 @@ abstract interface class Disposable {
   void dispose();
 }
 
+typedef DisposableAdder<T> = void Function(T value);
+
 class DisposableBagEntryAdapter<T extends Object> {
-  final void Function(T) _onAdd;
+  final DisposableAdder _onAdd;
   const DisposableBagEntryAdapter(this._onAdd);
 
   void operator <<(T object) {
@@ -74,8 +76,8 @@ class DisposeBag with DescriptionProvider, Diagnosticable implements Disposable 
     _logger.level += 1;
     try {
       // dispose in reversed order, LIFO order
-      for (var i = _items.length - 1; i >= 0; i--) {
-        _items.elementAtOrNull(i)?.call();
+      for (var i = _items.length - 1; i >= 0; i -= 1) {
+        _items.elementAtOrNull(i)?.invoke();
       }
       _items.clear();
     } finally {
@@ -116,11 +118,11 @@ mixin DisposeBagHolder implements Disposable {
   }
 }
 
-abstract class _Item<T extends Object> with Diagnosticable {
+abstract interface class _Item<T extends Object> with Diagnosticable {
   final T object;
   _Item(this.object);
 
-  void call();
+  void invoke();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -134,10 +136,10 @@ class _DisposableItem extends _Item {
       : assert(
           () {
             try {
-              // ignore: unnecessary_statements, avoid-dynamic
+              // Just a comment to self-explanatory code
+              // ignore: avoid-dynamic, avoid-ignoring-return-values
               (object as dynamic).dispose;
               return true;
-              // ignore: avoid_catching_errors
             } on NoSuchMethodError {
               return false;
             }
@@ -146,14 +148,14 @@ class _DisposableItem extends _Item {
         );
 
   @override
-  void call() {
+  void invoke() {
     _logger(() => 'Disposing $object...');
     try {
-      // ignore: avoid_dynamic_calls, avoid-dynamic
+      // Just a comment to self-explanatory code
+      // ignore: avoid-dynamic, avoid-ignoring-return-values
       (object as dynamic).dispose();
-      // ignore: avoid_catching_errors
-    } on NoSuchMethodError catch (e) {
-      _logger(() => "The '${object.runtimeType}' type has no dispose() method: $e");
+    } on NoSuchMethodError {
+      _logger(() => "The '${object.runtimeType}' type has no dispose() method");
     }
   }
 }
@@ -162,8 +164,11 @@ class _SubscriptionItem extends _Item<StreamSubscription> {
   _SubscriptionItem(super.object);
 
   @override
-  void call() {
+  void invoke() {
     _logger(() => 'Canceling $object...');
+
+    // In rare cases when you really need await here not not use DisposeBag at all
+    // ignore: avoid-async-call-in-sync-function
     object.cancel();
   }
 }
@@ -173,10 +178,10 @@ class _ClosableItem extends _Item {
       : assert(
           () {
             try {
-              // ignore: avoid-dynamic, unnecessary_statements
+              // Just a comment to self-explanatory code
+              // ignore: avoid-dynamic, avoid-ignoring-return-values
               (object as dynamic).close;
               return true;
-              // ignore: avoid_catching_errors
             } on NoSuchMethodError {
               return false;
             }
@@ -185,14 +190,14 @@ class _ClosableItem extends _Item {
         );
 
   @override
-  void call() {
+  void invoke() {
     _logger(() => 'Closing $object...');
     try {
-      // ignore: avoid_dynamic_calls, avoid-dynamic
+      // Just a comment to self-explanatory code
+      // ignore: avoid-dynamic, avoid-ignoring-return-values
       (object as dynamic).close();
-      // ignore: avoid_catching_errors
-    } on NoSuchMethodError catch (e) {
-      _logger(() => "The '${object.runtimeType}' type has no close() method: $e");
+    } on NoSuchMethodError {
+      _logger(() => "The '${object.runtimeType}' type has no close() method");
     }
   }
 }
@@ -202,11 +207,14 @@ class _DisposeBagLogger {
   bool isEnabled = false;
 
   void call(String Function() f) {
-    if (isEnabled) {
-      final padding = '  ' * level;
-      dev.log(padding + f());
+    if (!isEnabled) {
+      return;
     }
+
+    final padding = '  ' * level;
+    dev.log(padding + f());
   }
 }
 
+// Let it be global for now
 final _logger = _DisposeBagLogger();

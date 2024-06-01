@@ -19,17 +19,17 @@ class DescriptionBuilder {
       return;
     }
 
-    if (name != null) {
-      if (quote && s != null) {
-        s = "$name: '$s'";
-      } else {
-        s = '$name: $s';
-      }
-    } else {
+    if (name == null) {
       if (quote && s != null) {
         s = "'$s'";
       } else {
         s ??= '<null>';
+      }
+    } else {
+      if (quote && s != null) {
+        s = "$name: '$s'";
+      } else {
+        s = '$name: $s';
       }
     }
 
@@ -85,6 +85,7 @@ mixin DescriptionProvider {
     return sb();
   }
 
+  // ..Comment to make analyzer happy..
   // ignore: avoid-unused-parameters
   void configureDescription(DescriptionBuilder db) {
     // nothing in the base

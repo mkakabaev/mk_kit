@@ -1,11 +1,11 @@
 // import 'package:flutter/material.dart';
 
-import 'window.dart';
+// import 'window.dart';
 // import 'window_state.dart';
 
-///
-/// UNDER CONSTRUCTION...
-///
+//
+// UNDER CONSTRUCTION...
+//
 
 sealed class MDIControllerCommand {}
 
@@ -23,14 +23,15 @@ class MDIController {
 //     value = newValue;
 //   }
 
-    // ignore: avoid_unused_constructor_parameters
-    MDIController({List<MDIWindow>? initialWindows}) {
+    const MDIController();
+
+    // MDIController({List<MDIWindow>? initialWindows}) {
         //if (initialWindows != null) {
         //    for (final window in initialWindows) {
         //        // addWindows(window);
         //    }
         // }
-    }
+    // }
 
     void dispose() {}
 }

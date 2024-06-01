@@ -1,6 +1,4 @@
-import 'package:mk_kit/mk_kit.dart';
-
-import './description.dart';
+import 'description.dart';
 
 ///
 /// Helper to pass nullable value to copyWith() method oif a class.
@@ -82,6 +80,7 @@ T safeMapValue<T>(Object? map, String key, T defaultValue) {
 }
 
 bool isEmpty(Object? value) {
+
   if (value == null) {
     return true;
   }

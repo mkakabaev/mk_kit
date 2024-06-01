@@ -17,7 +17,7 @@ class _MDIDemoState extends State<MDIDemo> {
     void initState() {
         super.initState();
 
-        _controller = MDIController();
+        _controller = const MDIController();
     }
 
     @override

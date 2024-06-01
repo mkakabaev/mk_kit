@@ -20,6 +20,7 @@ class MKMultiChildLayout<ID extends Object, DATA extends Object> extends MultiCh
   }
 
   @override
+  // ..Comment to make analyzer happy..
   // ignore: consistent-update-render-object
   void updateRenderObject(BuildContext context, RenderObject renderObject) {
     (renderObject as _RenderLayout).setDelegate(delegate);
@@ -172,6 +173,8 @@ class _RenderLayout<ID extends Object, DATA extends Object> extends RenderBox
   @override
   void setupParentData(RenderBox child) {
     if (child.parentData is! MKMultiChildLayoutParentData<ID, DATA>) {
+      // ..Comment to make analyzer happy..
+      // ignore: avoid-mutating-parameters
       child.parentData = MKMultiChildLayoutParentData<ID, DATA>();
     }
   }
@@ -201,7 +204,13 @@ class _RenderLayout<ID extends Object, DATA extends Object> extends RenderBox
         final childParentData = child.parentData;
         if (childParentData is MKMultiChildLayoutParentData<ID, DATA>) {
           final layoutId = childParentData.layoutId;
-          if (layoutId != null) {
+
+          if (layoutId == null) {
+            assert(
+              false,
+              'MKLayoutId widget wrapper must have a non-null id. Please check generic param ID and DATA types.',
+            );
+          } else {
             assert(() {
               if (childMap.containsKey(layoutId)) {
                 throw FlutterError.fromParts([
@@ -214,11 +223,6 @@ class _RenderLayout<ID extends Object, DATA extends Object> extends RenderBox
               return true;
             }());
             childMap[layoutId] = MKChildLayout<ID, DATA>(child, childParentData);
-          } else {
-            assert(
-              false,
-              'MKLayoutId widget wrapper must have a non-null id. Please check generic param ID and DATA types.',
-            );
           }
         } else {
           assert(false);
@@ -233,6 +237,8 @@ class _RenderLayout<ID extends Object, DATA extends Object> extends RenderBox
     // Checking for missed layouts
     // MKTODO: remove this check? Allow to skip some layouts?
     assert(() {
+      // ..Comment to make analyzer happy..
+      // ignore: avoid-accessing-other-classes-private-members
       final missedLayouts = childMap.keys.where((key) => childMap[key]?._layedOut == false);
       if (missedLayouts.isNotEmpty) {
         throw FlutterError.fromParts([
