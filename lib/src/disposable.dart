@@ -29,6 +29,7 @@ class DisposeBag with DescriptionProvider, Diagnosticable implements Disposable 
   String? name;
 
   static bool get isLogEnabled => _logger.isEnabled;
+
   static set isLogEnabled(bool value) => _logger.isEnabled = value;
 
   factory DisposeBag({String? name}) {
@@ -133,19 +134,16 @@ abstract interface class _Item<T extends Object> with Diagnosticable {
 
 class _DisposableItem extends _Item {
   _DisposableItem(super.object)
-      : assert(
-          () {
-            try {
-              // Just a comment to self-explanatory code
-              // ignore: avoid-dynamic, avoid-ignoring-return-values
-              (object as dynamic).dispose;
-              return true;
-            } on NoSuchMethodError {
-              return false;
-            }
-          }(),
-          'The ${object.runtimeType} type must have dispose() method',
-        );
+    : assert(() {
+        try {
+          // Just a comment to self-explanatory code
+          // ignore: avoid-dynamic, avoid-ignoring-return-values
+          (object as dynamic).dispose;
+          return true;
+        } on NoSuchMethodError {
+          return false;
+        }
+      }(), 'The ${object.runtimeType} type must have dispose() method');
 
   @override
   void invoke() {
@@ -175,19 +173,16 @@ class _SubscriptionItem extends _Item<StreamSubscription> {
 
 class _ClosableItem extends _Item {
   _ClosableItem(super.object)
-      : assert(
-          () {
-            try {
-              // Just a comment to self-explanatory code
-              // ignore: avoid-dynamic, avoid-ignoring-return-values
-              (object as dynamic).close;
-              return true;
-            } on NoSuchMethodError {
-              return false;
-            }
-          }(),
-          'The ${object.runtimeType} type must have close() method',
-        );
+    : assert(() {
+        try {
+          // Just a comment to self-explanatory code
+          // ignore: avoid-dynamic, avoid-ignoring-return-values
+          (object as dynamic).close;
+          return true;
+        } on NoSuchMethodError {
+          return false;
+        }
+      }(), 'The ${object.runtimeType} type must have close() method');
 
   @override
   void invoke() {

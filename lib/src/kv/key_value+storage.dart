@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import '../description.dart';
-import '../parser.dart';
+import '../parse_utils.dart';
 import './key_value+other.dart';
 import './key_value+provider.dart';
 
@@ -9,10 +9,9 @@ typedef KeyValueStorageErrorHandler = void Function(KeyValueStorageException err
 
 class KeyValueStorage with DescriptionProvider {
   final KeyValueStorageProvider provider;
-  final Parser parser;
   KeyValueStorageErrorHandler? onError;
 
-  KeyValueStorage({required this.provider, this.parser = Parser.instance, this.onError});
+  KeyValueStorage({required this.provider, this.onError});
 
   void _onError(String message, Object error, StackTrace stackTrace) {
     final e = KeyValueStorageException('$this: $message: $error');
@@ -63,31 +62,25 @@ class KeyValueStorage with DescriptionProvider {
     }
   }
 
-  Future<int?> getInt(String key) => getValue(key, (value) => parser.parseInt(value));
+  Future<int?> getInt(String key) => getValue(key, (value) => ParseUtils.parseInt(value));
   Future<void> setInt(String key, int? value) => setValue(key, value);
 
-  Future<bool?> getBool(String key) => getValue(key, (value) => parser.parseBool(value));
+  Future<bool?> getBool(String key) => getValue(key, (value) => ParseUtils.parseBool(value));
   Future<void> setBool(String key, bool? value) => setValue(key, value);
 
-  Future<String?> getString(String key) => getValue(key, (value) => parser.parseString(value));
+  Future<String?> getString(String key) => getValue(key, (value) => ParseUtils.parseString(value));
   Future<void> setString(String key, String? value) => setValue(key, value);
 
   /// Most common way to organize json objects. This way we move all possible typecasting errors into parsing
-  Future<Map<String, dynamic>?> getJsonMap(String key) => getValue(
-        key,
-        (value) {
-          final s = Parser.instance.parseString(value);
-          final result = jsonDecode(s);
-          return Parser.instance.parseMap(result) as Map<String, dynamic>?;
-        },
-      );
+  Future<Map<String, dynamic>?> getJsonMap(String key) => getValue(key, (value) {
+    final s = ParseUtils.parseString(value);
+    final result = jsonDecode(s);
+    return ParseUtils.parseMap(result) as Map<String, dynamic>?;
+  });
 
-  Future<Object?> getJson(String key) => getValue(
-        key,
-        (value) {
-          return jsonDecode(Parser.instance.parseString(value));
-        },
-      );
+  Future<Object?> getJson(String key) => getValue(key, (value) {
+    return jsonDecode(ParseUtils.parseString(value));
+  });
 
   Future<void> setJson(String key, Object? value) async {
     try {

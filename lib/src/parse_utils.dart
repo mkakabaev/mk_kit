@@ -1,15 +1,7 @@
 import './misc.dart';
 
-class Parser {
-  static const instance = Parser();
-
-  const Parser();
-
-  Map parseMap(
-    Object? value, {
-    bool allowEmpty = true,
-    Map Function()? defaultValue,
-  }) {
+abstract final class ParseUtils {
+  static Map parseMap(Object? value, {bool allowEmpty = true, Map Function()? defaultValue}) {
     final effectiveValue = value ?? defaultValue?.call();
     if (effectiveValue is! Map) {
       throw FormatException("Wrong value '$effectiveValue': a map is expected");
@@ -21,11 +13,7 @@ class Parser {
     return effectiveValue;
   }
 
-  List<T> parseArray<T>(
-    Object? value, {
-    bool allowEmpty = true,
-    List<T> Function()? defaultValue,
-  }) {
+  static List<T> parseList<T>(Object? value, {bool allowEmpty = true, List<T> Function()? defaultValue}) {
     final effectiveValue = value ?? defaultValue?.call();
 
     if (effectiveValue is! List) {
@@ -38,7 +26,7 @@ class Parser {
     return effectiveValue as List<T>;
   }
 
-  bool parseBool(Object? value, {bool? defaultValue}) {
+  static bool parseBool(Object? value, {bool? defaultValue}) {
     bool? result;
     if (value is bool) {
       return value;
@@ -73,15 +61,10 @@ class Parser {
       return result;
     }
 
-    throw FormatException("Wrong value '$value': a boolean is expected");
+    throw FormatException("Wrong value '$value': a boolean value is expected");
   }
 
-  String parseString(
-    Object? value, {
-    bool allowEmpty = true,
-    bool allowInt = false,
-    String? defaultValue,
-  }) {
+  static String parseString(Object? value, {bool allowEmpty = true, bool allowInt = false, String? defaultValue}) {
     String? result;
     if (value is String) {
       result = value;
@@ -101,12 +84,7 @@ class Parser {
     throw FormatException("Wrong value '$value': a string is expected");
   }
 
-  int parseInt(
-    Object? value, {
-    int? defaultValue,
-    int? minValue,
-    int? maxValue,
-  }) {
+  static int parseInt(Object? value, {int? defaultValue, int? minValue, int? maxValue}) {
     int? result;
     if (value == null) {
       result = defaultValue;
@@ -128,12 +106,7 @@ class Parser {
     return result;
   }
 
-  double parseDouble(
-    Object? value, {
-    double? defaultValue,
-    double? minValue,
-    double? maxValue,
-  }) {
+  static double parseDouble(Object? value, {double? defaultValue, double? minValue, double? maxValue}) {
     double? result;
     if (value == null) {
       result = defaultValue;

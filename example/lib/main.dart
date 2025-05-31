@@ -1,76 +1,51 @@
-import 'package:example/column_demo.dart';
-import 'package:example/mdi_demo.dart';
 import 'package:flutter/material.dart';
 
+import 'package:example/column_demo/column_demo.dart';
+
 void main() {
-    runApp(const MyApp());
+  runApp(const MKKitExampleApp());
 }
 
-class MyApp extends StatelessWidget {
-    const MyApp({super.key});
+class MKKitExampleApp extends StatelessWidget {
+  const MKKitExampleApp({super.key});
 
-    @override
-    Widget build(BuildContext context) {
-        var theme = ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-        );
+  @override
+  Widget build(BuildContext context) {
+    var theme = ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple), useMaterial3: true);
+    theme = theme.copyWith(appBarTheme: AppBarTheme(backgroundColor: theme.colorScheme.inversePrimary));
 
-        theme = theme.copyWith(
-            appBarTheme: AppBarTheme(
-                backgroundColor: theme.colorScheme.inversePrimary,
-            ),
-        );
-
-        return MaterialApp(
-            title: 'Flutter Demo',
-            theme: theme,
-            home: const MyHomePage(),
-        );
-    }
+    return MaterialApp(title: 'Flutter Demo', theme: theme, home: const _HomePage());
+  }
 }
 
-class MyHomePage extends StatelessWidget {
-    const MyHomePage({super.key});
+class _HomePage extends StatelessWidget {
+  const _HomePage();
 
-    @override
-    Widget build(BuildContext context) {
-        return Scaffold(
-            appBar: AppBar(
-                title: const Text('mk-kit demo'),
-            ),
-            body: ListView(
-                children: [
-                    MyListTile(title: 'MKColumn', screenBuilder: (_) => const ColumnDemo()),
-                    MyListTile(title: 'MDI', screenBuilder: (_) => const MDIDemo()),
-                ],
-            ),
-        );
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('mk-kit demo')),
+      body: ListView(
+        children: [_ListItem(title: 'MKColumn', screenBuilder: (_) => const ColumnDemo())],
+      ),
+    );
+  }
 }
 
-class MyListTile extends StatelessWidget {
-    const MyListTile({
-        Key? key,
-        required this.title,
-        required this.screenBuilder,
-    }): super(key: key);
+class _ListItem extends StatelessWidget {
+  const _ListItem({required this.title, required this.screenBuilder});
 
-    final String title;
-    final WidgetBuilder screenBuilder;
+  final String title;
+  final WidgetBuilder screenBuilder;
 
-    @override
-    Widget build(BuildContext context) {
-        return ListTile(
-            title: Text(title),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute<dynamic>(
-                        builder: (context) => screenBuilder(context),
-                    ),
-                );
-            },
-        );
-    }
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(title),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute<dynamic>(builder: (context) => screenBuilder(context)));
+      },
+    );
+  }
 }

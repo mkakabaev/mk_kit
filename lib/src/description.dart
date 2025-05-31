@@ -36,20 +36,11 @@ class DescriptionBuilder {
     _items.add(s);
   }
 
-  void add(
-    String name,
-    Object? value, {
-    bool skipEmpty = true,
-    bool quote = false,
-  }) {
+  void add(String name, Object? value, {bool skipEmpty = true, bool quote = false}) {
     _add(name, value, skipEmpty, quote);
   }
 
-  void addValue(
-    Object? value, {
-    bool skipEmpty = true,
-    bool quote = false,
-  }) {
+  void addValue(Object? value, {bool skipEmpty = true, bool quote = false}) {
     _add(null, value, skipEmpty, quote);
   }
 

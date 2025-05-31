@@ -24,8 +24,8 @@ import 'description.dart';
 ///
 /// Starting Dart 3.3 implemented using 'extension type'
 /// Due type unsafety of 'extension type' I had to use pseudo-typing record (T?, Type) to hold the value
-/// Without it CWValue(null) interpret as null,
-/// Instead (T?, Type) record (T?, String) can be used as well and event (T?,)
+/// Without it CWValue(null) is interpreted as null,
+/// Instead (T?, Type) record (T?, String) can be used as well and even (T?,)
 /// After all it gives type checking on CWValue(null)
 
 extension type const CWValue<T extends Object>._((T?, Type) _value) {
@@ -79,8 +79,9 @@ T safeMapValue<T>(Object? map, String key, T defaultValue) {
   return defaultValue;
 }
 
-bool isEmpty(Object? value) {
+// ------------------------------------------------------------------------------------------------
 
+bool isEmpty(Object? value) {
   if (value == null) {
     return true;
   }
@@ -111,6 +112,9 @@ abstract interface class CanBeEmpty {
   bool get isNotEmpty => !isEmpty;
 }
 
+
+// ------------------------------------------------------------------------------------------------
+
 String? stringify(Object? value) {
   if (value == null) {
     return null;
@@ -127,14 +131,14 @@ String? stringify(Object? value) {
   return '$value';
 }
 
+// ------------------------------------------------------------------------------------------------
+
 ///
 /// Tagged (or branded) type concept, similar to TypeScript's branded types.
 ///
 /// In most cases it is better to use the new 'extension type' feature (Dart 3.3+)
 /// ```
-///     extension type MyType(T id) {
-///
-///     }
+///    extension type MyType(T id) { }///
 /// ```
 ///
 abstract class TaggedType<T extends Object> with DescriptionProvider {

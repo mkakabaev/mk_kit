@@ -7,6 +7,9 @@ include: package:flutter_lints/flutter.yaml
 # analyzer:
 #   plugins:
 
+formatter:
+  page_width: 120
+
 dart_code_metrics:
   extends:
     # - recommended

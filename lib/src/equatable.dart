@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
+// Outdated. Use standard `Equatable` package instead.
+
 mixin EquatableProps {
   @protected
   final equatableProps = <Object?>[];

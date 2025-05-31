@@ -1,12 +1,14 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'multi_child_layout.dart';
-import 'spacer.dart';
+import 'package:collection/collection.dart';
+
+import '../multi_child_layout/multi_child_layout.dart';
+
+import 'column_spacer.dart';
 
 // cSpell: words Diagnosticable trackpad
 
@@ -14,10 +16,7 @@ import 'spacer.dart';
 class MKColumn extends StatelessWidget {
   final List<Widget> children;
 
-  const MKColumn({
-    super.key,
-    required this.children,
-  });
+  const MKColumn({super.key, required this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -34,28 +33,19 @@ class MKColumn extends StatelessWidget {
             },
           ),
           child: SingleChildScrollView(
-            child: MKMultiChildLayout<int, _Data>(
-              delegate: _LayoutDelegate(
-                viewportHeight: constraints.maxHeight,
-              ),
+            child: MKMultiChildLayout<int>(
+              delegate: _LayoutDelegate(viewportHeight: constraints.maxHeight),
               // Does not worth to optimize these little lists
               // ignore: avoid-slow-collection-methods
               children: children.mapIndexed((index, child) {
-                if (child is MKSpacer) {
+                if (child is MKColumnSpacer) {
                   return MKLayoutId(
                     id: index,
-                    data: _Data(
-                      height: child.height,
-                      minHeight: child.minHeight,
-                      isExpandable: child.isExpandable,
-                    ),
+                    data: _Data(height: child.height, minHeight: child.minHeight, isExpandable: child.isExpandable),
                     child: child.child ?? const SizedBox(),
                   );
                 }
-                return MKLayoutId<int, _Data>(
-                  id: index,
-                  child: child,
-                );
+                return MKLayoutId(id: index, child: child);
               }).toList(),
             ),
           ),
@@ -70,11 +60,7 @@ class _Data with Diagnosticable {
   final double height;
   final double minHeight;
   final bool isExpandable;
-  const _Data({
-    required this.height,
-    required this.minHeight,
-    required this.isExpandable,
-  });
+  const _Data({required this.height, required this.minHeight, required this.isExpandable});
 
   @override
   String toStringShort() => '_MKColumnData';
@@ -89,7 +75,7 @@ class _Data with Diagnosticable {
 }
 
 class _LayoutInfo {
-  final MKChildLayout<int, _Data> child;
+  final MKChildLayout<int> child;
   double height = 0.0;
   double minHeight = 0.0;
   bool isHandled = false;
@@ -97,18 +83,17 @@ class _LayoutInfo {
 }
 
 @immutable
-class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<int, _Data> {
+class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<int> {
   final double viewportHeight;
 
-  const _LayoutDelegate({
-    required this.viewportHeight,
-  });
+  const _LayoutDelegate({required this.viewportHeight});
 
   @override
-  Size performLayout(Map<int, MKChildLayout<int, _Data>> children, BoxConstraints constraints) {
+  Size performLayout(Map<int, MKChildLayout<int>> children, BoxConstraints constraints) {
     // If we have at least one expandable item then all non-expandable spacers have
     // minimum height (i.e. they can be considered as regular 'fixed-size' elements)
-    final expandableEnvironment = children.values.firstWhereOrNull((e) => e.data?.isExpandable == true) != null;
+    final expandableEnvironment =
+        children.values.firstWhereOrNull((e) => (e.data as _Data?)?.isExpandable == true) != null;
 
     // Enumerate items, layout fixed ones and collect spacers (expandable and not)
     final allLayouts = <_LayoutInfo>[];
@@ -128,7 +113,7 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
         return;
       }
 
-      final _Data(:minHeight, :isExpandable, :height) = data;
+      final _Data(:minHeight, :isExpandable, :height) = data as _Data;
 
       // Non-expandable spacer in expandable environment (there are expandable spacers in the column).
       // Consider it as a regular widget with a fixed height (and layout).
