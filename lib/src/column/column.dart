@@ -36,7 +36,6 @@ class MKColumn extends StatelessWidget {
             child: MKMultiChildLayout<int>(
               delegate: _LayoutDelegate(viewportHeight: constraints.maxHeight),
               // Does not worth to optimize these little lists
-              // ignore: avoid-slow-collection-methods
               children: children.mapIndexed((index, child) {
                 if (child is MKColumnSpacer) {
                   return MKLayoutId(
@@ -122,8 +121,6 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
         final sz = child.layout(
           maxWidth: constraints.maxWidth,
           minHeight: minHeight,
-          // Not an error
-          // ignore: no-equal-arguments
           maxHeight: minHeight,
         );
         layout.height = sz.height;
@@ -189,8 +186,6 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
       final _ = layout.child.layout(
         maxWidth: constraints.maxWidth,
         minHeight: layout.height,
-        // Not an error
-        // ignore: no-equal-arguments
         maxHeight: layout.height,
       );
     }

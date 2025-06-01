@@ -1,5 +1,3 @@
-// ignore_for_file: no-magic-number, prefer-test-matchers
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mk_kit/mk_kit.dart';
 

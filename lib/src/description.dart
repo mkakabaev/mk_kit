@@ -76,8 +76,6 @@ mixin DescriptionProvider {
     return sb();
   }
 
-  // ..Comment to make analyzer happy..
-  // ignore: avoid-unused-parameters
   void configureDescription(DescriptionBuilder db) {
     // nothing in the base
   }

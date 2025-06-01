@@ -137,7 +137,7 @@ class _DisposableItem extends _Item {
     : assert(() {
         try {
           // Just a comment to self-explanatory code
-          // ignore: avoid-dynamic, avoid-ignoring-return-values
+          // ignore: avoid-dynamic
           (object as dynamic).dispose;
           return true;
         } on NoSuchMethodError {
@@ -150,7 +150,7 @@ class _DisposableItem extends _Item {
     _logger(() => 'Disposing $object...');
     try {
       // Just a comment to self-explanatory code
-      // ignore: avoid-dynamic, avoid-ignoring-return-values
+      // ignore: avoid-dynamic
       (object as dynamic).dispose();
     } on NoSuchMethodError {
       _logger(() => "The '${object.runtimeType}' type has no dispose() method");
@@ -165,8 +165,7 @@ class _SubscriptionItem extends _Item<StreamSubscription> {
   void invoke() {
     _logger(() => 'Canceling $object...');
 
-    // In rare cases when you really need await here not not use DisposeBag at all
-    // ignore: avoid-async-call-in-sync-function
+    // In rare cases when you really need await here do not use DisposeBag at all
     object.cancel();
   }
 }
@@ -176,7 +175,7 @@ class _ClosableItem extends _Item {
     : assert(() {
         try {
           // Just a comment to self-explanatory code
-          // ignore: avoid-dynamic, avoid-ignoring-return-values
+          // ignore: avoid-dynamic
           (object as dynamic).close;
           return true;
         } on NoSuchMethodError {
@@ -188,8 +187,7 @@ class _ClosableItem extends _Item {
   void invoke() {
     _logger(() => 'Closing $object...');
     try {
-      // Just a comment to self-explanatory code
-      // ignore: avoid-dynamic, avoid-ignoring-return-values
+      // ignore: avoid-dynamic
       (object as dynamic).close();
     } on NoSuchMethodError {
       _logger(() => "The '${object.runtimeType}' type has no close() method");

@@ -44,7 +44,7 @@ class _ListItem extends StatelessWidget {
       title: Text(title),
       trailing: const Icon(Icons.chevron_right),
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute<dynamic>(builder: (context) => screenBuilder(context)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => screenBuilder(context)));
       },
     );
   }

@@ -1,4 +1,6 @@
-include: package:flutter_lints/flutter.yaml
+include: 
+    - package:flutter_lints/flutter.yaml
+    - dcm_options.yaml
 
 # cSpell: disable
 # Additional information about this file can be found at
@@ -10,48 +12,8 @@ include: package:flutter_lints/flutter.yaml
 formatter:
   page_width: 120
 
-dart_code_metrics:
-  extends:
-    # - recommended
-    - package:dart_code_metrics_presets/all.yaml
-  metrics:
-    cyclomatic-complexity: 20
-    maximum-nesting-level: 5
-    number-of-parameters: 4
-    source-lines-of-code: 50
-  rules:
-    avoid-nullable-interpolation: false
-    unnecessary-trailing-comma: false
-    no-empty-block: false
-    prefer-match-file-name: false
-    avoid-renaming-representation-getters: false
-    prefer-correct-callback-field-name: false
-    prefer-single-widget-per-file: false
-    member-ordering: false
-    prefer-correct-identifier-length: false
-    newline-before-return: false
-    format-comment: false
-    avoid-positional-record-field-access: false
-    parameters-ordering: false
-    avoid-long-functions: false
-    prefer-type-over-var: false
-    prefer-static-class: false
-    avoid-collection-mutating-methods: false
-    prefer-returning-conditional-expressions: false
-    prefer-conditional-expressions: false
-    prefer-single-declaration-per-file: false
-    prefer-named-boolean-parameters: false
-    avoid-declaring-call-method: false
-    no-magic-string: false
-    prefer-typedefs-for-callbacks: false
-    prefer-correct-switch-length: false
-    arguments-ordering: false
-    prefer-correct-error-name: false
-    avoid-long-parameter-list: false
-    prefer-widget-private-members: false
-    
-
 linter:
   rules:
     always_use_package_imports: false
     file_names: false
+    strict_top_level_inference: false

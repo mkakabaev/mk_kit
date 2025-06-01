@@ -28,8 +28,6 @@ class MKMultiChildLayout<ID extends Object> extends MultiChildRenderObjectWidget
   }
 
   @override
-  // ..a comment to make analyzer happy..
-  // ignore: consistent-update-render-object
   void updateRenderObject(BuildContext context, RenderObject renderObject) {
     (renderObject as _RenderLayout).setDelegate(delegate, isOpaqueToHits, shouldClip);
   }
@@ -65,8 +63,6 @@ class _RenderLayout<ID extends Object> extends RenderBox
   @override
   void setupParentData(RenderBox child) {
     if (child.parentData is! MKMultiChildLayoutParentData<ID>) {
-      // ..a comment to make analyzer happy..
-      // ignore: avoid-mutating-parameters
       child.parentData = MKMultiChildLayoutParentData<ID>();
     }
   }
@@ -146,8 +142,6 @@ class _RenderLayout<ID extends Object> extends RenderBox
     // Checking for missed layouts
     // MKTODO: remove this check? Allow to skip some layouts?
     assert(() {
-      // ..Comment to make analyzer happy..
-      // ignore: avoid-accessing-other-classes-private-members
       final missedLayouts = childMap.keys.where((key) => childMap[key]?.laidOut == false);
       if (missedLayouts.isNotEmpty) {
         throw FlutterError.fromParts([
