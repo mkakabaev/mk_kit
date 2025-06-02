@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'multi_child_layout.dart';
-import 'parent_data.dart';
+import 'multi_child_layout_parent_data.dart';
 
 ///
 /// Similar to [LayoutId] but with additional padding and data properties.

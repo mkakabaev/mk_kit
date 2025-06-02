@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'key_value+provider.dart';
+import 'key_value_storage_provider.dart';
 
 class PreferencesStorageProvider implements KeyValueStorageProvider {
   SharedPreferences? _backedStorage;

@@ -11,10 +11,13 @@ class MKKitExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple), useMaterial3: true);
-    theme = theme.copyWith(appBarTheme: AppBarTheme(backgroundColor: theme.colorScheme.inversePrimary));
+    final baseTheme = ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple), useMaterial3: true);
 
-    return MaterialApp(title: 'Flutter Demo', theme: theme, home: const _HomePage());
+    return MaterialApp(
+      title: 'MK-Kit Demo',
+      theme: baseTheme.copyWith(appBarTheme: AppBarTheme(backgroundColor: baseTheme.colorScheme.inversePrimary)),
+      home: const _HomePage(),
+    );
   }
 }
 

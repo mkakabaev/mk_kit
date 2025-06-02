@@ -3,7 +3,7 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/foundation.dart';
 
-import 'description.dart';
+import 'description_builder.dart';
 
 // cSpell: ignore closable, Diagnosticable, closables
 
@@ -121,7 +121,8 @@ mixin DisposeBagHolder implements Disposable {
 
 abstract interface class _Item<T extends Object> with Diagnosticable {
   final T object;
-  _Item(this.object);
+  
+  const _Item(this.object);
 
   void invoke();
 
@@ -159,7 +160,7 @@ class _DisposableItem extends _Item {
 }
 
 class _SubscriptionItem extends _Item<StreamSubscription> {
-  _SubscriptionItem(super.object);
+  const _SubscriptionItem(super.object);
 
   @override
   void invoke() {

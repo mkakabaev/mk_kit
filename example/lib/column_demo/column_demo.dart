@@ -4,23 +4,8 @@ import 'package:mk_kit/mk_kit.dart';
 
 import 'splitter.dart';
 
-class ColumnDemo extends StatefulWidget {
+class ColumnDemo extends StatelessWidget {
   const ColumnDemo({super.key});
-
-  @override
-  State createState() => _ColumnDemoState();
-}
-
-class _ColumnDemoState extends State<ColumnDemo> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +13,7 @@ class _ColumnDemoState extends State<ColumnDemo> {
       appBar: AppBar(title: const Text('Column Demo')),
       body: Splitter(
         top: MKColumn(
-          children: <Widget>[
+          children: [
             FixedHeightChild(color: Colors.green, height: 120.0),
 
             MKColumnSpacer(
@@ -56,6 +41,7 @@ class _ColumnDemoState extends State<ColumnDemo> {
               padding: const EdgeInsets.all(20),
               child: TextField(
                 decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'TextField'),
+                onChanged: (_) {},
               ),
             ),
 

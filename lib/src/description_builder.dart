@@ -76,7 +76,7 @@ mixin DescriptionProvider {
     return sb();
   }
 
-  void configureDescription(DescriptionBuilder db) {
+  void configureDescription(DescriptionBuilder _) {
     // nothing in the base
   }
 }

@@ -9,7 +9,6 @@
 # packages, and plugins designed to encourage good coding practices.
 include: 
   - package:flutter_lints/flutter.yaml
-  - ../dcm_options.yaml
 
 linter:
   # The lint rules applied to this project can be customized in the
@@ -32,3 +31,16 @@ linter:
 
 formatter:
   page_width: 120
+
+dart_code_metrics:
+  extends:
+    # - recommended
+    - package:dart_code_metrics_presets/all.yaml
+  rules:
+    no-magic-number: false
+    prefer-single-widget-per-file: false
+    member-ordering: false
+    prefer-match-file-name: false
+    avoid-shadowing: false
+    newline-before-return: false
+    no-empty-block: false

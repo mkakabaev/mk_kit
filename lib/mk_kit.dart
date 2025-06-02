@@ -1,10 +1,10 @@
-export 'src/description.dart';
+export 'src/description_builder.dart';
 export 'src/disposable.dart';
 export 'src/equatable.dart';
-export 'src/kv/key_value+memory_provider.dart';
-export 'src/kv/key_value+other.dart';
-export 'src/kv/key_value+provider.dart';
-export 'src/kv/key_value+storage.dart';
+export 'src/kv/memory_storage_provider.dart';
+export 'src/kv/key_value_storage_exception.dart';
+export 'src/kv/key_value_storage_provider.dart';
+export 'src/kv/key_value_storage.dart';
 export 'src/kv/preferences_storage_provider.dart';
 export 'src/kv/secure_storage_provider.dart';
 export 'src/misc.dart';

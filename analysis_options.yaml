@@ -1,6 +1,5 @@
 include: 
     - package:flutter_lints/flutter.yaml
-    - dcm_options.yaml
 
 # cSpell: disable
 # Additional information about this file can be found at
@@ -14,6 +13,19 @@ formatter:
 
 linter:
   rules:
-    always_use_package_imports: false
     file_names: false
-    strict_top_level_inference: false
+
+dart_code_metrics:
+  extends:
+    # - recommended
+    - package:dart_code_metrics_presets/all.yaml
+  rules:    
+    avoid-nullable-interpolation: false
+    avoid-shadowing: false
+    member-ordering: false
+    newline-before-return: false
+    no-empty-block: false
+    no-magic-number: false
+    prefer-conditional-expressions: false
+    prefer-correct-callback-field-name: false
+    prefer-match-file-name: false

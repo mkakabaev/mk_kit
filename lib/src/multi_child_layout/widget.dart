@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'child_layout.dart';
-import 'delegate.dart';
+import 'multi_child_layout_delegate.dart';
 import 'layout_id.dart';
-import 'parent_data.dart';
+import 'multi_child_layout_parent_data.dart';
 
 ///
 /// Extended version of [CustomMultiChildLayout] that allows to layout children
@@ -28,6 +28,7 @@ class MKMultiChildLayout<ID extends Object> extends MultiChildRenderObjectWidget
   }
 
   @override
+  // ignore: consistent-update-render-object
   void updateRenderObject(BuildContext context, RenderObject renderObject) {
     (renderObject as _RenderLayout).setDelegate(delegate, isOpaqueToHits, shouldClip);
   }

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import '../description.dart';
+import '../description_builder.dart';
 import '../parse_utils.dart';
-import './key_value+other.dart';
-import './key_value+provider.dart';
+import 'key_value_storage_exception.dart';
+import 'key_value_storage_provider.dart';
 
 typedef KeyValueStorageErrorHandler = void Function(KeyValueStorageException error, StackTrace stackTrace);
 

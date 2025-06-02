@@ -1,4 +1,4 @@
-import 'description.dart';
+import 'description_builder.dart';
 
 ///
 /// Helper to pass nullable value to copyWith() method oif a class.
@@ -28,12 +28,12 @@ import 'description.dart';
 /// Instead (T?, Type) record (T?, String) can be used as well and even (T?,)
 /// After all it gives type checking on CWValue(null)
 
-extension type const CWValue<T extends Object>._((T?, Type) _value) {
+extension type const CWValue<T extends Object>._((T?, Type) _value) implements Object {
   const CWValue(T? value) : this._((value, T));
 
   static T? resolve<T extends Object>(CWValue<T>? v, T? originalValue) => v == null ? originalValue : v._value.$1;
 
-  T? get value => _value.$1;
+  T? get value => _value.$1; // ignore: avoid-renaming-representation-getters
 
   static CWValue<T>? diffOnly<T extends Object>(T? valueFrom, T? valueTo) {
     return valueFrom == valueTo ? null : CWValue(valueTo);
@@ -111,7 +111,6 @@ abstract interface class CanBeEmpty {
   bool get isEmpty;
   bool get isNotEmpty => !isEmpty;
 }
-
 
 // ------------------------------------------------------------------------------------------------
 

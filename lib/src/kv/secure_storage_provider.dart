@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import './key_value+provider.dart';
+import 'key_value_storage_provider.dart';
 
 class SecureStorageProvider implements KeyValueStorageProvider {
   final FlutterSecureStorage _backedStorage;

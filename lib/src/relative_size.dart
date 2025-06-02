@@ -2,26 +2,29 @@ import 'package:flutter/material.dart';
 
 import 'multi_child_layout/multi_child_layout.dart';
 
-abstract class ReferencedSizeRule {
-  ({double minSize, double maxSize})? getSize(double extent);
+typedef ReferencedSizeRuleResult = ({double minSize, double maxSize})?;
 
-  static const none = _DelegatedRule(_none);
-  static const exact = _DelegatedRule(_exact);
+abstract class ReferencedSizeRule {
+  ReferencedSizeRuleResult getSize(double extent);
+
+  static const none = _CustomRule(_none);
+  static const exact = _CustomRule(_exact);
 }
 
 // ------------------------------------------------------------------------------------------------
 
-class _DelegatedRule implements ReferencedSizeRule {
-  final ({double minSize, double maxSize})? Function(double extent) callback;
+class _CustomRule implements ReferencedSizeRule {
+  final ReferencedSizeRuleResult Function(double extent) _callback;
 
-  const _DelegatedRule(this.callback);
+  const _CustomRule(this._callback);
 
   @override
-  ({double minSize, double maxSize})? getSize(double extent) => callback(extent);
+  ReferencedSizeRuleResult? getSize(double extent) => _callback(extent);
 }
 
-({double minSize, double maxSize})? _none(_) => null;
-({double minSize, double maxSize})? _exact(size) => (maxSize: size, minSize: size);
+ReferencedSizeRuleResult _none(_) => null;
+
+ReferencedSizeRuleResult _exact(double size) => (maxSize: size, minSize: size);
 
 // ------------------------------------------------------------------------------------------------
 
