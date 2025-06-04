@@ -1,13 +1,13 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
-// Outdated. Use standard `Equatable` package instead.
+import 'package:collection/collection.dart';
 
+///
+/// Outdated. Use standard `equatable` package instead.
+///
 mixin EquatableProps {
   @protected
-  final equatableProps = <Object?>[];
-
-  static const _kEquality = DeepCollectionEquality();
+  List<Object?> get equatableProps;
 
   @override
   int get hashCode {
@@ -26,8 +26,4 @@ mixin EquatableProps {
   }
 }
 
-class EquatableObject with EquatableProps {
-  EquatableObject(Iterable<Object?> equatableProps) {
-    this.equatableProps.addAll(equatableProps);
-  }
-}
+const _kEquality = DeepCollectionEquality();

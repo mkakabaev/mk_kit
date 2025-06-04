@@ -14,3 +14,5 @@ export 'src/misc.dart';
 export 'src/multi_child_layout/multi_child_layout.dart';
 export 'src/parse_utils.dart';
 export 'src/referenced_size.dart';
+export 'src/value_state.dart';
+export 'src/cw_value.dart';
