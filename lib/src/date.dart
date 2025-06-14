@@ -19,9 +19,15 @@ extension type const MKDate._(int _value) implements Object {
 
   DateTime toLocalDateTime() => DateTime(year, month, day);
 
-  int get daysInMonth => _daysInMonth(year, month);
+  MKDate firstOfMonth() => MKDate._fromYMD(year, month, 1);
 
-  MKDate firstOfMonth() => MKDate._((_value ~/ 100) * 100 + 1);
+  MKDate lastOfMonth() {
+    final year = this.year;
+    final month = this.month;
+    return MKDate._fromYMD(year, month, _daysInMonth(year, month));
+  }
+
+  int get daysInMonth => _daysInMonth(year, month);
 
   MKDate addedMonths(int monthCount) {
     if (monthCount == 0) {
@@ -101,6 +107,8 @@ extension type const MKDate._(int _value) implements Object {
 
   bool isBefore(MKDate other) => _value < other._value;
 
+  bool isSameDay(MKDate other) => _value == other._value;
+
   bool operator <=(MKDate other) => _value <= other._value;
 
   bool operator <(MKDate other) => _value < other._value;
@@ -148,4 +156,8 @@ extension MKDateRangeExt on MKDateRange {
   bool contains(MKDate date) => start <= date && date <= end;
 
   bool intersects(MKDateRange other) => start <= other.end && end >= other.start;
+
+  bool get isSingleDay => start == end;
+
+  int get length => end.difference(start) + 1;
 }

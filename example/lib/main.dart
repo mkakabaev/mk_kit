@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:example/column_demo/column_demo.dart';
+import 'package:mk_kit/mk_kit.dart';
+
+import 'column_demo/column_demo.dart';
+import 'responsive_demo/responsive_demo.dart';
 
 void main() {
   runApp(const MKKitExampleApp());
@@ -12,11 +15,12 @@ class MKKitExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseTheme = ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple), useMaterial3: true);
-
-    return MaterialApp(
-      title: 'MK-Kit Demo',
-      theme: baseTheme.copyWith(appBarTheme: AppBarTheme(backgroundColor: baseTheme.colorScheme.inversePrimary)),
-      home: const _HomePage(),
+    return Responsive(
+      child: MaterialApp(
+        title: 'MK-Kit Demo',
+        theme: baseTheme.copyWith(appBarTheme: AppBarTheme(backgroundColor: baseTheme.colorScheme.inversePrimary)),
+        home: const _HomePage(),
+      ),
     );
   }
 }
@@ -29,7 +33,10 @@ class _HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('mk-kit demo')),
       body: ListView(
-        children: [_ListItem(title: 'MKColumn', screenBuilder: (_) => const ColumnDemo())],
+        children: [
+          _ListItem(title: 'MKColumn', screenBuilder: (_) => const ColumnDemo()),
+          _ListItem(title: 'Responsive', screenBuilder: (_) => const ResponsiveDemo()),
+        ],
       ),
     );
   }

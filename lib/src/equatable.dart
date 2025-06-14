@@ -27,3 +27,16 @@ mixin EquatableProps {
 }
 
 const _kEquality = DeepCollectionEquality();
+
+///
+/// Helper wrapper to make object equatable in records. Useful for selectors to wrap collections.
+///
+class EQValue<T> with EquatableProps {
+  final T value;
+
+  const EQValue(this.value);
+
+  @override
+  List<Object?> get equatableProps => [value];
+}
+

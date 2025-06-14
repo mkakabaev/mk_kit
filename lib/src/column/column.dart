@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:collection/collection.dart';
 
@@ -118,11 +118,7 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
       // Consider it as a regular widget with a fixed height (and layout).
       // Min height is used have because we are in expandable environment and have to be compacted
       if (expandableEnvironment && !isExpandable) {
-        final sz = child.layout(
-          maxWidth: constraints.maxWidth,
-          minHeight: minHeight,
-          maxHeight: minHeight,
-        );
+        final sz = child.layout(maxWidth: constraints.maxWidth, minHeight: minHeight, maxHeight: minHeight);
         layout.height = sz.height;
         fixedHeight += sz.height;
         return;
@@ -183,11 +179,7 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
 
     // Layout spacers finally
     for (final layout in spacerLayouts) {
-      final _ = layout.child.layout(
-        maxWidth: constraints.maxWidth,
-        minHeight: layout.height,
-        maxHeight: layout.height,
-      );
+      final _ = layout.child.layout(maxWidth: constraints.maxWidth, minHeight: layout.height, maxHeight: layout.height);
     }
 
     var contentHeight = 0.0;

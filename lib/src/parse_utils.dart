@@ -127,4 +127,18 @@ abstract final class ParseUtils {
     }
     return result;
   }
+
+  static T parseValue<T>(Object? v, T defaultValue) {
+    return v is T ? v : defaultValue;
+  }
+
+  static T parseMapValue<T>(Object? map, String key, T defaultValue) {
+    if (map is Map) {
+      final v = map[key];
+      if (v is T) {
+        return v;
+      }
+    }
+    return defaultValue;
+  }
 }

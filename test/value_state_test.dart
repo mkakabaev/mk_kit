@@ -1,4 +1,4 @@
-// ignore_for_file: avoid-duplicate-initializers, avoid-unnecessary-reassignment, avoid-duplicate-test-assertions
+// ignore_for_file: avoid-duplicate-initializers, avoid-duplicate-test-assertions
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mk_kit/mk_kit.dart';

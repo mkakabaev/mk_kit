@@ -29,3 +29,7 @@ dart_code_metrics:
     prefer-conditional-expressions: false
     prefer-correct-callback-field-name: false
     prefer-match-file-name: false
+    avoid-top-level-members-in-tests: false
+    prefer-single-widget-per-file: false
+    avoid-unnecessary-reassignment: false
+    unnecessary-trailing-comma: false

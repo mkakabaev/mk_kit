@@ -1,5 +1,6 @@
+import 'package:flutter/painting.dart';
+
 import 'description_builder.dart';
-import 'equatable.dart';
 
 ///
 /// A simple wrapper to hold (and change) value. Use to mimic 'out' function parameters in Dart:
@@ -9,32 +10,6 @@ import 'equatable.dart';
 class ValueRef<T> {
   T value;
   ValueRef(this.value);
-}
-
-///
-/// Helper wrapper to make object equatable in records, useful for selectors to wrap collections
-///
-class EQValue<T> with EquatableProps {
-  final T value;
-
-  const EQValue(this.value);
-
-  @override
-  List<Object?> get equatableProps => [value];
-}
-
-T safe<T>(Object? v, T defaultValue) {
-  return v is T ? v : defaultValue;
-}
-
-T safeMapValue<T>(Object? map, String key, T defaultValue) {
-  if (map is Map) {
-    final v = map[key];
-    if (v is T) {
-      return v;
-    }
-  }
-  return defaultValue;
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -95,7 +70,7 @@ String? stringify(Object? value) {
 ///
 /// In most cases it is better to use the new 'extension type' feature (Dart 3.3+)
 /// ```
-///    extension type MyType(T id) { }///
+///    extension type MyType(T id) { }
 /// ```
 ///
 abstract class TaggedType<T extends Object> with DescriptionProvider {
@@ -123,6 +98,15 @@ abstract class TaggedType<T extends Object> with DescriptionProvider {
 
   @override
   void configureDescription(DescriptionBuilder db) {
-    db.addValue(value, quote: value is String);
+    db.addValue(value, isQuoted: value is String);
   }
+}
+
+extension MKEdgeInsets on EdgeInsets {
+  EdgeInsets getScaled(double scale) => EdgeInsets.fromLTRB(
+    (left * scale).roundToDouble(),
+    (top * scale).roundToDouble(),
+    (right * scale).roundToDouble(),
+    (bottom * scale).roundToDouble(),
+  );
 }

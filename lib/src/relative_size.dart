@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'multi_child_layout/multi_child_layout.dart';
 
-typedef ReferencedSizeRuleResult = ({double minSize, double maxSize})?;
+typedef RelativeSizeRuleResult = ({double minSize, double maxSize})?;
 
-abstract class ReferencedSizeRule {
-  ReferencedSizeRuleResult getSize(double extent);
+abstract class RelativeSizeRule {
+  RelativeSizeRuleResult getSize(double extent);
 
   static const none = _CustomRule(_none);
   static const exact = _CustomRule(_exact);
@@ -13,33 +13,33 @@ abstract class ReferencedSizeRule {
 
 // ------------------------------------------------------------------------------------------------
 
-class _CustomRule implements ReferencedSizeRule {
-  final ReferencedSizeRuleResult Function(double extent) _callback;
+class _CustomRule implements RelativeSizeRule {
+  final RelativeSizeRuleResult Function(double extent) _callback;
 
   const _CustomRule(this._callback);
 
   @override
-  ReferencedSizeRuleResult? getSize(double extent) => _callback(extent);
+  RelativeSizeRuleResult? getSize(double extent) => _callback(extent);
 }
 
-ReferencedSizeRuleResult _none(_) => null;
+RelativeSizeRuleResult _none(_) => null;
 
-ReferencedSizeRuleResult _exact(double size) => (maxSize: size, minSize: size);
+RelativeSizeRuleResult _exact(double size) => (maxSize: size, minSize: size);
 
 // ------------------------------------------------------------------------------------------------
 
-class ReferencedSize extends StatelessWidget {
+class RelativeSizeWidget extends StatelessWidget {
   final Widget child;
-  final Widget referenceWidget;
-  final ReferencedSizeRule vertical;
-  final ReferencedSizeRule horizontal;
+  final Widget relativeWidget;
+  final RelativeSizeRule vertical;
+  final RelativeSizeRule horizontal;
 
-  const ReferencedSize({
+  const RelativeSizeWidget({
     super.key,
-    required this.referenceWidget,
+    required this.relativeWidget,
     required this.child,
-    this.vertical = ReferencedSizeRule.none,
-    this.horizontal = ReferencedSizeRule.none,
+    this.vertical = RelativeSizeRule.none,
+    this.horizontal = RelativeSizeRule.none,
   });
 
   @override
@@ -47,31 +47,31 @@ class ReferencedSize extends StatelessWidget {
     return MKMultiChildLayout<_LayoutID>(
       delegate: _Delegate(vertical: vertical, horizontal: horizontal),
       children: [
-        MKLayoutId.keyed(id: _LayoutID.reference, key: const ValueKey(_LayoutID.reference), child: referenceWidget),
+        MKLayoutId.keyed(id: _LayoutID.relative, key: const ValueKey(_LayoutID.relative), child: relativeWidget),
         MKLayoutId.keyed(id: _LayoutID.child, key: const ValueKey(_LayoutID.child), child: child),
       ],
     );
   }
 }
 
-enum _LayoutID { reference, child }
+enum _LayoutID { relative, child }
 
 class _Delegate extends MKMultiChildLayoutDelegate<_LayoutID> {
-  final ReferencedSizeRule vertical;
-  final ReferencedSizeRule horizontal;
+  final RelativeSizeRule vertical;
+  final RelativeSizeRule horizontal;
 
   const _Delegate({required this.vertical, required this.horizontal});
 
   @override
   Size performLayout(Map<_LayoutID, MKChildLayout> childLayouts, BoxConstraints constraints) {
-    final reference = childLayouts[_LayoutID.reference]!;
-    reference.layoutConstrained(constraints);
-    reference.shouldPaint = false;
-    final refSize = reference.size;
+    final relative = childLayouts[_LayoutID.relative]!;
+    relative.layoutConstrained(constraints);
+    relative.shouldPaint = false;
+    final relSize = relative.size;
 
     final child = childLayouts[_LayoutID.child]!;
-    final h = horizontal.getSize(refSize.width);
-    final v = vertical.getSize(refSize.height);
+    final h = horizontal.getSize(relSize.width);
+    final v = vertical.getSize(relSize.height);
     final childSize = child.layout(
       minWidth: h == null ? constraints.minWidth : h.minSize,
       maxWidth: h == null ? constraints.maxWidth : h.maxSize,

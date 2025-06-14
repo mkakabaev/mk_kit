@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import 'description_builder.dart';
 
-// cSpell: ignore closable, Diagnosticable, closables
+// cSpell: ignore closable, closables
 
 abstract interface class Disposable {
   void dispose();
@@ -63,7 +63,7 @@ class DisposeBag with DescriptionProvider, Diagnosticable implements Disposable 
 
   @override
   void configureDescription(DescriptionBuilder db) {
-    db.addValue(name, quote: true);
+    db.addValue(name, isQuoted: true);
   }
 
   @override
@@ -121,7 +121,7 @@ mixin DisposeBagHolder implements Disposable {
 
 abstract interface class _Item<T extends Object> with Diagnosticable {
   final T object;
-  
+
   const _Item(this.object);
 
   void invoke();

@@ -14,23 +14,23 @@ class ColumnDemo extends StatelessWidget {
       body: Splitter(
         top: MKColumn(
           children: [
-            FixedHeightChild(color: Colors.green, height: 120.0),
+            const FixedHeightChild(color: Colors.green, height: 120.0),
 
-            MKColumnSpacer(
+            const MKColumnSpacer(
               minHeight: 20,
               height: 40,
               isExpandable: true,
               child: SpacerChild(color: Colors.red, label: 'Expandable 40(>=20)'),
             ),
 
-            MKColumnSpacer(
+            const MKColumnSpacer(
               height: 80,
               minHeight: 40,
               isExpandable: true,
               child: SpacerChild(color: Colors.yellow, label: 'Expandable 80(>=40)'),
             ),
 
-            MKColumnSpacer(
+            const MKColumnSpacer(
               height: 100,
               minHeight: 0,
               isExpandable: true,
@@ -40,20 +40,20 @@ class ColumnDemo extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(20),
               child: TextField(
-                decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'TextField'),
+                decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'TextField'),
                 onChanged: (_) {},
               ),
             ),
 
-            MKColumnSpacer(
+            const MKColumnSpacer(
               height: 60,
               minHeight: 60,
               child: SpacerChild(color: Colors.amber, label: '==60'),
             ),
 
-            FixedHeightChild(color: Colors.green, height: 120.0),
+            const FixedHeightChild(color: Colors.green, height: 120.0),
             // const MKSpacer(height: 50, minHeight: 16,),
-            FixedHeightChild(color: Colors.orange, height: 20.0),
+            const FixedHeightChild(color: Colors.orange, height: 20.0),
           ],
         ),
         bottomPanel: Container(),

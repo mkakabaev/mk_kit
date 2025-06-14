@@ -6,23 +6,24 @@ import 'multi_child_layout_parent_data.dart';
 
 ///
 /// Similar to [LayoutId] but with additional padding and data properties.
-/// 
-class MKLayoutId<ID extends Object>
-    extends ParentDataWidget<MKMultiChildLayoutParentData<ID>> {
+///
+class MKLayoutId<ID extends Object> extends ParentDataWidget<MKMultiChildLayoutParentData<ID>> {
   final ID id;
   final EdgeInsets padding;
 
   // Any external data to be passed to the layout.
   final Object? data;
 
-  const MKLayoutId.keyed({required this.id, required super.child, this.padding = EdgeInsets.zero, this.data, super.key});
-
-  MKLayoutId({
+  const MKLayoutId.keyed({
     required this.id,
     required super.child,
     this.padding = EdgeInsets.zero,
     this.data,
-  }) : super(key: ValueKey(id));
+    super.key,
+  });
+
+  MKLayoutId({required this.id, required super.child, this.padding = EdgeInsets.zero, this.data})
+    : super(key: ValueKey(id));
 
   @override
   void applyParentData(RenderObject renderObject) {
@@ -32,24 +33,11 @@ class MKLayoutId<ID extends Object>
       return;
     }
 
-    var needsLayout = false;
-
-    if (parentData.layoutId != id) {
+    if (parentData.layoutId != id || parentData.padding != padding || parentData.data != data) {
       parentData.layoutId = id;
-      needsLayout = true;
-    }
-
-    if (parentData.padding != padding) {
       parentData.padding = padding;
-      needsLayout = true;
-    }
-
-    if (parentData.data != data) {
       parentData.data = data;
-      needsLayout = true;
-    }
 
-    if (needsLayout) {
       final targetParent = renderObject.parent;
       if (targetParent is RenderObject) {
         targetParent.markNeedsLayout();

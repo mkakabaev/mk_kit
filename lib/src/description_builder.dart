@@ -12,36 +12,31 @@ class DescriptionBuilder {
     }
   }
 
-  void _add(String? name, Object? value, bool skipEmpty, bool quote) {
-    var s = stringify(value);
-
+  void _add(String? name, Object? value, bool skipEmpty, bool isQuoted) {
     if (skipEmpty && isEmpty(value)) {
       return;
     }
 
-    if (name == null) {
-      if (quote && s != null) {
-        s = "'$s'";
-      } else {
-        s ??= '<null>';
-      }
+    var s = stringify(value);
+    if (isQuoted && s != null) {
+      s = "'$s'";
     } else {
-      if (quote && s != null) {
-        s = "$name: '$s'";
-      } else {
-        s = '$name: $s';
-      }
+      s ??= '<null>';
+    }
+
+    if (name != null) {
+      s = '$name: $s';
     }
 
     _items.add(s);
   }
 
-  void add(String name, Object? value, {bool skipEmpty = true, bool quote = false}) {
-    _add(name, value, skipEmpty, quote);
+  void add(String name, Object? value, {bool skipEmpty = true, bool isQuoted = false}) {
+    _add(name, value, skipEmpty, isQuoted);
   }
 
-  void addValue(Object? value, {bool skipEmpty = true, bool quote = false}) {
-    _add(null, value, skipEmpty, quote);
+  void addValue(Object? value, {bool skipEmpty = true, bool isQuoted = false}) {
+    _add(null, value, skipEmpty, isQuoted);
   }
 
   void addFlag(String flagName, bool? value) {

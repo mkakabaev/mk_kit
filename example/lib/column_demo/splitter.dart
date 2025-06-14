@@ -53,7 +53,7 @@ class _SplitterState extends State<Splitter> {
                   child: Center(
                     child: Container(
                       decoration: ShapeDecoration(
-                        shape: StadiumBorder(),
+                        shape: const StadiumBorder(),
                         color: _isDown ? Colors.grey.shade600 : Colors.grey.shade400,
                       ),
                       height: 6,
