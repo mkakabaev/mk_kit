@@ -135,8 +135,6 @@ class _Screen extends StatelessWidget {
 
       child: Container(
         color: Colors.blue,
-        // width: 50,
-        // height: 100,
         child: Text("$text → ${spacing.toInt()}"),
       ),
     );

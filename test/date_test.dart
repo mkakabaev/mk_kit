@@ -51,9 +51,46 @@ void main() {
 
       expect(date2.difference(date1), 5);
       expect(date1.difference(date2), -5);
-      
+
       expect(date3.difference(date1), -24);
       expect(date1.difference(date3), 24);
+    });
+
+    test('differenceInMonths', () {
+      final mar24 = MKDate.fromYMD(2024, 3, 15);
+      final may24 = MKDate.fromYMD(2024, 5, 15);
+      final jan24 = MKDate.fromYMD(2024, 1, 15);
+      final mar25 = MKDate.fromYMD(2025, 3, 15);
+      final mar23 = MKDate.fromYMD(2023, 3, 15);
+
+      expect(may24.differenceInMonths(mar24), 2);
+      expect(mar24.differenceInMonths(may24), -2);
+
+      expect(jan24.differenceInMonths(mar24), -2);
+      expect(mar24.differenceInMonths(jan24), 2);
+
+      expect(mar25.differenceInMonths(mar24), 12);
+      expect(mar24.differenceInMonths(mar25), -12);
+
+      expect(mar23.differenceInMonths(mar24), -12);
+      expect(mar24.differenceInMonths(mar23), 12);
+
+      expect(jan24.differenceInMonths(mar23), 10);
+      expect(mar23.differenceInMonths(jan24), -10);
+
+      // Test same month
+      // ignore: avoid-passing-self-as-argument
+      expect(mar24.differenceInMonths(mar24), 0);
+
+      // Test different days in same month
+      final mar24_1 = MKDate.fromYMD(2024, 3, 1);
+      expect(mar24_1.differenceInMonths(mar24), 0);
+      expect(mar24.differenceInMonths(mar24_1), 0);
+
+      // Test different days in different months
+      final mar24_2 = MKDate.fromYMD(2024, 3, 2);
+      expect(mar24_2.differenceInMonths(mar24), 0);
+      expect(mar24.differenceInMonths(mar24_2), 0);
     });
 
     test('comparison', () {

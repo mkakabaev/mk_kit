@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:collection/collection.dart';
 
+/// @docImport 'value_state';
+
 ///
 /// Outdated. Use standard `equatable` package instead.
 ///
@@ -31,7 +33,7 @@ const _kEquality = DeepCollectionEquality();
 ///
 /// Helper wrapper to make object equatable in records. Useful for selectors to wrap collections.
 ///
-class EQValue<T> with EquatableProps {
+final class EQValue<T> with EquatableProps {
   final T value;
 
   const EQValue(this.value);
@@ -40,3 +42,19 @@ class EQValue<T> with EquatableProps {
   List<Object?> get equatableProps => [value];
 }
 
+///
+/// Helper wrapper to work with nullable objects. Use case: [ValueState]
+///
+/// mktodo: Could it be replaced with extension type?
+///
+final class OptionalValue<T extends Object> {
+  final T? value;
+
+  const OptionalValue(this.value);
+
+  @override
+  int get hashCode => value.hashCode;
+
+  @override
+  bool operator ==(Object other) => other is OptionalValue<T> && other.value == value;
+}

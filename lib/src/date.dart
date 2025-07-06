@@ -1,7 +1,12 @@
 extension type const MKDate._(int _value) implements Object {
+  // 'Unchecked' constructor for internal use only
   MKDate._fromYMD(int year, int month, int day) : _value = _ymd(year, month, day);
 
-  factory MKDate.fromInt(int value) => _checkedDate(value);
+  const MKDate.fromIntUnchecked(int ymd) : _value = ymd;
+
+  factory MKDate.fromYMD(int year, int month, int day) => _checkedDate(_ymd(year, month, day));
+
+  factory MKDate.fromInt(int ymd) => _checkedDate(ymd);
 
   factory MKDate.fromDateTime(DateTime dateTime) => MKDate._fromYMD(dateTime.year, dateTime.month, dateTime.day);
 
@@ -99,6 +104,10 @@ extension type const MKDate._(int _value) implements Object {
       return day - other.day;
     }
     return toUtcDateTime().difference(other.toUtcDateTime()).inDays;
+  }
+
+  int differenceInMonths(MKDate other) {
+    return (year - other.year) * 12 + (month - other.month);
   }
 
   int compareTo(MKDate other) => _value.compareTo(other._value);
