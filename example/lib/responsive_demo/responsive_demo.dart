@@ -53,7 +53,7 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> {
           }
 
           // Get child screen size and calculate boundary margin to center the child screen if it is small
-          final currentScreenSize = _screenSizes[_currentScreenSizeIndex].$1; // ignore: avoid-unsafe-collection-methods
+          final currentScreenSize = _screenSizes[_currentScreenSizeIndex].$1; 
           final boundaryMargin = EdgeInsets.symmetric(
             horizontal: max(10, (constraints.maxWidth - currentScreenSize.width) / 2),
             vertical: max(10, (constraints.maxHeight - currentScreenSize.height) / 2),

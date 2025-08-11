@@ -1,3 +1,31 @@
+///
+/// [MKDate] is a compact, immutable value type representing a calendar date (year, month, day) without any time or timezone information.
+///
+/// It is implemented as an extension type over a single integer in the format `yyyymmdd` (e.g., 20240601 for June 1, 2024),
+/// providing efficient storage, comparison, and serialization.
+///
+/// # Features
+/// - **Type-safe**: Only valid dates can be constructed (invalid dates throw).
+/// - **Immutable**: All instances are deeply immutable.
+/// - **Efficient**: Backed by a single integer for fast equality, hashing, and storage.
+/// - **No Time/Timezone**: Represents only the date part, not time-of-day or timezone.
+/// - **Conversions**: Easily convert to/from [DateTime], and extract year/month/day components.
+/// - **Date Arithmetic**: Supports adding months, getting first/last day of month, etc.
+///
+/// # Example
+/// ```dart
+/// final date = MKDate.fromYMD(2024, 6, 1);
+/// print(date.year); // 2024
+/// print(date.month); // 6
+/// print(date.day); // 1
+/// print(date.toUtcDateTime()); // 2024-06-01 00:00:00.000Z
+/// ```
+///
+/// # Use Cases
+/// - Value objects for business logic (e.g., birthdays, due dates, etc.)
+/// - Keys in maps or sets
+/// - Serialization to/from database or network
+///
 extension type const MKDate._(int _value) implements Object {
   // 'Unchecked' constructor for internal use only
   MKDate._fromYMD(int year, int month, int day) : _value = _ymd(year, month, day);

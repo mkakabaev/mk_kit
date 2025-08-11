@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:mk_kit/mk_kit.dart';
 
+import 'baseline_demo/baseline_demo.dart';
+// import 'buttons_demo/buttons_demo.dart';
 import 'column_demo/column_demo.dart';
 import 'responsive_demo/responsive_demo.dart';
 
@@ -36,6 +38,8 @@ class _HomePage extends StatelessWidget {
         children: [
           _ListItem(title: 'MKColumn', screenBuilder: (_) => const ColumnDemo()),
           _ListItem(title: 'Responsive', screenBuilder: (_) => const ResponsiveDemo()),
+          _ListItem(title: 'Baseline', screenBuilder: (_) => const BaselineDemo()),
+          //   _ListItem(title: 'Buttons', screenBuilder: (_) => const ButtonsDemo()),
         ],
       ),
     );

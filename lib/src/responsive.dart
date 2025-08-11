@@ -4,6 +4,41 @@ import 'package:flutter/widgets.dart';
 
 import 'equatable.dart';
 
+/// Responsive utilities and widgets for Flutter.
+///
+/// This library provides the [Responsive] widget and related classes to help build
+/// adaptive user interfaces that respond to different screen sizes, orientations,
+/// and device characteristics.
+///
+/// The [Responsive] widget injects a [ResponsiveData] object into the widget tree,
+/// which can be accessed using [Responsive.of] or [Responsive.get]. This data can
+/// be used to adjust layout, sizing, and other properties based on the current
+/// context.
+///
+/// Example usage:
+/// ```dart
+/// Responsive(
+///   child: Builder(
+///     builder: (context) {
+///       final data = Responsive.of(context);
+///       if (data.isTablet) {
+///         return TabletLayout();
+///       } else {
+///         return MobileLayout();
+///       }
+///     },
+///   ),
+/// )
+/// ```
+///
+/// You can customize how [ResponsiveData] is produced by providing a custom
+/// [ResponsiveDataProducer] to the [Responsive] widget.
+///
+/// See also:
+///  - [InheritedResponsive], which provides the [ResponsiveData] to descendants.
+///  - [ResponsiveData], which contains information about the current device and layout.
+///  - [ResponsiveDataProducer], for customizing the data generation logic.
+
 class Responsive extends StatelessWidget {
   final Widget child;
   final ResponsiveDataProducer producer;

@@ -66,12 +66,29 @@ String? stringify(Object? value) {
 // ------------------------------------------------------------------------------------------------
 
 ///
-/// Tagged (or branded) type concept, similar to TypeScript's branded types.
+/// A base class for implementing tagged (or branded) types in Dart, inspired by TypeScript's branded types.
 ///
-/// In most cases it is better to use the new 'extension type' feature (Dart 3.3+)
+/// Tagged types are used to create distinct types from primitive values (such as `String` or `int`)
+/// to provide additional type safety and prevent accidental misuse or mixing of values that share the same underlying type.
+/// For example, you might want to distinguish between a `UserId` and a `ProductId` even though both are represented as `String`.
+///
+/// Example usage:
+/// ```dart
+/// class UserId extends TaggedType<String> {
+///   const UserId(super.value);
+/// }
+///
+/// void fetchUser(UserId id) { ... }
 /// ```
-///    extension type MyType(T id) { }
+///
+/// **Note:**
+/// As of Dart 3.3, the new 'extension type' feature is generally preferred for this use case,
+/// as it provides a more idiomatic and efficient way to create branded types:
+/// ```dart
+/// extension type UserId(String id) {}
 /// ```
+/// Use this class only if you need compatibility with older Dart versions or require additional
+/// functionality provided by this base class (such as [DescriptionProvider]).
 ///
 abstract class TaggedType<T extends Object> with DescriptionProvider {
   final T value;
@@ -109,4 +126,24 @@ extension MKEdgeInsets on EdgeInsets {
     (right * scale).roundToDouble(),
     (bottom * scale).roundToDouble(),
   );
+}
+
+///
+/// A lightweight wrapper for nullable objects to enable value-based equality and hashing.
+///
+/// This is particularly useful when you need to distinguish between `null` and non-null values
+/// in equality comparisons or as map keys, such as in state management scenarios (e.g., [ValueState]).
+///
+/// mktodo: Could this be replaced with an extension type?
+///
+final class OptionalValue<T extends Object> {
+  final T? value;
+
+  const OptionalValue(this.value);
+
+  @override
+  int get hashCode => value.hashCode;
+
+  @override
+  bool operator ==(Object other) => other is OptionalValue<T> && other.value == value;
 }

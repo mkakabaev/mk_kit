@@ -46,4 +46,9 @@ dart_code_metrics:
     newline-before-return: false
     no-empty-block: false
     avoid-returning-widgets: false
+    avoid-commented-out-code: false
+    prefer-commenting-analyzer-ignores: false
+    prefer-extracting-callbacks: false
+    avoid-unnecessary-stateful-widgets: false
+    avoid-unsafe-collection-methods: false
 

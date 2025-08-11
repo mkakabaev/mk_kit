@@ -10,8 +10,6 @@ import '../multi_child_layout/multi_child_layout.dart';
 
 import 'column_spacer.dart';
 
-// cSpell: words Diagnosticable trackpad
-
 @immutable
 class MKColumn extends StatelessWidget {
   final List<Widget> children;
@@ -21,7 +19,7 @@ class MKColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (_, constraints) {
+      builder: (context, constraints) {
         return ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(
             dragDevices: {

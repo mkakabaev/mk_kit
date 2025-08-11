@@ -43,15 +43,16 @@ class MKChildLayout<ID extends Object> {
     layout(maxWidth: width, maxHeight: height, minWidth: width, minHeight: height);
   }
 
-  Size layoutConstrained(BoxConstraints constraints, {
+  Size layoutConstrained(
+    BoxConstraints constraints, {
     bool includeVerticalPadding = true,
     bool includeHorizontalPadding = true,
   }) {
     if (includeVerticalPadding || includeHorizontalPadding) {
-        constraints = constraints.copyWith(
-          maxWidth: max(0, constraints.maxWidth - padding.horizontal),
-          maxHeight: max(0, constraints.maxHeight - padding.vertical),
-        );
+      constraints = constraints.copyWith(
+        maxWidth: max(0, constraints.maxWidth - padding.horizontal),
+        maxHeight: max(0, constraints.maxHeight - padding.vertical),
+      );
     }
 
     _laidOut = true;

@@ -4,14 +4,47 @@ import 'package:mk_kit/mk_kit.dart';
 
 typedef TaskBody = Future<bool> Function(TaskContext context);
 
+/// Provides context to a [TaskBody], including cancellation status.
 abstract class TaskContext {
+  /// Whether the task has been canceled.
   bool get isCanceled;
 }
 
+/// The current status of a [Task].
 enum TaskStatus { pendingFirstRun, running, completed, failed }
 
-enum TaskRestartOption { runIfNotYet, runOrRerun }
+///
+/// [TaskRestartOption] controls the behavior when attempting to restart a task:
+///
+enum TaskRestartOption {
+  /// Only run the task if it hasn't started yet.
+  runIfNotYet,
 
+  /// Start the task immediately if it is not running, or restart it after completion.
+  runOrRerun,
+}
+
+/// A [Task] represents a unit of asynchronous work that can be scheduled, retried, and canceled.
+///
+/// Tasks are defined by a [TaskBody] function, which receives a [TaskContext] and returns a [Future<bool>]
+/// indicating success (`true`) or failure (`false`). The [Task] manages its own execution state,
+/// supports automatic retries with configurable intervals, and can be canceled or restarted.
+///
+/// Example usage:
+/// ```dart
+/// final task = Task(
+///   name: 'SyncData',
+///   body: (context) async {
+///     // Perform some async work
+///     if (context.isCanceled) return false;
+///     // ...
+///     return true;
+///   },
+///   retrySuccessInterval: Duration(minutes: 5),
+///   retryFailInterval: Duration(seconds: 30),
+/// );
+/// ```
+///
 class Task with DescriptionProvider implements TaskContext {
   final TaskBody body;
   final String name;

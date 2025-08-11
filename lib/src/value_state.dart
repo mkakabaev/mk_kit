@@ -48,7 +48,7 @@ final class ValueState<T, ERR extends Object, TAG> with DescriptionProvider, Equ
     builder.addFlag('hasValue', hasValue);
     builder.add('error', error);
   }
-  
+
   @override
   List<Object?> get equatableProps => [tag, status, _value, error];
 }

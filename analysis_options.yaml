@@ -32,4 +32,8 @@ dart_code_metrics:
     avoid-top-level-members-in-tests: false
     prefer-single-widget-per-file: false
     avoid-unnecessary-reassignment: false
-    unnecessary-trailing-comma: false
+    # unnecessary-trailing-comma: false
+    prefer-commenting-analyzer-ignores: false
+    avoid-constant-assert-conditions: false
+    prefer-static-class: false
+    avoid-commented-out-code: false
