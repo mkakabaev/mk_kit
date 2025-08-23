@@ -85,6 +85,18 @@ extension type const MKDate._(int _value) implements Object {
     return MKDate._fromYMD(newYear, newMonth, newDay);
   }
 
+  @pragma("vm:prefer-inline")
+  MKDate get next => addedDays(1);
+
+  @pragma("vm:prefer-inline")
+  MKDate get nextMonth => addedMonths(1);
+
+  @pragma("vm:prefer-inline")
+  MKDate get previous => addedDays(-1);
+
+  @pragma("vm:prefer-inline")
+  MKDate get previousMonth => addedMonths(-1);
+
   MKDate addedDays(int days) {
     if (days == 0) {
       return this;
@@ -190,9 +202,37 @@ MKDate _checkedDate(int value) {
 typedef MKDateRange = ({MKDate start, MKDate end});
 
 extension MKDateRangeExt on MKDateRange {
+  static MKDateRange fromDate(MKDate date) => (start: date, end: date);
+
   bool contains(MKDate date) => start <= date && date <= end;
 
   bool intersects(MKDateRange other) => start <= other.end && end >= other.start;
+
+  MKDateRange? intersection(MKDateRange other) {
+    if (start > other.end || end < other.start) {
+      return null;
+    }
+    return (start: start < other.start ? other.start : start, end: end > other.end ? other.end : end);
+  }
+
+  Iterable<MKDate> get iterable sync* {
+    var temp = start;
+    while (temp <= end) {
+      yield temp;
+      temp = temp.next;
+    }
+  }
+
+  static MKDateRange? union(MKDateRange? r1, MKDateRange? r2) {
+    if (r1 == null) {
+      return r2;
+    }
+    if (r2 == null) {
+      return r1;
+    }
+
+    return (start: r1.start < r2.start ? r1.start : r2.start, end: r1.end > r2.end ? r1.end : r2.end);
+  }
 
   bool get isSingleDay => start == end;
 

@@ -62,6 +62,17 @@ extension type const CWValue<T extends Object>._((T?, Type) _value) implements O
   static CWValue<T>? diffOnly<T extends Object>(T? valueFrom, T? valueTo) {
     return valueFrom == valueTo ? null : CWValue(valueTo);
   }
+
+  /// Convenient method to transform one CWValue to another inside a copyWith function
+  CWValue<R> cast<R extends Object>(R Function(T) converter) {
+    final v = _value.$1;
+    return v == null ? CWValue<R>(null) : CWValue(converter(v));
+  }
+
+  /// Convenient method to transform one CWValue to another inside a copyWith function
+  CWValue<R> castNullable<R extends Object>(R? Function(T?) converter) {
+    return CWValue(converter(_value.$1));
+  }
 }
 
 /* old, pre-Dart 3.3 implementation
