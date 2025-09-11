@@ -60,7 +60,7 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> {
           );
 
           if (_mustUpdateTransformation) {
-            _controller.value = Matrix4.identity()..translate(boundaryMargin.left, boundaryMargin.top);
+            _controller.value = Matrix4.identity()..translateByDouble(boundaryMargin.left, boundaryMargin.top, 0, 1);
             _mustUpdateTransformation = false;
           }
 

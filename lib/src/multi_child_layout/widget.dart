@@ -50,13 +50,13 @@ class _RenderLayout<ID extends Object> extends RenderBox
 
   _RenderLayout({required this.delegate, required this.isOpaqueToHits, required this.shouldClip});
 
-  void setDelegate(MKMultiChildLayoutDelegate<ID> newDelegate, bool isOpaqueToHits, bool shouldClip) {
+  void setDelegate(MKMultiChildLayoutDelegate<ID> delegate, bool isOpaqueToHits, bool shouldClip) {
     if (this.isOpaqueToHits != isOpaqueToHits ||
         this.shouldClip != shouldClip ||
-        this.delegate.shouldRelayout(newDelegate)) {
+        this.delegate.shouldRelayout(delegate)) {
       markNeedsLayout();
     }
-    this.delegate = newDelegate;
+    this.delegate = delegate;
     this.isOpaqueToHits = isOpaqueToHits;
     this.shouldClip = shouldClip;
   }
