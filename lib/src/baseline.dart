@@ -149,8 +149,9 @@ class RenderMKBaseline extends RenderShiftedBox {
       return super.computeDistanceToActualBaseline(baseline);
     }
 
-    // ignore: avoid-passing-self-as-argument
-    final childSize = child.getDryLayout(child.constraints);
-    return _delegate.computeBaseline(childSize);
+    if (!child.hasSize) {
+      return super.computeDistanceToActualBaseline(baseline);
+    }
+    return _delegate.computeBaseline(child.size);
   }
 }

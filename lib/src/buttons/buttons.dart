@@ -25,3 +25,13 @@ class MKButton extends StatelessWidget {
 }
 
 abstract class MKButtonConfig {}
+
+
+// abstract class MKButtonLayoutConfig {
+//   EdgeInsets padding;
+//   final EdgeInsets margin;
+//   final EdgeInsets border;
+//   final EdgeInsets iconPadding;
+//   final EdgeInsets textPadding;
+//   final EdgeInsets contentPadding;
+// }

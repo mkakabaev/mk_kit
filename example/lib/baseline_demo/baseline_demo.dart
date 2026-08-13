@@ -105,11 +105,16 @@ class RenderBaselineBox extends RenderShiftedBox {
     if (child == null) {
       return constraints.smallest;
     }
-    return child.getDryLayout(constraints);
+    final childSize = child.getDryLayout(_innerConstraints(constraints));
+    return constraints.constrain(Size(childSize.width, _topPadding + childSize.height + _bottomPadding));
   }
 
   final _topPadding = 20.0;
   final _bottomPadding = 20.0;
+
+  BoxConstraints _innerConstraints(BoxConstraints constraints) {
+    return constraints.deflate(EdgeInsets.only(top: _topPadding, bottom: _bottomPadding));
+  }
 
   @override
   void performLayout() {
@@ -119,12 +124,13 @@ class RenderBaselineBox extends RenderShiftedBox {
       return;
     }
 
-    // Layout the child with the same constraints
-    child.layout(constraints, parentUsesSize: true);
-    double baseline = child.getDryBaseline(constraints, TextBaseline.alphabetic) ?? child.size.height;
+    child.layout(_innerConstraints(constraints), parentUsesSize: true);
+    final baseline = child.getDistanceToBaseline(TextBaseline.alphabetic) ?? child.size.height;
 
-    size = Size(child.size.width, _topPadding + max(child.size.height, baseline) + _bottomPadding);
-    (child.parentData as BoxParentData?)?.offset = Offset(0.0, _topPadding);
+    size = constraints.constrain(
+      Size(child.size.width, _topPadding + max(child.size.height, baseline) + _bottomPadding),
+    );
+    (child.parentData as BoxParentData).offset = Offset(0.0, _topPadding);
   }
 
   @override
@@ -138,8 +144,8 @@ class RenderBaselineBox extends RenderShiftedBox {
       context.canvas.drawRect(offset & size, paint);
     }
 
-    {
-      double baseline = child?.getDryBaseline(constraints, TextBaseline.alphabetic) ?? 0;
+    if (child != null && child.hasSize) {
+      final baseline = child.getDistanceToBaseline(TextBaseline.alphabetic) ?? 0;
       final paint = Paint()
         ..color = Colors.red.withValues(alpha: 0.5)
         ..strokeWidth = 1.0

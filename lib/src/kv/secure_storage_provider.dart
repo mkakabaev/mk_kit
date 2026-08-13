@@ -7,7 +7,7 @@ class SecureStorageProvider implements KeyValueStorageProvider {
 
   SecureStorageProvider({
     String? accountName, // macOS only
-  }) : _backedStorage = FlutterSecureStorage(mOptions: MacOsOptions.defaultOptions.copyWith(accountName: accountName));
+  }) : _backedStorage = FlutterSecureStorage(mOptions: MacOsOptions(accountName: accountName));
 
   @override
   Future<Object?> getValueForKey(String key) async {
