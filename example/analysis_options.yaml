@@ -42,13 +42,22 @@ dart_code_metrics:
     prefer-single-widget-per-file: false
     member-ordering: false
     prefer-match-file-name: false
-    avoid-shadowing: false
+    # avoid-shadowing: false
     newline-before-return: false
     no-empty-block: false
     avoid-returning-widgets: false
-    avoid-commented-out-code: false
+    # avoid-commented-out-code: false
     prefer-commenting-analyzer-ignores: false
     prefer-extracting-callbacks: false
     avoid-unnecessary-stateful-widgets: false
-    avoid-unsafe-collection-methods: false
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+    # avoid-unsafe-collection-methods: false
 

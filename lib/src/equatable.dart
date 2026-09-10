@@ -2,8 +2,6 @@ import 'package:flutter/foundation.dart';
 
 import 'package:collection/collection.dart';
 
-/// @docImport 'value_state';
-
 ///
 /// A lightweight internal mixin for implementing value-based equality and hashCode in Dart classes,
 /// similar to the functionality provided by the `equatable` package, but without introducing an external dependency.

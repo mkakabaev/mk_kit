@@ -132,7 +132,7 @@ extension MKEdgeInsets on EdgeInsets {
 /// A lightweight wrapper for nullable objects to enable value-based equality and hashing.
 ///
 /// This is particularly useful when you need to distinguish between `null` and non-null values
-/// in equality comparisons or as map keys, such as in state management scenarios (e.g., [ValueState]).
+/// in equality comparisons or as map keys.
 ///
 /// mktodo: Could this be replaced with an extension type?
 ///

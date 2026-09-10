@@ -14,7 +14,6 @@ export 'src/misc.dart';
 export 'src/multi_child_layout/multi_child_layout.dart';
 export 'src/parse_utils.dart';
 export 'src/sized_relative.dart';
-export 'src/value_state.dart';
 export 'src/copy_with_value.dart';
 export 'src/task.dart';
 export 'src/responsive.dart';
