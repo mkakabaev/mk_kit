@@ -83,15 +83,19 @@ class KeyValueStorage with DescriptionProvider {
   });
 
   Future<void> setJson(String key, Object? value) async {
+    if (value == null) {
+      await setValue(key, null);
+      return;
+    }
+
+    final String encoded;
     try {
-      if (value == null) {
-        await setValue(key, value); // this will remove the key
-      } else {
-        await setString(key, jsonEncode(value));
-      }
+      encoded = jsonEncode(value);
     } catch (e, stack) {
       _onError("Failed to encode value to JSON for key '$key'", e, stack);
+      return;
     }
+    await setString(key, encoded);
   }
 
   Future<void> clear() async {

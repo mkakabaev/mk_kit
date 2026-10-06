@@ -48,15 +48,16 @@ class MKChildLayout<ID extends Object> {
     bool includeVerticalPadding = true,
     bool includeHorizontalPadding = true,
   }) {
-    if (includeVerticalPadding || includeHorizontalPadding) {
-      constraints = constraints.copyWith(
-        maxWidth: max(0, constraints.maxWidth - padding.horizontal),
-        maxHeight: max(0, constraints.maxHeight - padding.vertical),
-      );
-    }
-
+    final resolved = _constraintsForChild(
+      minWidth: constraints.minWidth,
+      maxWidth: constraints.maxWidth,
+      minHeight: constraints.minHeight,
+      maxHeight: constraints.maxHeight,
+      includeHorizontalPadding: includeHorizontalPadding,
+      includeVerticalPadding: includeVerticalPadding,
+    );
     _laidOut = true;
-    _child.layout(constraints, parentUsesSize: true);
+    _child.layout(resolved, parentUsesSize: true);
     return size;
   }
 
@@ -68,14 +69,46 @@ class MKChildLayout<ID extends Object> {
     bool includeVerticalPadding = true,
     bool includeHorizontalPadding = true,
   }) {
-    final constraints = BoxConstraints(
-      minHeight: minHeight,
+    final constraints = _constraintsForChild(
       minWidth: minWidth,
-      maxHeight: includeVerticalPadding ? max(0, maxHeight - padding.vertical) : maxHeight,
-      maxWidth: includeHorizontalPadding ? max(0, maxWidth - padding.horizontal) : maxWidth,
+      maxWidth: maxWidth,
+      minHeight: minHeight,
+      maxHeight: maxHeight,
+      includeHorizontalPadding: includeHorizontalPadding,
+      includeVerticalPadding: includeVerticalPadding,
     );
     _laidOut = true;
     _child.layout(constraints, parentUsesSize: true);
     return size;
+  }
+
+  BoxConstraints _constraintsForChild({
+    required double minWidth,
+    required double maxWidth,
+    required double minHeight,
+    required double maxHeight,
+    required bool includeHorizontalPadding,
+    required bool includeVerticalPadding,
+  }) {
+    var resolvedMinWidth = minWidth;
+    var resolvedMaxWidth = maxWidth;
+    var resolvedMinHeight = minHeight;
+    var resolvedMaxHeight = maxHeight;
+
+    if (includeHorizontalPadding) {
+      resolvedMaxWidth = max(0.0, resolvedMaxWidth - padding.horizontal);
+      resolvedMinWidth = min(max(0.0, resolvedMinWidth - padding.horizontal), resolvedMaxWidth);
+    }
+    if (includeVerticalPadding) {
+      resolvedMaxHeight = max(0.0, resolvedMaxHeight - padding.vertical);
+      resolvedMinHeight = min(max(0.0, resolvedMinHeight - padding.vertical), resolvedMaxHeight);
+    }
+
+    return BoxConstraints(
+      minWidth: resolvedMinWidth,
+      maxWidth: resolvedMaxWidth,
+      minHeight: resolvedMinHeight,
+      maxHeight: resolvedMaxHeight,
+    );
   }
 }

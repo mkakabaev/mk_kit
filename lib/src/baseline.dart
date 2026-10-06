@@ -47,7 +47,7 @@ class MKBaselineAlignmentDelegate implements MKBaselineDelegate {
 /// Example usage:
 /// ```dart
 /// MKBaseline(
-///   delegate: MKBaselinePositionDelegate(position: 0.5),
+///   delegate: MKBaselineAlignmentDelegate(alignment: 0.5),
 ///   debugDrawBaseline: true,
 ///   child: MyWidget(),
 /// )

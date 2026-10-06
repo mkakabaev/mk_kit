@@ -23,7 +23,21 @@ abstract final class ParseUtils {
     if (!allowEmpty && effectiveValue.isEmpty) {
       throw FormatException("Wrong value '$value': a non-empty array is expected");
     }
-    return effectiveValue as List<T>;
+
+    if (effectiveValue is List<T>) {
+      return effectiveValue;
+    }
+
+    final result = <T>[];
+    var index = 0;
+    for (final element in effectiveValue) {
+      if (element is! T) {
+        throw FormatException("Wrong value '$element' at index $index: a $T is expected");
+      }
+      result.add(element);
+      index += 1;
+    }
+    return result;
   }
 
   static bool parseBool(Object? value, {bool? defaultValue}) {
@@ -98,10 +112,10 @@ abstract final class ParseUtils {
       throw FormatException("Wrong value '$value': an integer is expected");
     }
     if (minValue != null && result < minValue) {
-      throw FormatException('Wrong integer value $result: must be less than $minValue');
+      throw FormatException('Wrong integer value $result: must be greater than or equal to $minValue');
     }
     if (maxValue != null && result > maxValue) {
-      throw FormatException('Wrong integer value $result: must be greater than $maxValue');
+      throw FormatException('Wrong integer value $result: must be less than or equal to $maxValue');
     }
     return result;
   }
@@ -120,10 +134,10 @@ abstract final class ParseUtils {
       throw FormatException("Wrong value '$value': a double is expected");
     }
     if (minValue != null && result < minValue) {
-      throw FormatException('Wrong double value $result: must be less than $minValue');
+      throw FormatException('Wrong double value $result: must be greater than or equal to $minValue');
     }
     if (maxValue != null && result > maxValue) {
-      throw FormatException('Wrong double value $result: must be greater than $maxValue');
+      throw FormatException('Wrong double value $result: must be less than or equal to $maxValue');
     }
     return result;
   }

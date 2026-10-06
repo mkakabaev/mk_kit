@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:mk_kit/mk_kit.dart';
+import 'description_builder.dart';
 
 typedef TaskBody = Future<bool> Function(TaskContext context);
 
@@ -140,10 +140,12 @@ class Task with DescriptionProvider implements TaskContext {
       return;
     }
 
-    // Restart immediately
+    // A requested restart runs now. Scheduling it after the retry interval
+    // would replace this timer and drop the immediate run.
     if (_restartImmediately) {
       _restartImmediately = false;
       _schedulePoll();
+      return;
     }
 
     // Success

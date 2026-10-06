@@ -8,8 +8,6 @@ export 'src/kv/key_value_storage_exception.dart';
 export 'src/kv/key_value_storage_provider.dart';
 export 'src/kv/key_value_storage.dart';
 export 'src/kv/memory_storage_provider.dart';
-export 'src/kv/preferences_storage_provider.dart';
-export 'src/kv/secure_storage_provider.dart';
 export 'src/misc.dart';
 export 'src/multi_child_layout/multi_child_layout.dart';
 export 'src/parse_utils.dart';

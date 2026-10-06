@@ -20,6 +20,26 @@ class MKColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        final layout = MKMultiChildLayout<int>(
+          delegate: _LayoutDelegate(viewportHeight: constraints.maxHeight),
+          // Does not worth to optimize these little lists
+          children: children.mapIndexed((index, child) {
+            if (child is MKColumnSpacer) {
+              return MKLayoutId(
+                id: index,
+                data: _Data(height: child.height, minHeight: child.minHeight, isExpandable: child.isExpandable),
+                child: child.child ?? const SizedBox(),
+              );
+            }
+            return MKLayoutId(id: index, child: child);
+          }).toList(),
+        );
+
+        // A scroll view cannot take an unbounded height. Size to the children instead.
+        if (!constraints.maxHeight.isFinite) {
+          return layout;
+        }
+
         return ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(
             dragDevices: {
@@ -30,22 +50,7 @@ class MKColumn extends StatelessWidget {
               PointerDeviceKind.trackpad,
             },
           ),
-          child: SingleChildScrollView(
-            child: MKMultiChildLayout<int>(
-              delegate: _LayoutDelegate(viewportHeight: constraints.maxHeight),
-              // Does not worth to optimize these little lists
-              children: children.mapIndexed((index, child) {
-                if (child is MKColumnSpacer) {
-                  return MKLayoutId(
-                    id: index,
-                    data: _Data(height: child.height, minHeight: child.minHeight, isExpandable: child.isExpandable),
-                    child: child.child ?? const SizedBox(),
-                  );
-                }
-                return MKLayoutId(id: index, child: child);
-              }).toList(),
-            ),
-          ),
+          child: SingleChildScrollView(child: layout),
         );
       },
     );
@@ -87,6 +92,8 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
 
   @override
   Size performLayout(Map<int, MKChildLayout<int>> children, BoxConstraints constraints) {
+    final boundedViewport = viewportHeight.isFinite;
+
     // If we have at least one expandable item then all non-expandable spacers have
     // minimum height (i.e. they can be considered as regular 'fixed-size' elements)
     final expandableEnvironment =
@@ -127,8 +134,11 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
       assert(expandableEnvironment ^ !isExpandable, 'assertion_20230601_501183');
 
       // Spacer with adjustable (later) height. Just collect it for now.
-      if (expandableEnvironment) {
+      // Expandable height is a weight of the viewport. With no viewport, use minHeight.
+      if (expandableEnvironment && boundedViewport) {
         layout.height = max(1, height) * viewportHeight;
+      } else if (expandableEnvironment) {
+        layout.height = minHeight;
       } else {
         layout.height = height;
       }
@@ -140,7 +150,7 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
     // Calculate adjusting (if needed) for spacer heights to fit the viewport.
     // for expandable spacers we can can scale in any direction (up and down),
     // for non-expandable spacers we can only scale down.
-    if (spacerHeight > 0) {
+    if (boundedViewport && spacerHeight > 0) {
       var viewportSpacerHeight = viewportHeight - fixedHeight;
       var hasUnhandled = spacerLayouts.isNotEmpty;
       if (spacerHeight > viewportSpacerHeight && hasUnhandled) {
@@ -186,7 +196,7 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
       contentHeight += layout.height;
     }
 
-    return Size(constraints.maxWidth, max(contentHeight, viewportHeight));
+    return Size(constraints.maxWidth, boundedViewport ? max(contentHeight, viewportHeight) : contentHeight);
   }
 
   @override

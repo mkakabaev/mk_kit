@@ -51,9 +51,11 @@ class _RenderLayout<ID extends Object> extends RenderBox
   _RenderLayout({required this.delegate, required this.isOpaqueToHits, required this.shouldClip});
 
   void setDelegate(MKMultiChildLayoutDelegate<ID> delegate, bool isOpaqueToHits, bool shouldClip) {
-    if (this.isOpaqueToHits != isOpaqueToHits ||
-        this.shouldClip != shouldClip ||
-        this.delegate.shouldRelayout(delegate)) {
+    final oldDelegate = this.delegate;
+    if (isOpaqueToHits != this.isOpaqueToHits ||
+        shouldClip != this.shouldClip ||
+        delegate.runtimeType != oldDelegate.runtimeType ||
+        delegate.shouldRelayout(oldDelegate)) {
       markNeedsLayout();
     }
     this.delegate = delegate;
@@ -70,7 +72,23 @@ class _RenderLayout<ID extends Object> extends RenderBox
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
-    return defaultHitTestChildren(result, position: position);
+    // similar to defaultHitTestChildren(result, position: position) but respects the shouldPaint flag
+    var child = lastChild;
+    while (child != null) {
+      final parentData = child.parentData! as MKMultiChildLayoutParentData<ID>;
+      if (parentData.shouldPaint) {
+        final hit = result.addWithPaintOffset(
+          offset: parentData.offset,
+          position: position,
+          hitTest: (result, transformed) => child!.hitTest(result, position: transformed),
+        );
+        if (hit) {
+          return true;
+        }
+      }
+      child = parentData.previousSibling;
+    }
+    return false;
   }
 
   @override

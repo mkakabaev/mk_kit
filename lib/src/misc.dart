@@ -96,21 +96,14 @@ abstract class TaggedType<T extends Object> with DescriptionProvider {
   const TaggedType(this.value);
 
   @override
-  int get hashCode => value.hashCode;
+  int get hashCode => Object.hash(runtimeType, value);
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (other is TaggedType) {
-      assert(
-        other.runtimeType == runtimeType,
-        'An attempt to compare using different types: $runtimeType vs ${other.runtimeType}',
-      );
-      return other.value == value;
-    }
-    return false;
+    return other is TaggedType && other.runtimeType == runtimeType && other.value == value;
   }
 
   @override

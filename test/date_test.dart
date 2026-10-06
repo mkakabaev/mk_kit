@@ -16,7 +16,7 @@ void main() {
       expect(date.year, today.year);
       expect(date.month, today.month);
       expect(date.day, today.day);
-      expect(date, today);
+      expect(date, MKDate.fromDateTime(today));
     });
 
     test('addedMonths', () {
@@ -26,10 +26,19 @@ void main() {
       expect(date.addedMonths(-1), MKDate.fromDateTime(DateTime(2024, 2, 15)));
       expect(date.addedMonths(12), MKDate.fromDateTime(DateTime(2025, 3, 15)));
       expect(date.addedMonths(-12), MKDate.fromDateTime(DateTime(2023, 3, 15)));
+      expect(date.addedMonths(13), MKDate.fromDateTime(DateTime(2025, 4, 15)));
+      expect(date.addedMonths(-13), MKDate.fromDateTime(DateTime(2023, 2, 15)));
+      expect(date.addedMonths(100), MKDate.fromDateTime(DateTime(2032, 7, 15)));
+      expect(date.addedMonths(-100), MKDate.fromDateTime(DateTime(2015, 11, 15)));
+      expect(date.addedMonths(921), MKDate.fromDateTime(DateTime(2100, 12, 15)));
+      expect(date.addedMonths(-1490), MKDate.fromDateTime(DateTime(1900, 1, 15)));
 
       // Test month end handling
       final endOfMonth = MKDate.fromDateTime(DateTime(2024, 1, 31));
       expect(endOfMonth.addedMonths(1), MKDate.fromDateTime(DateTime(2024, 2, 29))); // Leap year
+      expect(endOfMonth.addedMonths(13), MKDate.fromDateTime(DateTime(2025, 2, 28)));
+      expect(endOfMonth.addedMonths(49), MKDate.fromDateTime(DateTime(2028, 2, 29)));
+      expect(MKDate.fromDateTime(DateTime(2024, 3, 31)).addedMonths(-13), MKDate.fromDateTime(DateTime(2023, 2, 28)));
     });
 
     test('addedDays', () {
@@ -100,8 +109,16 @@ void main() {
     test('daysInMonth', () {
       expect(MKDate.fromDateTime(DateTime(2024, 2, 1)).daysInMonth, 29); // Leap year
       expect(MKDate.fromDateTime(DateTime(2023, 2, 1)).daysInMonth, 28); // Non-leap year
+      expect(MKDate.fromDateTime(DateTime(2000, 2, 1)).daysInMonth, 29); // Divisible by 400
+      expect(MKDate.fromDateTime(DateTime(1900, 2, 1)).daysInMonth, 28); // Century, not divisible by 400
+      expect(MKDate.fromYMD(2100, 2, 1).daysInMonth, 28);
       expect(MKDate.fromDateTime(DateTime(2024, 4, 1)).daysInMonth, 30);
       expect(MKDate.fromDateTime(DateTime(2024, 5, 1)).daysInMonth, 31);
+    });
+
+    test('addedMonths clamps century non-leap February', () {
+      expect(MKDate.fromYMD(1900, 1, 31).addedMonths(1), MKDate.fromYMD(1900, 2, 28));
+      expect(MKDate.fromYMD(2000, 1, 31).addedMonths(1), MKDate.fromYMD(2000, 2, 29));
     });
 
     test('invalid date', () {
@@ -109,6 +126,9 @@ void main() {
       expect(() => MKDate.fromInt(20241301), throwsFormatException); // Invalid month
       expect(() => MKDate.fromInt(18990101), throwsFormatException); // Year too small
       expect(() => MKDate.fromInt(21010101), throwsFormatException); // Year too large
+      expect(() => MKDate.fromYMD(1900, 2, 29), throwsFormatException);
+      expect(() => MKDate.fromYMD(2100, 2, 29), throwsFormatException);
+      expect(MKDate.fromYMD(2000, 2, 29), MKDate.fromInt(20000229));
     });
   });
 

@@ -22,7 +22,7 @@ class DisposableBagEntryAdapter<T extends Object> {
   }
 }
 
-class DisposeBag with DescriptionProvider, Diagnosticable implements Disposable {
+class DisposeBag with Diagnosticable, DescriptionProvider implements Disposable {
   final List<_Item> _items;
   var _disposed = false;
 
@@ -73,7 +73,9 @@ class DisposeBag with DescriptionProvider, Diagnosticable implements Disposable 
       return;
     }
     _disposed = true;
-    _logger(() => 'Disposing $this...');
+    if (_logger.isEnabled) {
+      _logger('Disposing $this...');
+    }
     _logger.level += 1;
     try {
       // dispose in reversed order, LIFO order
@@ -84,7 +86,6 @@ class DisposeBag with DescriptionProvider, Diagnosticable implements Disposable 
     } finally {
       _logger.level -= 1;
     }
-    _items.clear();
   }
 
   @override
@@ -148,13 +149,17 @@ class _DisposableItem extends _Item {
 
   @override
   void invoke() {
-    _logger(() => 'Disposing $object...');
+    if (_logger.isEnabled) {
+      _logger('Disposing $object...');
+    }
     try {
       // Just a comment to self-explanatory code
       // ignore: avoid-dynamic
       (object as dynamic).dispose();
-    } on NoSuchMethodError {
-      _logger(() => "The '${object.runtimeType}' type has no dispose() method");
+    } on NoSuchMethodError {    
+      if (_logger.isEnabled) {
+        _logger("The '${object.runtimeType}' type has no dispose() method");
+      }
     }
   }
 }
@@ -164,7 +169,9 @@ class _SubscriptionItem extends _Item<StreamSubscription> {
 
   @override
   void invoke() {
-    _logger(() => 'Canceling $object...');
+    if (_logger.isEnabled) {
+      _logger('Canceling $object...');
+    }
 
     // In rare cases when you really need await here do not use DisposeBag at all
     object.cancel();
@@ -186,12 +193,16 @@ class _ClosableItem extends _Item {
 
   @override
   void invoke() {
-    _logger(() => 'Closing $object...');
+    if (_logger.isEnabled) {
+      _logger('Closing $object...');
+    }
     try {
       // ignore: avoid-dynamic
       (object as dynamic).close();
     } on NoSuchMethodError {
-      _logger(() => "The '${object.runtimeType}' type has no close() method");
+        if (_logger.isEnabled) {
+          _logger("The '${object.runtimeType}' type has no close() method");
+        }
     }
   }
 }
@@ -200,13 +211,13 @@ class _DisposeBagLogger {
   int level = 0;
   bool isEnabled = false;
 
-  void call(String Function() f) {
+  void call(String s) {
     if (!isEnabled) {
       return;
     }
 
     final padding = '  ' * level;
-    dev.log(padding + f());
+    dev.log(padding + s);
   }
 }
 

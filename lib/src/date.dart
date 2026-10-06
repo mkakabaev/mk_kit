@@ -27,18 +27,19 @@
 /// - Serialization to/from database or network
 ///
 extension type const MKDate._(int _value) implements Object {
-  // 'Unchecked' constructor for internal use only
-  MKDate._fromYMD(int year, int month, int day) : _value = _ymd(year, month, day);
+  factory MKDate.fromInt(int ymd) {
+    _validateYMD(ymd);
+    return ._(ymd);
+  }
 
-  const MKDate.fromIntUnchecked(int ymd) : _value = ymd;
+  factory MKDate.fromYMD(int year, int month, int day) {
+    _validateDateComponents(year, month, day);
+    return ._(_ymd(year, month, day));
+  }
 
-  factory MKDate.fromYMD(int year, int month, int day) => _checkedDate(_ymd(year, month, day));
+  factory MKDate.fromDateTime(DateTime dateTime) => .fromYMD(dateTime.year, dateTime.month, dateTime.day);
 
-  factory MKDate.fromInt(int ymd) => _checkedDate(ymd);
-
-  factory MKDate.fromDateTime(DateTime dateTime) => MKDate._fromYMD(dateTime.year, dateTime.month, dateTime.day);
-
-  factory MKDate.today() => MKDate.fromDateTime(DateTime.now());
+  factory MKDate.today() => .fromDateTime(DateTime.now());
 
   int get yearMonth => _value ~/ 100;
 
@@ -52,12 +53,12 @@ extension type const MKDate._(int _value) implements Object {
 
   DateTime toLocalDateTime() => DateTime(year, month, day);
 
-  MKDate firstOfMonth() => MKDate._fromYMD(year, month, 1);
+  MKDate firstOfMonth() => .fromYMD(year, month, 1);
 
   MKDate lastOfMonth() {
     final year = this.year;
     final month = this.month;
-    return MKDate._fromYMD(year, month, _daysInMonth(year, month));
+    return .fromYMD(year, month, _daysInMonth(year, month));
   }
 
   int get daysInMonth => _daysInMonth(year, month);
@@ -67,32 +68,19 @@ extension type const MKDate._(int _value) implements Object {
       return this;
     }
 
-    var newMonth = month + monthCount;
-    var newYear = year;
-
-    while (newMonth > 12) {
-      newMonth -= 12;
-      newYear += 1;
-    }
-    while (newMonth < 1) {
-      newMonth += 12;
-      newYear -= 1;
-    }
+    final zeroBased = (month - 1) + monthCount;
+    final monthIndex = zeroBased % 12;
+    final newYear = year + (zeroBased - monthIndex) ~/ 12;
+    final newMonth = monthIndex + 1;
 
     final daysInMonth = _daysInMonth(newYear, newMonth);
     final newDay = day > daysInMonth ? daysInMonth : day;
 
-    return MKDate._fromYMD(newYear, newMonth, newDay);
+    return .fromYMD(newYear, newMonth, newDay);
   }
 
   @pragma("vm:prefer-inline")
-  MKDate get next => addedDays(1);
-
-  @pragma("vm:prefer-inline")
   MKDate get nextMonth => addedMonths(1);
-
-  @pragma("vm:prefer-inline")
-  MKDate get previous => addedDays(-1);
 
   @pragma("vm:prefer-inline")
   MKDate get previousMonth => addedMonths(-1);
@@ -135,8 +123,14 @@ extension type const MKDate._(int _value) implements Object {
       }
     }
 
-    return MKDate._fromYMD(year, month, finalDay);
+    return .fromYMD(year, month, finalDay);
   }
+
+  @pragma("vm:prefer-inline")
+  MKDate get next => addedDays(1);
+
+  @pragma("vm:prefer-inline")
+  MKDate get previous => addedDays(-1);
 
   int difference(MKDate other) {
     // small optimization
@@ -172,29 +166,44 @@ extension type const MKDate._(int _value) implements Object {
 @pragma("vm:prefer-inline")
 int _ymd(int year, int month, int day) => year * 10000 + month * 100 + day;
 
+@pragma("vm:prefer-inline")
+bool _isLeapYear(int year) => year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+
+@pragma("vm:prefer-inline")
+int _year(int ymd) => ymd ~/ 10000;
+
+@pragma("vm:prefer-inline")
+int _month(int ymd) => (ymd % 10000) ~/ 100;
+
+@pragma("vm:prefer-inline")
+int _day(int ymd) => ymd % 100;
+
 int _daysInMonth(int year, int month) {
-  assert(month >= 1 && month <= 12, 'assertion_20230603_504967');
+  if (month < 1 || month > 12) {
+    throw FormatException('Invalid month: $month');
+  }
   const days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  if (month == 2) {
-    return year % 4 == 0 ? 29 : 28;
+  if (month == 2 && _isLeapYear(year)) {
+    return 29;
   }
   // ignore: avoid-unsafe-collection-methods
   return days[month - 1];
 }
 
-MKDate _checkedDate(int value) {
-  final result = MKDate._(value);
-  final year = result.year;
+void _validateDateComponents(int year, int month, int day) {
   if (year >= 1900 && year <= 2100) {
-    final month = result.month;
     if (month >= 1 && month <= 12) {
-      final day = result.day;
       if (day >= 1 && day <= _daysInMonth(year, month)) {
-        return result;
+        return;
       }
     }
   }
-  throw FormatException('Invalid date value: $value');
+  throw FormatException('Invalid date value: $year-$month-$day');
+}
+
+@pragma("vm:prefer-inline")
+void _validateYMD(int ymd) {
+  _validateDateComponents(_year(ymd), _month(ymd), _day(ymd));
 }
 
 // ------------------------------------------------------------------------------------------------

@@ -6,9 +6,8 @@ import 'equatable.dart';
 
 /// Responsive utilities and widgets for Flutter.
 ///
-/// This library provides the [Responsive] widget and related classes to help build
-/// adaptive user interfaces that respond to different screen sizes, orientations,
-/// and device characteristics.
+/// This library provides the [Responsive] widget and related classes to scale
+/// spacing and screen margin from the current screen size and text scale.
 ///
 /// The [Responsive] widget injects a [ResponsiveData] object into the widget tree,
 /// which can be accessed using [Responsive.of] or [Responsive.get]. This data can
@@ -21,11 +20,7 @@ import 'equatable.dart';
 ///   child: Builder(
 ///     builder: (context) {
 ///       final data = Responsive.of(context);
-///       if (data.isTablet) {
-///         return TabletLayout();
-///       } else {
-///         return MobileLayout();
-///       }
+///       return Padding(padding: data.screenMargin, child: const Text('Content'));
 ///     },
 ///   ),
 /// )
@@ -36,7 +31,7 @@ import 'equatable.dart';
 ///
 /// See also:
 ///  - [InheritedResponsive], which provides the [ResponsiveData] to descendants.
-///  - [ResponsiveData], which contains information about the current device and layout.
+///  - [ResponsiveData], which holds the screen margin and spacing scale.
 ///  - [ResponsiveDataProducer], for customizing the data generation logic.
 
 class Responsive extends StatelessWidget {
@@ -46,41 +41,30 @@ class Responsive extends StatelessWidget {
   const Responsive({super.key, this.producer = const DefaultResponsiveDataProducer(), required this.child});
 
   static ResponsiveData of(BuildContext context) {
-    final r = context.dependOnInheritedWidgetOfExactType<InheritedResponsive>();
-    assert(() {
-      if (r == null) {
-        throw FlutterError.fromParts([
-          ErrorSummary('No InheritedResponsive found.'),
-          ErrorDescription(
-            '${context.widget.runtimeType} widget require InheritedResponsive '
-            'to be provided by a Responsive or similar widget ancestor.',
-          ),
-          ...context.describeMissingAncestor(expectedAncestorType: InheritedResponsive),
-        ]);
-      }
-      return true;
-    }());
-
-    return r!.data; // ignore: avoid-non-null-assertion
+    final inherited = context.dependOnInheritedWidgetOfExactType<InheritedResponsive>();
+    if (inherited == null) {
+      _missingAncestor(context);
+    }
+    return inherited.data;
   }
 
   static ResponsiveData get(BuildContext context) {
-    final r = context.getInheritedWidgetOfExactType<InheritedResponsive>();
-    assert(() {
-      if (r == null) {
-        throw FlutterError.fromParts([
-          ErrorSummary('No InheritedResponsive found.'),
-          ErrorDescription(
-            '${context.widget.runtimeType} widget require InheritedResponsive '
-            'to be provided by a Responsive or similar widget ancestor.',
-          ),
-          ...context.describeMissingAncestor(expectedAncestorType: InheritedResponsive),
-        ]);
-      }
-      return true;
-    }());
+    final inherited = context.getInheritedWidgetOfExactType<InheritedResponsive>();
+    if (inherited == null) {
+      _missingAncestor(context);
+    }
+    return inherited.data;
+  }
 
-    return r!.data; // ignore: avoid-non-null-assertion
+  static Never _missingAncestor(BuildContext context) {
+    throw FlutterError.fromParts([
+      ErrorSummary('No InheritedResponsive found.'),
+      ErrorDescription(
+        '${context.widget.runtimeType} widget requires an InheritedResponsive '
+        'ancestor, usually a Responsive widget.',
+      ),
+      ...context.describeMissingAncestor(expectedAncestorType: InheritedResponsive),
+    ]);
   }
 
   @override

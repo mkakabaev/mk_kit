@@ -16,9 +16,6 @@ linter:
     file_names: false
 
 dart_code_metrics:
-  extends:
-    # - recommended
-    - package:dart_code_metrics_presets/all.yaml
   rules:    
     # avoid-nullable-interpolation: false
     # avoid-shadowing: false
