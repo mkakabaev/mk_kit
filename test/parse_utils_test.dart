@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mk_kit/mk_kit.dart';
 
+// ignore_for_file: avoid-dynamic
+
 void main() {
   test('parseList accepts a JSON list when every element has the requested type', () {
     expect(ParseUtils.parseList<int>(<dynamic>[1, 2, 3]), [1, 2, 3]);

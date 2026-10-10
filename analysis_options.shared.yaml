@@ -1,0 +1,118 @@
+# cSpell: disable
+include: package:flutter_lints/flutter.yaml
+
+formatter:
+  page_width: 120
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    discarded_futures: true
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+dcm:
+  rules:
+    - always-remove-listener
+    - avoid-assignments-as-conditions
+    - avoid-bloc-public-fields
+    - avoid-bloc-public-methods
+    - avoid-border-all
+    - avoid-cascade-after-if-null
+    - avoid-casting-to-extension-type
+    - avoid-collection-methods-with-unrelated-types
+    - avoid-commented-out-code
+    - avoid-conditions-with-boolean-literals
+    - avoid-cubits: false
+    - avoid-double-slash-imports
+    - avoid-duplicate-bloc-event-handlers
+    - avoid-duplicate-exports
+    - avoid-duplicate-mixins
+    - avoid-duplicate-named-imports
+    - avoid-duplicate-test-assertions
+    - avoid-dynamic
+    - avoid-empty-build-when
+    - avoid-empty-spread
+    - avoid-existing-instances-in-bloc-provider
+    - avoid-expanded-as-spacer
+    - avoid-explicit-pattern-field-name
+    - avoid-generics-shadowing
+    - avoid-global-state
+    - avoid-incomplete-copy-with
+    - avoid-incorrect-image-opacity
+    - avoid-instantiating-in-bloc-value-provider
+    - avoid-late-keyword
+    - avoid-missed-calls
+    - avoid-misused-set-literals
+    - avoid-nested-conditional-expressions
+    - avoid-nested-records
+    - avoid-non-null-assertion
+    - avoid-nullable-tostring
+    - avoid-passing-async-when-sync-expected
+    - avoid-passing-bloc-to-bloc
+    - avoid-passing-build-context-to-blocs
+    - avoid-passing-self-as-argument
+    - avoid-redundant-async
+    - avoid-returning-value-from-cubit-methods
+    - avoid-returning-widgets
+    - avoid-self-assignment
+    - avoid-self-compare
+    - avoid-shrink-wrap-in-lists
+    - avoid-substring
+    - avoid-throw-in-catch-block
+    - avoid-top-level-members-in-tests
+    - avoid-unnecessary-conditionals
+    - avoid-unnecessary-setstate
+    - avoid-unnecessary-stateful-widgets
+    - avoid-unnecessary-type-assertions
+    - avoid-unnecessary-type-casts
+    - avoid-unrelated-type-assertions
+    - avoid-unused-parameters
+    - avoid-wrapping-in-padding
+    - binary-expression-operand-order
+    - check-for-equals-in-render-object-setters
+    - check-is-not-closed-after-async-gap
+    - consistent-update-render-object
+    - double-literal-format
+    - emit-new-bloc-state-instances
+    - handle-bloc-event-subclasses
+    - member-ordering: false
+    - missing-test-assertion
+    - newline-before-return: false
+    - no-boolean-literal-compare
+    - no-equal-then-else
+    - no-magic-number: false
+    - prefer-async-await
+    - prefer-bloc-event-suffix
+    - prefer-bloc-extensions
+    - prefer-bloc-state-suffix
+    - prefer-commenting-analyzer-ignores: false
+    - prefer-conditional-expressions
+    - prefer-const-border-radius
+    - prefer-correct-bloc-provider
+    - prefer-correct-edge-insets-constructor
+    - prefer-correct-test-file-name
+    - prefer-define-hero-tag
+    - prefer-enums-by-name
+    - prefer-extracting-callbacks: false
+    - prefer-first
+    - prefer-immediate-return
+    - prefer-immutable-bloc-events
+    - prefer-immutable-bloc-state
+    - prefer-iterable-of
+    - prefer-last
+    - prefer-match-file-name: false
+    - prefer-moving-to-variable: false
+    - prefer-multi-bloc-provider
+    - prefer-sealed-bloc-events
+    - prefer-sealed-bloc-state
+    - prefer-single-widget-per-file: false
+    - prefer-static-class
+    - prefer-text-rich
+    - prefer-using-list-view
+    - provide-image-semantic-label
+    - use-setstate-synchronously

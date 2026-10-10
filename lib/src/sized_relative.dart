@@ -8,6 +8,9 @@ import 'multi_child_layout/multi_child_layout.dart';
 abstract class SizedRelativeToWidgetRule {
   SizedRelativeToWidgetRuleGetSizeResult getSize(double extent);
 
+  static SizedRelativeToWidgetRuleGetSizeResult _none(_) => null;
+  static SizedRelativeToWidgetRuleGetSizeResult _exact(double size) => (maxSize: size, minSize: size);
+
   static const none = _CustomRule(_none);
   static const exact = _CustomRule(_exact);
 }
@@ -137,7 +140,3 @@ class _CustomRule implements SizedRelativeToWidgetRule {
   @override
   SizedRelativeToWidgetRuleGetSizeResult? getSize(double extent) => _callback(extent);
 }
-
-SizedRelativeToWidgetRuleGetSizeResult _none(_) => null;
-
-SizedRelativeToWidgetRuleGetSizeResult _exact(double size) => (maxSize: size, minSize: size);

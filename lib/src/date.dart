@@ -1,3 +1,5 @@
+// ignore_for_file: prefer-static-class
+
 ///
 /// [MKDate] is a compact, immutable value type representing a calendar date (year, month, day) without any time or timezone information.
 ///
@@ -186,7 +188,6 @@ int _daysInMonth(int year, int month) {
   if (month == 2 && _isLeapYear(year)) {
     return 29;
   }
-  // ignore: avoid-unsafe-collection-methods
   return days[month - 1];
 }
 

@@ -6,7 +6,7 @@ class _FailingStorage implements KeyValueStorageProvider {
   Future<void> clear() async {}
 
   @override
-  Future getValueForKey(String key) async => null;
+  Future<Object?> getValueForKey(String key) async => null;
 
   @override
   Future<void> removeValueForKey(String key) async {}

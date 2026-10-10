@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore_for_file: avoid-unnecessary-stateful-widgets
 class ButtonsDemo extends StatefulWidget {
   const ButtonsDemo({super.key});
 

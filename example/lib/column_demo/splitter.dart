@@ -34,6 +34,7 @@ class _SplitterState extends State<Splitter> {
       builder: (context, constraints) {
         _height = constraints.maxHeight;
         final y = (_split * _height).roundToDouble() - _dividerHeight / 2;
+
         return Stack(
           fit: StackFit.expand,
           children: [
@@ -74,7 +75,6 @@ class _SplitterState extends State<Splitter> {
               left: 0,
               top: y + _dividerHeight,
               right: 0,
-              // height: 100,
               child: OverflowBar(
                 alignment: MainAxisAlignment.center,
                 children: [

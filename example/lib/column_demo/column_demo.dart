@@ -96,7 +96,6 @@ class SpacerChild extends StatelessWidget {
         return Container(
           color: color,
           alignment: Alignment.center,
-          //   decoration: BoxDecoration1(),
           child: Text('$label | ${constraints.maxHeight}'),
         );
       },

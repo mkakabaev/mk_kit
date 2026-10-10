@@ -18,6 +18,8 @@ class DescriptionBuilder {
     }
 
     var s = stringify(value);
+
+    // ignore: prefer-conditional-expressions
     if (isQuoted && s != null) {
       s = "'$s'";
     } else {

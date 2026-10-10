@@ -20,18 +20,8 @@ class MKButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('MKButton');
+    return const Text('MKButton');
   }
 }
 
 abstract class MKButtonConfig {}
-
-
-// abstract class MKButtonLayoutConfig {
-//   EdgeInsets padding;
-//   final EdgeInsets margin;
-//   final EdgeInsets border;
-//   final EdgeInsets iconPadding;
-//   final EdgeInsets textPadding;
-//   final EdgeInsets contentPadding;
-// }

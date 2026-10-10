@@ -7,7 +7,7 @@ class MemoryKeyValueStorageProvider implements KeyValueStorageProvider {
   Future<void> clear() async => _data.clear();
 
   @override
-  Future getValueForKey(String key) async => _data[key];
+  Future<Object?> getValueForKey(String key) async => _data[key];
 
   @override
   Future<void> removeValueForKey(String key) async => _data.remove(key);

@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'description_builder.dart';
 
 // cSpell: ignore closable, closables
+// ignore_for_file: strict_raw_type, argument_type_not_assignable, avoid-dynamic
 
 abstract interface class Disposable {
   void dispose();
@@ -139,7 +140,6 @@ class _DisposableItem extends _Item {
     : assert(() {
         try {
           // Just a comment to self-explanatory code
-          // ignore: avoid-dynamic
           (object as dynamic).dispose;
           return true;
         } on NoSuchMethodError {
@@ -154,7 +154,6 @@ class _DisposableItem extends _Item {
     }
     try {
       // Just a comment to self-explanatory code
-      // ignore: avoid-dynamic
       (object as dynamic).dispose();
     } on NoSuchMethodError {    
       if (_logger.isEnabled) {
@@ -174,7 +173,7 @@ class _SubscriptionItem extends _Item<StreamSubscription> {
     }
 
     // In rare cases when you really need await here do not use DisposeBag at all
-    object.cancel();
+    unawaited(object.cancel());
   }
 }
 
@@ -183,7 +182,6 @@ class _ClosableItem extends _Item {
     : assert(() {
         try {
           // Just a comment to self-explanatory code
-          // ignore: avoid-dynamic
           (object as dynamic).close;
           return true;
         } on NoSuchMethodError {
@@ -197,7 +195,6 @@ class _ClosableItem extends _Item {
       _logger('Closing $object...');
     }
     try {
-      // ignore: avoid-dynamic
       (object as dynamic).close();
     } on NoSuchMethodError {
         if (_logger.isEnabled) {
@@ -222,4 +219,5 @@ class _DisposeBagLogger {
 }
 
 // Let it be global for now
+// ignore: prefer-static-class
 final _logger = _DisposeBagLogger();

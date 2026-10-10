@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:mk_kit/mk_kit.dart';
 
+// ignore_for_file: avoid-returning-widgets
+
 class ResponsiveDemo extends StatefulWidget {
   const ResponsiveDemo({super.key});
 

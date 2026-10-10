@@ -2,6 +2,8 @@ import 'package:flutter/painting.dart';
 
 import 'description_builder.dart';
 
+// ignore_for_file: prefer-static-class
+
 ///
 /// A simple wrapper to hold (and change) value. Use to mimic 'out' function parameters in Dart:
 /// an ability to change the value of a parameter inside a function by reference. Mostly

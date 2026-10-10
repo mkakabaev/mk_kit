@@ -26,7 +26,10 @@ void main() {
 
   test('runOrRerun while running does not wait for the retry interval', () async {
     var runs = 0;
+
+    // ignore: avoid-late-keyword
     late void Function(bool success) finish;
+    
     final task = Task(
       name: 'restart',
       retrySuccessInterval: const Duration(hours: 1),

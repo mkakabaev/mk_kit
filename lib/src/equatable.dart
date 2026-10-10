@@ -47,6 +47,7 @@ mixin EquatableProps {
   }
 }
 
+// ignore: prefer-static-class
 const _kEquality = DeepCollectionEquality();
 
 ///

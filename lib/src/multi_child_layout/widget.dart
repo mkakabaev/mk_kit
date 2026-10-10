@@ -75,11 +75,13 @@ class _RenderLayout<ID extends Object> extends RenderBox
     // similar to defaultHitTestChildren(result, position: position) but respects the shouldPaint flag
     var child = lastChild;
     while (child != null) {
+      // ignore: avoid-non-null-assertion
       final parentData = child.parentData! as MKMultiChildLayoutParentData<ID>;
       if (parentData.shouldPaint) {
         final hit = result.addWithPaintOffset(
           offset: parentData.offset,
           position: position,
+          // ignore: avoid-non-null-assertion
           hitTest: (result, transformed) => child!.hitTest(result, position: transformed),
         );
         if (hit) {

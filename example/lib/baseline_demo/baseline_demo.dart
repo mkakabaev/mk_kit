@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 
 import 'package:mk_kit/mk_kit.dart';
 
+// ignore_for_file: avoid-unnecessary-stateful-widgets
 class BaselineDemo extends StatefulWidget {
   const BaselineDemo({super.key});
 

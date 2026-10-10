@@ -57,7 +57,7 @@ extension type const CWValue<T extends Object>._((T?, Type) _value) implements O
 
   static T? resolve<T extends Object>(CWValue<T>? v, T? originalValue) => v == null ? originalValue : v._value.$1;
 
-  T? get value => _value.$1; // ignore: avoid-renaming-representation-getters
+  T? get value => _value.$1;
 
   static CWValue<T>? diffOnly<T extends Object>(T? valueFrom, T? valueTo) {
     return valueFrom == valueTo ? null : CWValue(valueTo);

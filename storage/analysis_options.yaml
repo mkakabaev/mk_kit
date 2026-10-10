@@ -1,12 +1,4 @@
-include: 
-    - package:flutter_lints/flutter.yaml
-
-formatter:
-  page_width: 120
-
-linter:
-  rules:
-    file_names: false
+include: ../analysis_options.shared.yaml
 
 analyzer:
   exclude:

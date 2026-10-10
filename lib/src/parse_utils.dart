@@ -1,7 +1,11 @@
 import './misc.dart';
 
 abstract final class ParseUtils {
-  static Map parseMap(Object? value, {bool allowEmpty = true, Map Function()? defaultValue}) {
+  static Map<dynamic, dynamic> parseMap(
+    Object? value, {
+    bool allowEmpty = true,
+    Map<dynamic, dynamic> Function()? defaultValue,
+  }) {
     final effectiveValue = value ?? defaultValue?.call();
     if (effectiveValue is! Map) {
       throw FormatException("Wrong value '$effectiveValue': a map is expected");
