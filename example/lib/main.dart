@@ -6,6 +6,7 @@ import 'baseline_demo/baseline_demo.dart';
 import 'buttons_demo/buttons_demo.dart';
 import 'column_demo/column_demo.dart';
 import 'responsive_demo/responsive_demo.dart';
+import 'reference_sized_box_demo/reference_sized_box_demo.dart';
 
 void main() {
   runApp(const MKKitExampleApp());
@@ -36,9 +37,10 @@ class _HomePage extends StatelessWidget {
       appBar: AppBar(title: const Text('mk-kit demo')),
       body: ListView(
         children: [
-          _ListItem(title: 'MKColumn', screenBuilder: (_) => const ColumnDemo()),
+          _ListItem(title: 'Column', screenBuilder: (_) => const ColumnDemo()),
           _ListItem(title: 'Responsive', screenBuilder: (_) => const ResponsiveDemo()),
           _ListItem(title: 'Baseline', screenBuilder: (_) => const BaselineDemo()),
+          _ListItem(title: 'ReferenceSizedBox', screenBuilder: (_) => const ReferenceSizedBoxDemo()),
           _ListItem(title: 'Buttons', screenBuilder: (_) => const ButtonsDemo()),
         ],
       ),

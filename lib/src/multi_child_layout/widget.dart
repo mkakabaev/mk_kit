@@ -1,25 +1,25 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-import 'child_layout.dart';
+import 'layout.dart';
 import 'layout_id.dart';
-import 'multi_child_layout_delegate.dart';
-import 'multi_child_layout_parent_data.dart';
+import 'delegate.dart';
+import 'layout_parent_data.dart';
 
 ///
 /// Extended version of [CustomMultiChildLayout] that allows to layout children
 ///
-class MKMultiChildLayout<ID extends Object> extends MultiChildRenderObjectWidget {
-  final MKMultiChildLayoutDelegate<ID> delegate;
+class CustomChildLayout<ID extends Object> extends MultiChildRenderObjectWidget {
+  final ChildLayoutDelegate<ID> delegate;
   final bool isOpaqueToHits;
   final bool shouldClip;
 
-  const MKMultiChildLayout({
+  const CustomChildLayout({
     super.key,
     required this.delegate,
     this.isOpaqueToHits = false,
     this.shouldClip = false,
-    required List<MKLayoutId<ID>> super.children,
+    required List<ChildLayoutId<ID>> super.children,
   });
 
   @override
@@ -42,15 +42,15 @@ class MKMultiChildLayout<ID extends Object> extends MultiChildRenderObjectWidget
 
 class _RenderLayout<ID extends Object> extends RenderBox
     with
-        ContainerRenderObjectMixin<RenderBox, MKMultiChildLayoutParentData<ID>>,
-        RenderBoxContainerDefaultsMixin<RenderBox, MKMultiChildLayoutParentData<ID>> {
-  MKMultiChildLayoutDelegate<ID> delegate;
+        ContainerRenderObjectMixin<RenderBox, ChildLayoutParentData<ID>>,
+        RenderBoxContainerDefaultsMixin<RenderBox, ChildLayoutParentData<ID>> {
+  ChildLayoutDelegate<ID> delegate;
   bool isOpaqueToHits;
   bool shouldClip;
 
   _RenderLayout({required this.delegate, required this.isOpaqueToHits, required this.shouldClip});
 
-  void setDelegate(MKMultiChildLayoutDelegate<ID> delegate, bool isOpaqueToHits, bool shouldClip) {
+  void setDelegate(ChildLayoutDelegate<ID> delegate, bool isOpaqueToHits, bool shouldClip) {
     final oldDelegate = this.delegate;
     if (isOpaqueToHits != this.isOpaqueToHits ||
         shouldClip != this.shouldClip ||
@@ -65,8 +65,8 @@ class _RenderLayout<ID extends Object> extends RenderBox
 
   @override
   void setupParentData(RenderBox child) {
-    if (child.parentData is! MKMultiChildLayoutParentData<ID>) {
-      child.parentData = MKMultiChildLayoutParentData<ID>();
+    if (child.parentData is! ChildLayoutParentData<ID>) {
+      child.parentData = ChildLayoutParentData<ID>();
     }
   }
 
@@ -76,7 +76,7 @@ class _RenderLayout<ID extends Object> extends RenderBox
     var child = lastChild;
     while (child != null) {
       // ignore: avoid-non-null-assertion
-      final parentData = child.parentData! as MKMultiChildLayoutParentData<ID>;
+      final parentData = child.parentData! as ChildLayoutParentData<ID>;
       if (parentData.shouldPaint) {
         final hit = result.addWithPaintOffset(
           offset: parentData.offset,
@@ -110,7 +110,7 @@ class _RenderLayout<ID extends Object> extends RenderBox
   void _defaultPaint(PaintingContext context, Offset offset) {
     var child = firstChild;
     while (child != null) {
-      final childParentData = child.parentData as MKMultiChildLayoutParentData<ID>;
+      final childParentData = child.parentData as ChildLayoutParentData<ID>;
       if (childParentData.shouldPaint) {
         context.paintChild(child, childParentData.offset + offset);
       }
@@ -119,19 +119,39 @@ class _RenderLayout<ID extends Object> extends RenderBox
   }
 
   @override
+  void visitChildrenForSemantics(RenderObjectVisitor visitor) {
+    var child = firstChild;
+    while (child != null) {
+      final childParentData = child.parentData as ChildLayoutParentData<ID>;
+      if (childParentData.shouldPaint) {
+        visitor(child);
+      }
+      child = childParentData.nextSibling;
+    }
+  }
+
+  @override
   void performLayout() {
+    final paintBeforeLayout = <RenderBox, bool>{};
+    var child = firstChild;
+    while (child != null) {
+      final childParentData = child.parentData as ChildLayoutParentData<ID>;
+      paintBeforeLayout[child] = childParentData.shouldPaint;
+      child = childAfter(child);
+    }
+
     // Fill the layout map
-    final childMap = <ID, MKChildLayout<ID>>{};
+    final childMap = <ID, ChildLayout<ID>>{};
     {
       var child = firstChild;
       while (child != null) {
         final childParentData = child.parentData;
-        if (childParentData is MKMultiChildLayoutParentData<ID>) {
+        if (childParentData is ChildLayoutParentData<ID>) {
           final layoutId = childParentData.layoutId;
           if (layoutId == null) {
             assert(
               false,
-              'MKLayoutId widget wrapper must have a non-null id. '
+              'ChildLayoutId widget wrapper must have a non-null id. '
               'Please check generic param ID type.',
             );
           } else {
@@ -140,14 +160,14 @@ class _RenderLayout<ID extends Object> extends RenderBox
                 throw FlutterError.fromParts([
                   ErrorSummary('Duplicated layout identifier $layoutId found.'),
                   ErrorDescription(
-                    'All MKLayoutId widget wrapper identifiers for '
-                    'a MKMultiChildLayout(delegate: $delegate) instance must be unique',
+                    'All ChildLayoutId widget wrapper identifiers for '
+                    'a CustomChildLayout(delegate: $delegate) instance must be unique',
                   ),
                 ]);
               }
               return true;
             }());
-            childMap[layoutId] = MKChildLayout<ID>(child, childParentData);
+            childMap[layoutId] = ChildLayout<ID>(child, childParentData);
           }
         } else {
           assert(false);
@@ -166,7 +186,7 @@ class _RenderLayout<ID extends Object> extends RenderBox
       final missedLayouts = childMap.keys.where((key) => childMap[key]?.laidOut == false);
       if (missedLayouts.isNotEmpty) {
         throw FlutterError.fromParts([
-          ErrorSummary('Inconsistent MKMultiChildLayout children layout.'),
+          ErrorSummary('Inconsistent CustomChildLayout children layout.'),
           ErrorDescription(
             'Few widgets have not been laid out while running $delegate.performLayout(). Their identifiers are:\n',
           ),
@@ -178,19 +198,28 @@ class _RenderLayout<ID extends Object> extends RenderBox
 
     // constraint to the calculated size
     size = constraints.constrain(calculatedSize);
+
+    child = firstChild;
+    while (child != null) {
+      final childParentData = child.parentData as ChildLayoutParentData<ID>;
+      if (paintBeforeLayout[child] != childParentData.shouldPaint) {
+        markNeedsSemanticsUpdate();
+        break;
+      }
+      child = childAfter(child);
+    }
   }
 
-  // See notes on [RenderBox.computeDistanceToActualBaseline] for
-  // possible strategies to handle this case.
-  // For now it iw enough to use the first child's baseline.
+  // Uses the first painted child that has a baseline.
+  // Children with shouldPaint == false are measurement-only and must not contribute.
   // Later move the logic to the delegate!!
   @override
   double? computeDistanceToActualBaseline(TextBaseline baselineType) {
     var child = firstChild;
     while (child != null) {
-      final childParentData = child.parentData as MKMultiChildLayoutParentData<ID>;
+      final childParentData = child.parentData as ChildLayoutParentData<ID>;
       assert(childParentData.layoutId != null);
-      if (childParentData.layoutId != null) {
+      if (childParentData.shouldPaint && childParentData.layoutId != null) {
         final result = child.getDistanceToActualBaseline(baselineType);
         if (result != null) {
           return result + childParentData.offset.dy;

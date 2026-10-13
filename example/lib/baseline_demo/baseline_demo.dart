@@ -1,60 +1,63 @@
-import 'dart:math';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
 
 import 'package:mk_kit/mk_kit.dart';
 
-// ignore_for_file: avoid-unnecessary-stateful-widgets
 class BaselineDemo extends StatefulWidget {
   const BaselineDemo({super.key});
 
   @override
-  State createState() => _BaselineDemoState();
+  State<BaselineDemo> createState() => _BaselineDemoState();
 }
 
 class _BaselineDemoState extends State<BaselineDemo> {
+  var _alignment = 0.0;
+  var _flutterBaseline = 56.0;
+
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(height: 2, fontSize: 30, leadingDistribution: TextLeadingDistribution.proportional);
-
-    const circle = SizedBox(
-      width: 20,
-      height: 20,
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: Colors.black, shape: BoxShape.circle),
-      ),
-    );
+    final body = Theme.of(context).textTheme.bodyMedium;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Baseline Demo')),
       body: ListView(
+        padding: const EdgeInsets.all(16),
         children: [
-          for (final r in <double>[-1, 0, 0.5, 1, 2.0])
-            _Row(
-              title: 'Alignment($r)',
-              child: MKBaseline(
-                delegate: MKBaselineAlignmentDelegate(alignment: r),
-                debugDrawBaseline: true,
-                child: circle,
-              ),
-            ),
-
-          const _Row(
-            title: 'Text',
-            child: Text("Hello", style: textStyle),
+          Text(
+            'The circle has no text baseline of its own. BaselineBox reports one so it lines up with the text. '
+            '0 is the bottom of the circle, 1 is the top, and values outside that range sit past the circle.',
+            style: body,
           ),
-
-          // Not all widgets support baseline. For example, Icon()
-          const _Row(
-            title: 'Other',
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: DecoratedBox(
-                decoration: BoxDecoration(color: Colors.black, shape: BoxShape.circle),
-              ),
-            ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
+            child: _Preview(alignment: _alignment),
+          ),
+          _SliderControl(
+            label: 'Alignment',
+            value: _alignment,
+            min: -1,
+            max: 2,
+            onChanged: (value) => setState(() => _alignment = value),
+          ),
+          const SizedBox(height: 24),
+          Text('Flutter Baseline', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          Text(
+            "Baseline places the child's alphabetic baseline this many pixels from the top. "
+            "The circle has no baseline, so its bottom is used.",
+            style: body,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
+            child: _FlutterPreview(baseline: _flutterBaseline),
+          ),
+          _SliderControl(
+            label: 'Baseline',
+            value: _flutterBaseline,
+            min: 0,
+            max: 120,
+            fractionDigits: 0,
+            onChanged: (value) => setState(() => _flutterBaseline = value),
           ),
         ],
       ),
@@ -62,102 +65,153 @@ class _BaselineDemoState extends State<BaselineDemo> {
   }
 }
 
-class _Row extends StatelessWidget {
-  final String title;
-  final Widget child;
-  const _Row({required this.title, required this.child});
+class _Preview extends StatelessWidget {
+  const _Preview({required this.alignment});
+
+  final double alignment;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Row(
-        spacing: 16,
-        children: [
-          Expanded(flex: 1, child: Text(title, style: const TextStyle(fontSize: 12))),
-          Expanded(flex: 2, child: BaselineBox(child: child)),
-        ],
+    return _PreviewFrame(
+      children: [
+        const Text('Ay', style: TextStyle(fontSize: 48)),
+        BaselineBox(
+          delegate: FractionalBaselineDelegate(alignment: alignment),
+          child: const _Circle(),
+        ),
+        BaselineBox(
+          delegate: FractionalBaselineDelegate(alignment: alignment),
+          child: const Text("Ay", style: TextStyle(fontSize: 48)),
+        ),
+      ],
+    );
+  }
+}
+
+class _FlutterPreview extends StatelessWidget {
+  const _FlutterPreview({required this.baseline});
+
+  final double baseline;
+
+  @override
+  Widget build(BuildContext context) {
+    return _PreviewFrame(
+      children: [
+        Baseline(
+          baseline: baseline,
+          baselineType: TextBaseline.alphabetic,
+          child: const Text('Ay', style: TextStyle(fontSize: 48)),
+        ),
+        Baseline(baseline: baseline, baselineType: TextBaseline.alphabetic, child: const _Circle()),
+        Baseline(
+          baseline: baseline,
+          baselineType: TextBaseline.alphabetic,
+          child: const Text("Ay", style: TextStyle(fontSize: 48)),
+        ),
+      ],
+    );
+  }
+}
+
+class _PreviewFrame extends StatelessWidget {
+  final List<Widget> children;
+
+  const _PreviewFrame({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue.withValues(alpha: 0.08),
+        border: const Border.fromBorderSide(BorderSide(color: Colors.black12)),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 32),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.red.withValues(alpha: 0.08),
+          border: const Border.symmetric(horizontal: BorderSide(color: Colors.black12)),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: _RowBaseline(
+          child: Row(
+            spacing: 16,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: children,
+          ),
+        ),
       ),
     );
   }
 }
 
-///
-/// Helper widget to visualize the baseline of a child
-///
-class BaselineBox extends SingleChildRenderObjectWidget {
-  const BaselineBox({super.key, super.child});
+class _Circle extends StatelessWidget {
+  const _Circle();
 
   @override
-  RenderObject createRenderObject(BuildContext context) {
-    return RenderBaselineBox();
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      width: 28,
+      height: 28,
+      child: DecoratedBox(
+        decoration: BoxDecoration(color: Colors.black, shape: BoxShape.circle),
+      ),
+    );
   }
-
-  @override
-  void updateRenderObject(BuildContext context, RenderBaselineBox renderObject) {}
 }
 
-class RenderBaselineBox extends RenderShiftedBox {
-  RenderBaselineBox({RenderBox? child}) : super(child);
+class _RowBaseline extends SingleChildRenderObjectWidget {
+  const _RowBaseline({required super.child});
 
   @override
-  Size computeDryLayout(BoxConstraints constraints) {
-    final RenderBox? child = this.child;
-    if (child == null) {
-      return constraints.smallest;
-    }
-    final childSize = child.getDryLayout(_innerConstraints(constraints));
-    return constraints.constrain(Size(childSize.width, _topPadding + childSize.height + _bottomPadding));
-  }
+  RenderObject createRenderObject(BuildContext context) => _RenderRowBaseline();
+}
 
-  final _topPadding = 20.0;
-  final _bottomPadding = 20.0;
-
-  BoxConstraints _innerConstraints(BoxConstraints constraints) {
-    return constraints.deflate(EdgeInsets.only(top: _topPadding, bottom: _bottomPadding));
-  }
-
+class _RenderRowBaseline extends RenderProxyBox {
   @override
-  void performLayout() {
-    final RenderBox? child = this.child;
-    if (child == null) {
-      size = constraints.smallest;
+  void paint(PaintingContext context, Offset offset) {
+    super.paint(context, offset);
+
+    final baseline = getDistanceToBaseline(TextBaseline.alphabetic);
+    if (baseline == null) {
       return;
     }
 
-    child.layout(_innerConstraints(constraints), parentUsesSize: true);
-    final baseline = child.getDistanceToBaseline(TextBaseline.alphabetic) ?? child.size.height;
-
-    size = constraints.constrain(
-      Size(child.size.width, _topPadding + max(child.size.height, baseline) + _bottomPadding),
+    context.canvas.drawLine(
+      offset + Offset(0, baseline),
+      offset + Offset(size.width, baseline),
+      Paint()
+        ..color = Colors.blue.withValues(alpha: 0.5)
+        ..strokeWidth = 1,
     );
-    (child.parentData as BoxParentData).offset = Offset(0.0, _topPadding);
   }
+}
+
+class _SliderControl extends StatelessWidget {
+  const _SliderControl({
+    required this.label,
+    required this.value,
+    required this.min,
+    required this.max,
+    required this.onChanged,
+    this.fractionDigits = 2,
+  });
+
+  final String label;
+  final double value;
+  final double min;
+  final double max;
+  final ValueChanged<double> onChanged;
+  final int fractionDigits;
 
   @override
-  void paint(PaintingContext context, Offset offset) {
-    final child = this.child;
-
-    {
-      final paint = Paint()
-        ..color = Colors.blue.withValues(alpha: 0.1)
-        ..style = PaintingStyle.fill;
-      context.canvas.drawRect(offset & size, paint);
-    }
-
-    if (child != null && child.hasSize) {
-      final baseline = child.getDistanceToBaseline(TextBaseline.alphabetic) ?? 0;
-      final paint = Paint()
-        ..color = Colors.red.withValues(alpha: 0.5)
-        ..strokeWidth = 1.0
-        ..style = PaintingStyle.stroke;
-      context.canvas.drawLine(
-        offset + Offset(0, baseline + _topPadding),
-        offset + Offset(size.width, baseline + _topPadding),
-        paint,
-      );
-    }
-
-    super.paint(context, offset);
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('$label  ${value.toStringAsFixed(fractionDigits)}'),
+        Slider(value: value, min: min, max: max, onChanged: onChanged),
+      ],
+    );
   }
 }

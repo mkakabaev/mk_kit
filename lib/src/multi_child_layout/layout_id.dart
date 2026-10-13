@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import 'multi_child_layout.dart';
-import 'multi_child_layout_parent_data.dart';
+import 'layout_parent_data.dart';
+import 'widget.dart';
 
 ///
 /// Similar to [LayoutId] but with additional padding and data properties.
 ///
-class MKLayoutId<ID extends Object> extends ParentDataWidget<MKMultiChildLayoutParentData<ID>> {
+class ChildLayoutId<ID extends Object> extends ParentDataWidget<ChildLayoutParentData<ID>> {
   final ID id;
   final EdgeInsets padding;
 
   // Any external data to be passed to the layout.
   final Object? data;
 
-  const MKLayoutId.keyed({
+  const ChildLayoutId.keyed({
     required this.id,
     required super.child,
     this.padding = EdgeInsets.zero,
@@ -22,13 +22,13 @@ class MKLayoutId<ID extends Object> extends ParentDataWidget<MKMultiChildLayoutP
     super.key,
   });
 
-  MKLayoutId({required this.id, required super.child, this.padding = EdgeInsets.zero, this.data})
+  ChildLayoutId({required this.id, required super.child, this.padding = EdgeInsets.zero, this.data})
     : super(key: ValueKey(id));
 
   @override
   void applyParentData(RenderObject renderObject) {
     final parentData = renderObject.parentData;
-    if (parentData is! MKMultiChildLayoutParentData<ID>) {
+    if (parentData is! ChildLayoutParentData<ID>) {
       assert(false);
       return;
     }
@@ -46,7 +46,7 @@ class MKLayoutId<ID extends Object> extends ParentDataWidget<MKMultiChildLayoutP
   }
 
   @override
-  Type get debugTypicalAncestorWidgetClass => MKMultiChildLayout;
+  Type get debugTypicalAncestorWidgetClass => CustomChildLayout;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

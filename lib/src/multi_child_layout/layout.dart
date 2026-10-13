@@ -2,15 +2,15 @@ import 'dart:math';
 
 import 'package:flutter/rendering.dart';
 
-import 'multi_child_layout_parent_data.dart';
+import 'layout_parent_data.dart';
 
-class MKChildLayout<ID extends Object> {
+class ChildLayout<ID extends Object> {
   final RenderBox _child;
-  final MKMultiChildLayoutParentData<ID> _parentData;
+  final ChildLayoutParentData<ID> _parentData;
   final EdgeInsets padding;
   var _laidOut = false;
 
-  MKChildLayout(RenderBox child, MKMultiChildLayoutParentData<ID> parentData)
+  ChildLayout(RenderBox child, ChildLayoutParentData<ID> parentData)
     : assert(parentData.padding != null),
       _child = child,
       _parentData = parentData,

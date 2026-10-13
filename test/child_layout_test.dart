@@ -1,4 +1,6 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mk_kit/mk_kit.dart';
 
@@ -11,10 +13,10 @@ void main() {
           child: SizedBox(
             width: 100,
             height: 40,
-            child: MKMultiChildLayout<String>(
+            child: CustomChildLayout<String>(
               delegate: const _TightDelegate(),
               children: [
-                MKLayoutId(
+                ChildLayoutId(
                   id: 'child',
                   padding: const EdgeInsets.all(8),
                   child: const SizedBox.expand(key: Key('padded')),
@@ -29,13 +31,60 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(tester.getSize(find.byKey(const Key('padded'))), const Size(84, 24));
   });
+
+  testWidgets('unpainted child is omitted from semantics and baseline', (tester) async {
+    final semantics = tester.ensureSemantics();
+    const childStyle = TextStyle(fontSize: 14);
+    double? layoutBaseline;
+    double? textBaseline;
+
+    try {
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Column(
+            children: [
+              _BaselineProbe(
+                onBaseline: (value) => layoutBaseline = value,
+                child: CustomChildLayout<String>(
+                  delegate: const _HideReferenceDelegate(),
+                  children: [
+                    ChildLayoutId(
+                      id: 'reference',
+                      child: const Text('reference', style: TextStyle(fontSize: 40)),
+                    ),
+                    ChildLayoutId(
+                      id: 'child',
+                      child: const Text('child', style: childStyle),
+                    ),
+                  ],
+                ),
+              ),
+              _BaselineProbe(
+                onBaseline: (value) => textBaseline = value,
+                child: const Text('child', style: childStyle),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      expect(find.bySemanticsLabel('reference'), findsNothing);
+      expect(find.bySemanticsLabel('child'), findsWidgets);
+      expect(layoutBaseline, isNotNull);
+      expect(layoutBaseline, textBaseline);
+    } finally {
+      semantics.dispose();
+    }
+  });
 }
 
-class _TightDelegate extends MKMultiChildLayoutDelegate<String> {
+class _TightDelegate extends ChildLayoutDelegate<String> {
   const _TightDelegate();
 
   @override
-  Size performLayout(Map<String, MKChildLayout<String>> children, BoxConstraints constraints) {
+  Size performLayout(Map<String, ChildLayout<String>> children, BoxConstraints constraints) {
     final child = children['child']!;
     child.layout(
       minWidth: constraints.maxWidth,
@@ -45,5 +94,53 @@ class _TightDelegate extends MKMultiChildLayoutDelegate<String> {
     );
     child.setPosition(0, 0);
     return Size(constraints.maxWidth, constraints.maxHeight);
+  }
+}
+
+class _HideReferenceDelegate extends ChildLayoutDelegate<String> {
+  const _HideReferenceDelegate();
+
+  @override
+  Size performLayout(Map<String, ChildLayout<String>> children, BoxConstraints constraints) {
+    final reference = children['reference']!;
+    reference.layout(maxWidth: constraints.maxWidth, maxHeight: constraints.maxHeight);
+    reference.shouldPaint = false;
+
+    final child = children['child']!;
+    final childSize = child.layout(maxWidth: constraints.maxWidth, maxHeight: constraints.maxHeight);
+    child.setPosition(0, 0);
+    return childSize;
+  }
+}
+
+class _BaselineProbe extends SingleChildRenderObjectWidget {
+  const _BaselineProbe({required this.onBaseline, required super.child});
+
+  final ValueChanged<double?> onBaseline;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) => _RenderBaselineProbe(onBaseline);
+
+  @override
+  void updateRenderObject(BuildContext context, _RenderBaselineProbe renderObject) {
+    renderObject.onBaseline = onBaseline;
+  }
+}
+
+class _RenderBaselineProbe extends RenderProxyBox {
+  _RenderBaselineProbe(this.onBaseline);
+
+  ValueChanged<double?> onBaseline;
+
+  @override
+  void performLayout() {
+    final child = this.child;
+    if (child == null) {
+      assert(false, 'assertion_20261013_362698');
+      return;
+    }
+    child.layout(constraints, parentUsesSize: true);
+    size = child.size;
+    onBaseline(child.getDistanceToBaseline(TextBaseline.alphabetic));
   }
 }

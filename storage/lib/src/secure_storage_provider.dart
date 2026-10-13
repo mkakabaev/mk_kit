@@ -17,8 +17,8 @@ class SecureStorageProvider implements KeyValueStorageProvider {
   String _storageKey(String key) => '$keyPrefix$key';
 
   @override
-  Future<Object?> getValueForKey(String key) async {
-    return await _backedStorage.read(key: _storageKey(key));
+  Future<Object?> getValueForKey(String key) {
+    return _backedStorage.read(key: _storageKey(key));
   }
 
   @override

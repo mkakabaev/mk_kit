@@ -9,13 +9,13 @@ void main() {
         textDirection: TextDirection.ltr,
         child: Column(
           children: [
-            MKColumn(children: [Text('a'), MKColumnSpacer(height: 20, minHeight: 8, isExpandable: true)]),
+            SpacerColumn(children: [Text('a'), ColumnSpacer(height: 20, minHeight: 8, isExpandable: true)]),
           ],
         ),
       ),
     );
 
     expect(tester.takeException(), isNull);
-    expect(tester.getSize(find.byType(MKColumn)).height.isFinite, isTrue);
+    expect(tester.getSize(find.byType(SpacerColumn)).height.isFinite, isTrue);
   });
 }

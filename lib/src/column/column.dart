@@ -5,33 +5,36 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:collection/collection.dart';
+import 'package:mk_kit/src/multi_child_layout/layout.dart';
 
-import '../multi_child_layout/multi_child_layout.dart';
+import '../multi_child_layout/delegate.dart';
+import '../multi_child_layout/layout_id.dart';
+import '../multi_child_layout/widget.dart';
 
 import 'column_spacer.dart';
 
 @immutable
-class MKColumn extends StatelessWidget {
+class SpacerColumn extends StatelessWidget {
   final List<Widget> children;
 
-  const MKColumn({super.key, required this.children});
+  const SpacerColumn({super.key, required this.children});
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final layout = MKMultiChildLayout<int>(
+        final layout = CustomChildLayout<int>(
           delegate: _LayoutDelegate(viewportHeight: constraints.maxHeight),
           // Does not worth to optimize these little lists
           children: children.mapIndexed((index, child) {
-            if (child is MKColumnSpacer) {
-              return MKLayoutId(
+            if (child is ColumnSpacer) {
+              return ChildLayoutId(
                 id: index,
                 data: _Data(height: child.height, minHeight: child.minHeight, isExpandable: child.isExpandable),
                 child: child.child ?? const SizedBox(),
               );
             }
-            return MKLayoutId(id: index, child: child);
+            return ChildLayoutId(id: index, child: child);
           }).toList(),
         );
 
@@ -65,7 +68,7 @@ class _Data with Diagnosticable {
   const _Data({required this.height, required this.minHeight, required this.isExpandable});
 
   @override
-  String toStringShort() => '_MKColumnData';
+  String toStringShort() => '_SpacerColumnData';
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -77,7 +80,7 @@ class _Data with Diagnosticable {
 }
 
 class _LayoutInfo {
-  final MKChildLayout<int> child;
+  final ChildLayout<int> child;
   double height = 0.0;
   double minHeight = 0.0;
   bool isHandled = false;
@@ -85,13 +88,13 @@ class _LayoutInfo {
 }
 
 @immutable
-class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<int> {
+class _LayoutDelegate with Diagnosticable implements ChildLayoutDelegate<int> {
   final double viewportHeight;
 
   const _LayoutDelegate({required this.viewportHeight});
 
   @override
-  Size performLayout(Map<int, MKChildLayout<int>> children, BoxConstraints constraints) {
+  Size performLayout(Map<int, ChildLayout<int>> children, BoxConstraints constraints) {
     final boundedViewport = viewportHeight.isFinite;
 
     // If we have at least one expandable item then all non-expandable spacers have
@@ -205,7 +208,7 @@ class _LayoutDelegate with Diagnosticable implements MKMultiChildLayoutDelegate<
   }
 
   @override
-  String toStringShort() => '_MKColumnLayoutDelegate';
+  String toStringShort() => '_SpacerColumnLayoutDelegate';
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

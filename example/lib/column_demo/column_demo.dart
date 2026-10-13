@@ -12,25 +12,25 @@ class ColumnDemo extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Column Demo')),
       body: Splitter(
-        top: MKColumn(
+        top: SpacerColumn(
           children: [
             const FixedHeightChild(color: Colors.green, height: 120.0),
 
-            const MKColumnSpacer(
+            const ColumnSpacer(
               minHeight: 20,
               height: 40,
               isExpandable: true,
               child: SpacerChild(color: Colors.red, label: 'Expandable 40(>=20)'),
             ),
 
-            const MKColumnSpacer(
+            const ColumnSpacer(
               height: 80,
               minHeight: 40,
               isExpandable: true,
               child: SpacerChild(color: Colors.yellow, label: 'Expandable 80(>=40)'),
             ),
 
-            const MKColumnSpacer(
+            const ColumnSpacer(
               height: 100,
               minHeight: 0,
               isExpandable: true,
@@ -45,14 +45,13 @@ class ColumnDemo extends StatelessWidget {
               ),
             ),
 
-            const MKColumnSpacer(
+            const ColumnSpacer(
               height: 60,
               minHeight: 60,
               child: SpacerChild(color: Colors.amber, label: '==60'),
             ),
 
             const FixedHeightChild(color: Colors.green, height: 120.0),
-            // const MKSpacer(height: 50, minHeight: 16,),
             const FixedHeightChild(color: Colors.orange, height: 20.0),
           ],
         ),
@@ -80,7 +79,7 @@ class FixedHeightChild extends StatelessWidget {
 }
 
 ///
-/// Spacer content. MKSpace does not require a child, this is just for demo purposes
+/// Spacer content. ColumnSpacer does not require a child, this is just for demo purposes
 /// to show real height of the spacer.
 ///
 class SpacerChild extends StatelessWidget {

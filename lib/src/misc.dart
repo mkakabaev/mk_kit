@@ -114,7 +114,7 @@ abstract class TaggedType<T extends Object> with DescriptionProvider {
   }
 }
 
-extension MKEdgeInsets on EdgeInsets {
+extension EdgeInsetsExtension on EdgeInsets {
   EdgeInsets getScaled(double scale) => EdgeInsets.fromLTRB(
     (left * scale).roundToDouble(),
     (top * scale).roundToDouble(),

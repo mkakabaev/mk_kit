@@ -8,6 +8,11 @@ linter:
   rules:
     prefer_const_constructors: true
     discarded_futures: true
+    cancel_subscriptions: true
+    close_sinks: true
+    prefer_const_literals_to_create_immutables: true
+    unawaited_futures: true
+    unnecessary_await_in_return: true
 
 analyzer:
   language:
@@ -94,7 +99,7 @@ dcm:
     - prefer-conditional-expressions
     - prefer-const-border-radius
     - prefer-correct-bloc-provider
-    - prefer-correct-edge-insets-constructor
+    - prefer-correct-edge-insets-constructor: false
     - prefer-correct-test-file-name
     - prefer-define-hero-tag
     - prefer-enums-by-name

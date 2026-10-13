@@ -24,8 +24,8 @@ class _ButtonsDemoState extends State<ButtonsDemo> {
     return Scaffold(
       appBar: AppBar(title: const Text('Buttons Demo')),
       body: ListView(
-        children: [
-          const Text('Buttons Demo'),
+        children: const [
+          Text('Buttons Demo'),
           // TextButton(onPressed: onPressed, child: child)
         ],
       ),

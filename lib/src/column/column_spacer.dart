@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-class MKColumnSpacer extends StatelessWidget {
+class ColumnSpacer extends StatelessWidget {
   final double height;
   final double minHeight;
   final bool isExpandable;
@@ -8,7 +8,7 @@ class MKColumnSpacer extends StatelessWidget {
 
   static const defaultMinHeight = 8.0;
 
-  const MKColumnSpacer({
+  const ColumnSpacer({
     super.key,
     required this.height,
     this.minHeight = defaultMinHeight,
