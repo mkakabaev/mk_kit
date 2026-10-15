@@ -134,7 +134,7 @@ void main() {
 
   group('DateRange', () {
     test('contains', () {
-      final range = (start: Date.fromDateTime(DateTime(2024, 3, 1)), end: Date.fromDateTime(DateTime(2024, 3, 15)));
+      final range = DateRange(Date.fromDateTime(DateTime(2024, 3, 1)), Date.fromDateTime(DateTime(2024, 3, 15)));
 
       expect(range.contains(Date.fromDateTime(DateTime(2024, 3, 1))), true);
       expect(range.contains(Date.fromDateTime(DateTime(2024, 3, 10))), true);
@@ -144,25 +144,24 @@ void main() {
     });
 
     test('intersects', () {
-      final range1 = (
-        start: Date.fromDateTime(DateTime(2024, 3, 1)),
-        end: Date.fromDateTime(DateTime(2024, 3, 15)),
-      );
+      final range1 = DateRange(Date.fromDateTime(DateTime(2024, 3, 1)), Date.fromDateTime(DateTime(2024, 3, 15)));
 
-      final range2 = (
-        start: Date.fromDateTime(DateTime(2024, 3, 10)),
-        end: Date.fromDateTime(DateTime(2024, 3, 20)),
-      );
+      final range2 = DateRange(Date.fromDateTime(DateTime(2024, 3, 10)), Date.fromDateTime(DateTime(2024, 3, 20)));
 
-      final range3 = (
-        start: Date.fromDateTime(DateTime(2024, 3, 16)),
-        end: Date.fromDateTime(DateTime(2024, 3, 20)),
-      );
+      final range3 = DateRange(Date.fromDateTime(DateTime(2024, 3, 16)), Date.fromDateTime(DateTime(2024, 3, 20)));
 
       expect(range1.intersects(range2), true);
       expect(range2.intersects(range1), true);
       expect(range1.intersects(range3), false);
       expect(range3.intersects(range1), false);
+    });
+
+    test('invalid range', () {
+      final start = Date.fromYMD(2024, 3, 15);
+      final end = Date.fromYMD(2024, 3, 1);
+
+      expect(() => DateRange(start, end), throwsArgumentError);
+      expect(DateRange.fromDate(start), DateRange(start, start));
     });
   });
 }

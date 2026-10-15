@@ -29,6 +29,8 @@
 /// - Serialization to/from database or network
 ///
 extension type const Date._(int _value) implements Object {
+  const Date.unsafe(this._value);
+
   factory Date.fromInt(int ymd) {
     _validateYMD(ymd);
     return ._(ymd);
@@ -209,10 +211,21 @@ void _validateYMD(int ymd) {
 
 // ------------------------------------------------------------------------------------------------
 
-typedef DateRange = ({Date start, Date end});
+extension type const DateRange._(({Date start, Date end}) _value) implements Object {
+  const DateRange.unsafe(Date start, Date end) : this._((start: start, end: end));
 
-extension DateRangeExt on DateRange {
-  static DateRange fromDate(Date date) => (start: date, end: date);
+  factory DateRange(Date start, Date end) {
+    if (start > end) {
+      throw ArgumentError.value(end, 'end', 'end is before start ($start)');
+    }
+    return ._((start: start, end: end));
+  }
+
+  const DateRange.fromDate(Date date) : this._((start: date, end: date));
+
+  Date get start => _value.start;
+
+  Date get end => _value.end;
 
   bool contains(Date date) => start <= date && date <= end;
 
@@ -222,7 +235,7 @@ extension DateRangeExt on DateRange {
     if (start > other.end || end < other.start) {
       return null;
     }
-    return (start: start < other.start ? other.start : start, end: end > other.end ? other.end : end);
+    return .new(start < other.start ? other.start : start, end > other.end ? other.end : end);
   }
 
   Iterable<Date> get iterable sync* {
@@ -241,7 +254,7 @@ extension DateRangeExt on DateRange {
       return r1;
     }
 
-    return (start: r1.start < r2.start ? r1.start : r2.start, end: r1.end > r2.end ? r1.end : r2.end);
+    return .new(r1.start < r2.start ? r1.start : r2.start, r1.end > r2.end ? r1.end : r2.end);
   }
 
   bool get isSingleDay => start == end;
