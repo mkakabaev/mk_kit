@@ -9,10 +9,7 @@ import 'description_builder.dart';
 /// an ability to change the value of a parameter inside a function by reference. Mostly
 /// useless nowadays, can be replaced with a function that returns record with multiple values.
 ///
-class ValueRef<T> {
-  T value;
-  ValueRef(this.value);
-}
+class ValueRef<T>(var T value);
 
 // ------------------------------------------------------------------------------------------------
 
@@ -42,7 +39,7 @@ bool isEmpty(Object? value) {
 
 bool isNotEmpty(Object? value) => !isEmpty(value);
 
-abstract interface class CanBeEmpty {
+abstract interface class CanBeEmpty() {
   bool get isEmpty;
   bool get isNotEmpty => !isEmpty;
 }
@@ -92,11 +89,7 @@ String? stringify(Object? value) {
 /// Use this class only if you need compatibility with older Dart versions or require additional
 /// functionality provided by this base class (such as [DescriptionProvider]).
 ///
-abstract class TaggedType<T extends Object> with DescriptionProvider {
-  final T value;
-
-  const TaggedType(this.value);
-
+abstract class const TaggedType<T extends Object>(final T value) with DescriptionProvider {
   @override
   int get hashCode => Object.hash(runtimeType, value);
 
@@ -131,11 +124,7 @@ extension EdgeInsetsExtension on EdgeInsets {
 ///
 /// mktodo: Could this be replaced with an extension type?
 ///
-final class OptionalValue<T extends Object> {
-  final T? value;
-
-  const OptionalValue(this.value);
-
+final class const OptionalValue<T extends Object>(final T? value) {
   @override
   int get hashCode => value.hashCode;
 

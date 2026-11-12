@@ -1,3 +1,5 @@
+// ignore_for_file: use_primary_constructors
+
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
@@ -34,12 +36,11 @@ import 'equatable.dart';
 ///  - [ResponsiveData], which holds the screen margin and spacing scale.
 ///  - [ResponsiveDataProducer], for customizing the data generation logic.
 
-class Responsive extends StatelessWidget {
-  final Widget child;
-  final ResponsiveDataProducer producer;
-
-  const Responsive({super.key, this.producer = const DefaultResponsiveDataProducer(), required this.child});
-
+class const Responsive({
+  super.key,
+  final ResponsiveDataProducer producer = const DefaultResponsiveDataProducer(),
+  required final Widget child,
+}) extends StatelessWidget {
   static ResponsiveData of(BuildContext context) {
     final inherited = context.dependOnInheritedWidgetOfExactType<InheritedResponsive>();
     if (inherited == null) {
@@ -76,11 +77,8 @@ class Responsive extends StatelessWidget {
 
 // ------------------------------------------------------------------------------------------------
 
-class InheritedResponsive extends InheritedWidget {
-  final ResponsiveData data;
-
-  const InheritedResponsive({super.key, required this.data, required super.child});
-
+class const InheritedResponsive({super.key, required final ResponsiveData data, required super.child})
+    extends InheritedWidget {
   @override
   bool updateShouldNotify(InheritedResponsive oldWidget) {
     return oldWidget.data != data;
@@ -89,35 +87,20 @@ class InheritedResponsive extends InheritedWidget {
 
 // ------------------------------------------------------------------------------------------------
 
-class ResponsiveData with EquatableProps {
-  final EdgeInsets screenMargin;
-  final double spacing2;
-  final double spacing4;
-  final double spacing6;
-  final double spacing8;
-  final double spacing10;
-  final double spacing12;
-  final double spacing16;
-  final double spacing20;
-  final double spacing24;
-  final double spacing32;
-  final double spacing48;
-
-  const ResponsiveData({
-    required this.screenMargin,
-    required this.spacing2,
-    required this.spacing4,
-    required this.spacing6,
-    required this.spacing8,
-    required this.spacing10,
-    required this.spacing12,
-    required this.spacing16,
-    required this.spacing20,
-    required this.spacing24,
-    required this.spacing32,
-    required this.spacing48,
-  });
-
+class const ResponsiveData({
+  required final EdgeInsets screenMargin,
+  required final double spacing2,
+  required final double spacing4,
+  required final double spacing6,
+  required final double spacing8,
+  required final double spacing10,
+  required final double spacing12,
+  required final double spacing16,
+  required final double spacing20,
+  required final double spacing24,
+  required final double spacing32,
+  required final double spacing48,
+}) with EquatableProps {
   @override
   List<Object?> get equatableProps => [
     screenMargin,
@@ -141,13 +124,11 @@ abstract class ResponsiveDataProducer {
   ResponsiveData produce(BuildContext context);
 }
 
-class DefaultResponsiveDataProducer implements ResponsiveDataProducer {
+class const DefaultResponsiveDataProducer({
   /// This is a value that is used as a base to calculate (scale) all other
   /// Typically this is taken from a design mockup.
-  final double referenceScreenWidth;
-
-  const DefaultResponsiveDataProducer({this.referenceScreenWidth = 390});
-
+  final double referenceScreenWidth = 390,
+}) implements ResponsiveDataProducer {
   double screenMarginDimensions(Size screenSize) {
     final minDimension = screenSize.shortestSide;
 

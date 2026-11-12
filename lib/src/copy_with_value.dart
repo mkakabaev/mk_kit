@@ -53,7 +53,7 @@
 /// - [CWValue.diffOnly] for creating a [CWValue] only if the value has changed.
 ///
 extension type const CWValue<T extends Object>._((T?, Type) _value) implements Object {
-  const CWValue(T? value) : this._((value, T));
+  const new(T? value) : this._((value, T));
 
   static T? resolve<T extends Object>(CWValue<T>? v, T? originalValue) => v == null ? originalValue : v._value.$1;
 

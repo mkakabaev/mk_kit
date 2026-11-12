@@ -17,10 +17,6 @@ void main() {
   });
 }
 
-class _UserId extends TaggedType<String> {
-  const _UserId(super.value);
-}
+class const _UserId(super.value) extends TaggedType<String>;
 
-class _ProductId extends TaggedType<String> {
-  const _ProductId(super.value);
-}
+class const _ProductId(super.value) extends TaggedType<String>;

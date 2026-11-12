@@ -12,7 +12,14 @@ void main() {
           "keyList": [1, 2, 3],
           "keyMap": {
             "keyPlain": "value",
-            "keyList": [1, 2,  { "keyPlain": "value", "keyList": [1, 2, 3] }],
+            "keyList": [
+              1,
+              2,
+              {
+                "keyPlain": "value",
+                "keyList": [1, 2, 3],
+              },
+            ],
           },
           "keySet": {"A", "B", "C"},
         },
@@ -25,7 +32,14 @@ void main() {
           "keyList": [1, 2, 3],
           "keyMap": {
             "keyPlain": "value",
-            "keyList": [1, 2,  { "keyPlain": "value", "keyList": [1, 2, 3] }],
+            "keyList": [
+              1,
+              2,
+              {
+                "keyPlain": "value",
+                "keyList": [1, 2, 3],
+              },
+            ],
           },
           "keySet": {"A", "B", "C"},
         },
@@ -74,13 +88,7 @@ void main() {
   });
 }
 
-class _TestEquatable with EquatableProps {
-  final String name;
-  final int age;
-  final List<Object> tags;
-
-  _TestEquatable(this.name, this.age, this.tags);
-
+class _TestEquatable(final String name, final int age, final List<Object> tags) with EquatableProps {
   @override
   List<Object?> get equatableProps => [name, age, tags];
 }

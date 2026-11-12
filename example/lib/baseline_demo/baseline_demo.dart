@@ -1,16 +1,14 @@
-import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'package:mk_kit/mk_kit.dart';
 
-class BaselineDemo extends StatefulWidget {
-  const BaselineDemo({super.key});
-
+class const BaselineDemo({super.key}) extends StatefulWidget {
   @override
   State<BaselineDemo> createState() => _BaselineDemoState();
 }
 
-class _BaselineDemoState extends State<BaselineDemo> {
+class _BaselineDemoState() extends State<BaselineDemo> {
   var _alignment = 0.0;
   var _flutterBaseline = 56.0;
 
@@ -65,11 +63,7 @@ class _BaselineDemoState extends State<BaselineDemo> {
   }
 }
 
-class _Preview extends StatelessWidget {
-  const _Preview({required this.alignment});
-
-  final double alignment;
-
+class const _Preview({required final double alignment}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _PreviewFrame(
@@ -88,11 +82,7 @@ class _Preview extends StatelessWidget {
   }
 }
 
-class _FlutterPreview extends StatelessWidget {
-  const _FlutterPreview({required this.baseline});
-
-  final double baseline;
-
+class const _FlutterPreview({required final double baseline}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _PreviewFrame(
@@ -113,11 +103,7 @@ class _FlutterPreview extends StatelessWidget {
   }
 }
 
-class _PreviewFrame extends StatelessWidget {
-  final List<Widget> children;
-
-  const _PreviewFrame({required this.children});
-
+class const _PreviewFrame({required final List<Widget> children}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -145,9 +131,7 @@ class _PreviewFrame extends StatelessWidget {
   }
 }
 
-class _Circle extends StatelessWidget {
-  const _Circle();
-
+class const _Circle() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SizedBox(
@@ -160,14 +144,12 @@ class _Circle extends StatelessWidget {
   }
 }
 
-class _RowBaseline extends SingleChildRenderObjectWidget {
-  const _RowBaseline({required super.child});
-
+class const _RowBaseline({required super.child}) extends SingleChildRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) => _RenderRowBaseline();
 }
 
-class _RenderRowBaseline extends RenderProxyBox {
+class _RenderRowBaseline() extends RenderProxyBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     super.paint(context, offset);
@@ -187,23 +169,14 @@ class _RenderRowBaseline extends RenderProxyBox {
   }
 }
 
-class _SliderControl extends StatelessWidget {
-  const _SliderControl({
-    required this.label,
-    required this.value,
-    required this.min,
-    required this.max,
-    required this.onChanged,
-    this.fractionDigits = 2,
-  });
-
-  final String label;
-  final double value;
-  final double min;
-  final double max;
-  final ValueChanged<double> onChanged;
-  final int fractionDigits;
-
+class const _SliderControl({
+  required final String label,
+  required final double value,
+  required final double min,
+  required final double max,
+  required final ValueChanged<double> onChanged,
+  final int fractionDigits = 2,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

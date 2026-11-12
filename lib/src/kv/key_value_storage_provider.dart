@@ -1,4 +1,4 @@
-abstract interface class KeyValueStorageProvider {
+abstract interface class KeyValueStorageProvider() {
   Future<Object?> getValueForKey(String key);
   Future<void> removeValueForKey(String key);
   Future<void> setValueForKey(String key, Object value);

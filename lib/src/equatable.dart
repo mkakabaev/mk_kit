@@ -68,11 +68,7 @@ const _kEquality = DeepCollectionEquality();
 /// This is similar in spirit to the `Equatable` package, but can be used as a lightweight wrapper for individual values
 /// or collections, especially inside records or as map keys.
 ///
-final class EQValue<T> with EquatableProps {
-  final T value;
-
-  const EQValue(this.value);
-
+final class const EQValue<T>(final T value) with EquatableProps {
   @override
   List<Object?> get equatableProps => [value];
 }

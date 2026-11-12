@@ -1,22 +1,20 @@
 import 'package:flutter/widgets.dart';
 
-class MKButton extends StatelessWidget {
-  final MKButtonConfig config;
+class const MKButton({
+  super.key,
+  required final MKButtonConfig config,
+  required final VoidCallback onTap,
+  bool? isEnabled,
+  bool? showProgress,
+  bool? isDisabledOnProgress,
+}) extends StatelessWidget {
   final bool isEnabled;
   final bool showProgress;
   final bool isDisabledOnProgress;
-  final VoidCallback onTap;
-
-  const MKButton({
-    super.key,
-    required this.config,
-    required this.onTap,
-    bool? isEnabled,
-    bool? showProgress,
-    bool? isDisabledOnProgress,
-  }) : isEnabled = isEnabled ?? true,
-       showProgress = showProgress ?? false,
-       isDisabledOnProgress = isDisabledOnProgress ?? true;
+  this
+    : isEnabled = isEnabled ?? true,
+      showProgress = showProgress ?? false,
+      isDisabledOnProgress = isDisabledOnProgress ?? true;
 
   @override
   Widget build(BuildContext context) {
@@ -24,4 +22,4 @@ class MKButton extends StatelessWidget {
   }
 }
 
-abstract class MKButtonConfig {}
+abstract class MKButtonConfig();

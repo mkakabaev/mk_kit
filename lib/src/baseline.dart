@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 /// baseline. [childBaseline] is the child's own baseline for the requested
 /// [TextBaseline], or null when the child has none. A delegate may use that
 /// value or ignore it.
-abstract class BaselineBoxDelegate {
+abstract interface class BaselineBoxDelegate() {
   /// Returns the baseline offset (distance from the top) for the given [childSize].
   ///
   /// [childBaseline] is the distance from the top of the child to the child's
@@ -19,7 +19,7 @@ abstract class BaselineBoxDelegate {
 /// Reports a baseline at a fraction of the child's height.
 ///
 /// The child's own baseline is ignored.
-class FractionalBaselineDelegate implements BaselineBoxDelegate {
+class const FractionalBaselineDelegate({
   /// The alignment of the baseline, as a fraction of the child's height,
   ///
   /// A value of 0.0 means the baseline is at the bottom of the child,
@@ -28,11 +28,9 @@ class FractionalBaselineDelegate implements BaselineBoxDelegate {
   ///
   /// Can be negative to set the baseline below the child's bottom.
   /// Can be greater than 1.0 to set the baseline above the child's top.
-  final double alignment;
-  final bool respectChildBaseline;
-
-  const FractionalBaselineDelegate({required this.alignment, this.respectChildBaseline = true});
-
+  required final double alignment,
+  final bool respectChildBaseline = true,
+}) implements BaselineBoxDelegate {
   @override
   double computeBaseline(Size childSize, double? baseline) {
     var result = childSize.height * (1.0 - alignment);
@@ -78,12 +76,12 @@ class FractionalBaselineDelegate implements BaselineBoxDelegate {
 ///   child: MyWidget(),
 /// )
 /// ```
-class BaselineBox extends SingleChildRenderObjectWidget {
-  final BaselineBoxDelegate delegate;
-  final bool debugDrawBaseline;
-
-  const BaselineBox({super.key, super.child, required this.delegate, this.debugDrawBaseline = false});
-
+class const BaselineBox({
+  super.key,
+  super.child,
+  required final BaselineBoxDelegate delegate,
+  final bool debugDrawBaseline = false,
+}) extends SingleChildRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) =>
       RenderBaselineBox(delegate: delegate, debugDrawBaseline: debugDrawBaseline);
@@ -95,13 +93,12 @@ class BaselineBox extends SingleChildRenderObjectWidget {
   }
 }
 
-class RenderBaselineBox extends RenderShiftedBox {
-  RenderBaselineBox({RenderBox? child, required BaselineBoxDelegate delegate, required bool debugDrawBaseline})
-    : _delegate = delegate,
-      _debugDrawBaseline = debugDrawBaseline,
-      super(child);
-
-  bool _debugDrawBaseline;
+class RenderBaselineBox({
+  RenderBox? child,
+  required var BaselineBoxDelegate _delegate,
+  required var bool _debugDrawBaseline,
+}) extends RenderShiftedBox {
+  this : super(child);
 
   set debugDrawBaseline(bool value) {
     if (_debugDrawBaseline != value) {
@@ -109,8 +106,6 @@ class RenderBaselineBox extends RenderShiftedBox {
       markNeedsPaint();
     }
   }
-
-  BaselineBoxDelegate _delegate;
 
   set delegate(BaselineBoxDelegate value) {
     if (_delegate != value) {
@@ -166,7 +161,6 @@ class RenderBaselineBox extends RenderShiftedBox {
       offset + Offset(0, baseline),
       offset + Offset(size.width, baseline),
       Paint()..color = const Color(0xFFFF9800),
- 
     );
   }
 

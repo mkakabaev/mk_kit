@@ -12,9 +12,7 @@ void main() {
   runApp(const MKKitExampleApp());
 }
 
-class MKKitExampleApp extends StatelessWidget {
-  const MKKitExampleApp({super.key});
-
+class const MKKitExampleApp({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseTheme = ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple), useMaterial3: true);
@@ -28,9 +26,7 @@ class MKKitExampleApp extends StatelessWidget {
   }
 }
 
-class _HomePage extends StatelessWidget {
-  const _HomePage();
-
+class const _HomePage() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +44,8 @@ class _HomePage extends StatelessWidget {
   }
 }
 
-class _ListItem extends StatelessWidget {
-  const _ListItem({required this.title, required this.screenBuilder});
-
-  final String title;
-  final WidgetBuilder screenBuilder;
-
+class const _ListItem({required final String title, required final WidgetBuilder screenBuilder})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(

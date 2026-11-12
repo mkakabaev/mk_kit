@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 // ignore_for_file: avoid-unnecessary-stateful-widgets
-class ButtonsDemo extends StatefulWidget {
-  const ButtonsDemo({super.key});
-
+class const ButtonsDemo({super.key}) extends StatefulWidget {
   @override
   State createState() => _ButtonsDemoState();
 }
 
-class _ButtonsDemoState extends State<ButtonsDemo> {
+class _ButtonsDemoState() extends State<ButtonsDemo> {
   @override
   void initState() {
     super.initState();

@@ -19,9 +19,7 @@ import 'multi_child_layout/widget.dart';
 ///
 /// mktodo: add child aligning and positioning
 ///
-abstract class ReferenceSize {
-  const ReferenceSize();
-
+abstract class const ReferenceSize() {
   /// Returns the min and max for this axis, or null to leave it to the parent.
   ///
   /// [extent] is the reference widget's size on this axis after it has been
@@ -41,7 +39,7 @@ abstract class ReferenceSize {
   ///
   /// Return null to leave that axis to the parent constraints. `minSize` must
   /// be finite and zero or greater, and `maxSize` must be at least `minSize`.
-  const factory ReferenceSize.custom(ReferenceSizeCallback callback) = _CustomRule;
+  const factory custom(ReferenceSizeCallback callback) = _CustomRule;
 }
 
 typedef ReferenceSizeResult = ({double minSize, double maxSize})?;
@@ -85,31 +83,25 @@ typedef ReferenceSizeCallback = ReferenceSizeResult Function(double extent);
 ///   the parent max shrinks to that max, and a range smaller than the parent minimum expands
 ///   to that minimum. The child and this widget are the same size.
 ///
-class ReferenceSizedBox extends StatelessWidget {
+class const ReferenceSizedBox({
+  super.key,
+
   /// The widget whose dimensions will be used as a reference for sizing the [child].
-  final Widget reference;
+  required final Widget reference,
 
   /// The widget that will be sized according to the specified rules.
-  final Widget child;
+  required final Widget child,
 
   /// The sizing rule to apply to the width.
   ///
   /// Defaults to [ReferenceSize.none].
-  final ReferenceSize width;
+  final ReferenceSize width = ReferenceSize.none,
 
   /// The sizing rule to apply to the height.
   ///
   /// Defaults to [ReferenceSize.none].
-  final ReferenceSize height;
-
-  const ReferenceSizedBox({
-    super.key,
-    required this.reference,
-    required this.child,
-    this.width = ReferenceSize.none,
-    this.height = ReferenceSize.none,
-  });
-
+  final ReferenceSize height = ReferenceSize.none,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomChildLayout<_LayoutID>(
@@ -122,14 +114,13 @@ class ReferenceSizedBox extends StatelessWidget {
   }
 }
 
-enum _LayoutID { relative, child }
+enum _LayoutID() {
+  relative,
+  child,
+}
 
-class _Delegate extends ChildLayoutDelegate<_LayoutID> {
-  final ReferenceSize width;
-  final ReferenceSize height;
-
-  const _Delegate({required this.width, required this.height});
-
+class const _Delegate({required final ReferenceSize width, required final ReferenceSize height})
+    extends ChildLayoutDelegate<_LayoutID> {
   @override
   Size performLayout(Map<_LayoutID, ChildLayout> childLayouts, BoxConstraints constraints) {
     final relative = childLayouts[_LayoutID.relative]!;
@@ -196,11 +187,7 @@ class _Delegate extends ChildLayoutDelegate<_LayoutID> {
 
 // ------------------------------------------------------------------------------------------------
 
-class _CustomRule implements ReferenceSize {
-  final ReferenceSizeCallback _callback;
-
-  const _CustomRule(this._callback);
-
+class const _CustomRule(final ReferenceSizeCallback _callback) implements ReferenceSize {
   @override
   ReferenceSizeResult getSize(double extent) => _callback(extent);
 }

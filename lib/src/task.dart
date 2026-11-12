@@ -5,18 +5,23 @@ import 'description_builder.dart';
 typedef TaskBody = Future<bool> Function(TaskContext context);
 
 /// Provides context to a [TaskBody], including cancellation status.
-abstract class TaskContext {
+abstract class TaskContext() {
   /// Whether the task has been canceled.
   bool get isCanceled;
 }
 
 /// The current status of a [Task].
-enum TaskStatus { pendingFirstRun, running, completed, failed }
+enum TaskStatus() {
+  pendingFirstRun,
+  running,
+  completed,
+  failed,
+}
 
 ///
 /// [TaskRestartOption] controls the behavior when attempting to restart a task:
 ///
-enum TaskRestartOption {
+enum TaskRestartOption() {
   /// Only run the task if it hasn't started yet.
   runIfNotYet,
 
@@ -45,26 +50,20 @@ enum TaskRestartOption {
 /// );
 /// ```
 ///
-class Task with DescriptionProvider implements TaskContext {
-  final TaskBody body;
-  final String name;
-
-  final Duration? retrySuccessInterval;
-  final Duration? retryFailInterval;
-
+class Task({
+  required final TaskBody body,
+  required final String name,
+  final Duration? retrySuccessInterval,
+  final Duration? retryFailInterval,
+  Duration? initialDelay,
+}) with DescriptionProvider implements TaskContext {
   var _isCanceled = false;
   var _status = TaskStatus.pendingFirstRun;
   int _retryFailDelayFactor = 0;
   Timer? _timer;
   bool _restartImmediately = false;
 
-  Task({
-    required this.body,
-    required this.name,
-    this.retrySuccessInterval,
-    this.retryFailInterval,
-    Duration? initialDelay,
-  }) {
+  this {
     _schedulePoll(delay: initialDelay);
   }
 

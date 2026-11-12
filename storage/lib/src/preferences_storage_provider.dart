@@ -1,16 +1,14 @@
 import 'package:mk_kit/mk_kit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PreferencesStorageProvider implements KeyValueStorageProvider {
+class PreferencesStorageProvider({
   /// Prepended to every key. The default is empty, so keys are stored unchanged.
   ///
   /// An empty prefix makes [clear] delete every key in [SharedPreferences].
   /// A non-empty prefix stores keys as `keyPrefix + key` and makes [clear] delete only keys that start with it.
-  final String keyPrefix;
-
+  final String keyPrefix = '',
+}) implements KeyValueStorageProvider {
   SharedPreferences? _backedStorage;
-
-  PreferencesStorageProvider({this.keyPrefix = ''});
 
   String _storageKey(String key) => '$keyPrefix$key';
 

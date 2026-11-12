@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 
 import 'package:mk_kit/mk_kit.dart';
 
-class ReferenceSizedBoxDemo extends StatefulWidget {
-  const ReferenceSizedBoxDemo({super.key});
-
+class const ReferenceSizedBoxDemo({super.key}) extends StatefulWidget {
   @override
   State<ReferenceSizedBoxDemo> createState() => _ReferenceSizedBoxDemoState();
 }
 
-class _ReferenceSizedBoxDemoState extends State<ReferenceSizedBoxDemo> {
+class _ReferenceSizedBoxDemoState() extends State<ReferenceSizedBoxDemo> {
   var _referenceWidth = 160.0;
   var _referenceHeight = 88.0;
   var _width = _AxisRule.exact;
@@ -54,11 +52,7 @@ class _ReferenceSizedBoxDemoState extends State<ReferenceSizedBoxDemo> {
             onChanged: (value) => setState(() => _referenceHeight = value),
           ),
           const SizedBox(height: 8),
-          _RulePicker(
-            label: 'Width',
-            value: _width,
-            onChanged: (value) => setState(() => _width = value),
-          ),
+          _RulePicker(label: 'Width', value: _width, onChanged: (value) => setState(() => _width = value)),
           const SizedBox(height: 12),
           _RulePicker(label: 'Height', value: _height, onChanged: (value) => setState(() => _height = value)),
           const SizedBox(height: 16),
@@ -70,7 +64,7 @@ class _ReferenceSizedBoxDemoState extends State<ReferenceSizedBoxDemo> {
   }
 }
 
-enum _AxisRule {
+enum _AxisRule() {
   none,
   exact,
   half;
@@ -94,9 +88,7 @@ enum _AxisRule {
   };
 }
 
-class _HalfRule implements ReferenceSize {
-  const _HalfRule();
-
+class const _HalfRule() implements ReferenceSize {
   @override
   ReferenceSizeResult getSize(double extent) {
     final size = extent / 2;
@@ -104,19 +96,12 @@ class _HalfRule implements ReferenceSize {
   }
 }
 
-class _Preview extends StatelessWidget {
-  const _Preview({
-    required this.referenceWidth,
-    required this.referenceHeight,
-    required this.width,
-    required this.height,
-  });
-
-  final double referenceWidth;
-  final double referenceHeight;
-  final ReferenceSize width;
-  final ReferenceSize height;
-
+class const _Preview({
+  required final double referenceWidth,
+  required final double referenceHeight,
+  required final ReferenceSize width,
+  required final ReferenceSize height,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -170,23 +155,14 @@ class _Preview extends StatelessWidget {
   }
 }
 
-class _TopLeft extends StatelessWidget {
-  const _TopLeft({required this.child});
-
-  final Widget child;
-
+class const _TopLeft({required final Widget child}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(alignment: Alignment.topLeft, child: child);
   }
 }
 
-class _ReferenceBox extends StatelessWidget {
-  const _ReferenceBox({required this.width, required this.height});
-
-  final double width;
-  final double height;
-
+class const _ReferenceBox({required final double width, required final double height}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -206,9 +182,7 @@ class _ReferenceBox extends StatelessWidget {
   }
 }
 
-class _ChildBox extends StatelessWidget {
-  const _ChildBox();
-
+class const _ChildBox() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ColoredBox(
@@ -227,9 +201,7 @@ class _ChildBox extends StatelessWidget {
   }
 }
 
-class _Legend extends StatelessWidget {
-  const _Legend();
-
+class const _Legend() extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Row(
@@ -242,12 +214,7 @@ class _Legend extends StatelessWidget {
   }
 }
 
-class _Swatch extends StatelessWidget {
-  const _Swatch({required this.color, required this.label});
-
-  final Color color;
-  final String label;
-
+class const _Swatch({required final Color color, required final String label}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -261,21 +228,13 @@ class _Swatch extends StatelessWidget {
   }
 }
 
-class _SliderControl extends StatelessWidget {
-  const _SliderControl({
-    required this.label,
-    required this.value,
-    required this.min,
-    required this.max,
-    required this.onChanged,
-  });
-
-  final String label;
-  final double value;
-  final double min;
-  final double max;
-  final ValueChanged<double> onChanged;
-
+class const _SliderControl({
+  required final String label,
+  required final double value,
+  required final double min,
+  required final double max,
+  required final ValueChanged<double> onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -288,13 +247,11 @@ class _SliderControl extends StatelessWidget {
   }
 }
 
-class _RulePicker extends StatelessWidget {
-  const _RulePicker({required this.label, required this.value, required this.onChanged});
-
-  final String label;
-  final _AxisRule value;
-  final ValueChanged<_AxisRule> onChanged;
-
+class const _RulePicker({
+  required final String label,
+  required final _AxisRule value,
+  required final ValueChanged<_AxisRule> onChanged,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

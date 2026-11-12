@@ -29,21 +29,21 @@
 /// - Serialization to/from database or network
 ///
 extension type const Date._(int _value) implements Object {
-  const Date.unsafe(this._value);
+  const new unsafe(this._value);
 
-  factory Date.fromInt(int ymd) {
+  factory fromInt(int ymd) {
     _validateYMD(ymd);
     return ._(ymd);
   }
 
-  factory Date.fromYMD(int year, int month, int day) {
+  factory fromYMD(int year, int month, int day) {
     _validateDateComponents(year, month, day);
     return ._(_ymd(year, month, day));
   }
 
-  factory Date.fromDateTime(DateTime dateTime) => .fromYMD(dateTime.year, dateTime.month, dateTime.day);
+  factory fromDateTime(DateTime dateTime) => .fromYMD(dateTime.year, dateTime.month, dateTime.day);
 
-  factory Date.today() => .fromDateTime(DateTime.now());
+  factory today() => .fromDateTime(DateTime.now());
 
   int get yearMonth => _value ~/ 100;
 
@@ -212,16 +212,16 @@ void _validateYMD(int ymd) {
 // ------------------------------------------------------------------------------------------------
 
 extension type const DateRange._(({Date start, Date end}) _value) implements Object {
-  const DateRange.unsafe(Date start, Date end) : this._((start: start, end: end));
+  const new unsafe(Date start, Date end) : this._((start: start, end: end));
 
-  factory DateRange(Date start, Date end) {
+  factory(Date start, Date end) {
     if (start > end) {
       throw ArgumentError.value(end, 'end', 'end is before start ($start)');
     }
     return ._((start: start, end: end));
   }
 
-  const DateRange.fromDate(Date date) : this._((start: date, end: date));
+  const new fromDate(Date date) : this._((start: date, end: date));
 
   Date get start => _value.start;
 

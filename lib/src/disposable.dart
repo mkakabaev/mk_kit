@@ -8,32 +8,32 @@ import 'description_builder.dart';
 // cSpell: ignore closable, closables
 // ignore_for_file: strict_raw_type, argument_type_not_assignable, avoid-dynamic
 
-abstract interface class Disposable {
+abstract interface class Disposable() {
   void dispose();
 }
 
 typedef DisposableAdder<T> = void Function(T value);
 
-class DisposableBagEntryAdapter<T extends Object> {
-  final DisposableAdder _onAdd;
-  const DisposableBagEntryAdapter(this._onAdd);
-
+class const DisposableBagEntryAdapter<T extends Object>(final DisposableAdder _onAdd) {
   void operator <<(T object) {
     _onAdd(object);
   }
 }
 
-class DisposeBag with Diagnosticable, DescriptionProvider implements Disposable {
-  final List<_Item> _items;
+class DisposeBag._(
+  var String? name,
+  final List<_Item> _items,
+  final DisposableBagEntryAdapter<StreamSubscription> subscriptions,
+  final DisposableBagEntryAdapter disposables,
+  final DisposableBagEntryAdapter closables,
+) with Diagnosticable, DescriptionProvider implements Disposable {
   var _disposed = false;
-
-  String? name;
 
   static bool get isLogEnabled => _logger.isEnabled;
 
   static set isLogEnabled(bool value) => _logger.isEnabled = value;
 
-  factory DisposeBag({String? name}) {
+  factory({String? name}) {
     final items = <_Item>[];
     return DisposeBag._(
       name,
@@ -43,12 +43,6 @@ class DisposeBag with Diagnosticable, DescriptionProvider implements Disposable 
       DisposableBagEntryAdapter((v) => items.add(_ClosableItem(v))),
     );
   }
-
-  DisposeBag._(this.name, this._items, this.subscriptions, this.disposables, this.closables);
-
-  final DisposableBagEntryAdapter<StreamSubscription> subscriptions;
-  final DisposableBagEntryAdapter closables;
-  final DisposableBagEntryAdapter disposables;
 
   void addDisposable(Object object) {
     _items.add(_DisposableItem(object));
@@ -121,11 +115,7 @@ mixin DisposeBagHolder implements Disposable {
   }
 }
 
-abstract interface class _Item<T extends Object> with Diagnosticable {
-  final T object;
-
-  const _Item(this.object);
-
+abstract interface class const _Item<T extends Object>(final T object) with Diagnosticable {
   void invoke();
 
   @override
@@ -135,8 +125,8 @@ abstract interface class _Item<T extends Object> with Diagnosticable {
   }
 }
 
-class _DisposableItem extends _Item {
-  _DisposableItem(super.object)
+class _DisposableItem(super.object) extends _Item {
+  this
     : assert(() {
         try {
           // Just a comment to self-explanatory code
@@ -155,7 +145,7 @@ class _DisposableItem extends _Item {
     try {
       // Just a comment to self-explanatory code
       (object as dynamic).dispose();
-    } on NoSuchMethodError {    
+    } on NoSuchMethodError {
       if (_logger.isEnabled) {
         _logger("The '${object.runtimeType}' type has no dispose() method");
       }
@@ -163,9 +153,7 @@ class _DisposableItem extends _Item {
   }
 }
 
-class _SubscriptionItem extends _Item<StreamSubscription> {
-  const _SubscriptionItem(super.object);
-
+class const _SubscriptionItem(super.object) extends _Item<StreamSubscription> {
   @override
   void invoke() {
     if (_logger.isEnabled) {
@@ -177,8 +165,8 @@ class _SubscriptionItem extends _Item<StreamSubscription> {
   }
 }
 
-class _ClosableItem extends _Item {
-  _ClosableItem(super.object)
+class _ClosableItem(super.object) extends _Item {
+  this
     : assert(() {
         try {
           // Just a comment to self-explanatory code
@@ -197,14 +185,14 @@ class _ClosableItem extends _Item {
     try {
       (object as dynamic).close();
     } on NoSuchMethodError {
-        if (_logger.isEnabled) {
-          _logger("The '${object.runtimeType}' type has no close() method");
-        }
+      if (_logger.isEnabled) {
+        _logger("The '${object.runtimeType}' type has no close() method");
+      }
     }
   }
 }
 
-class _DisposeBagLogger {
+class _DisposeBagLogger() {
   int level = 0;
   bool isEnabled = false;
 

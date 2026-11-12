@@ -2,17 +2,14 @@ import 'dart:convert';
 
 import '../description_builder.dart';
 import '../parse_utils.dart';
+
 import 'key_value_storage_exception.dart';
 import 'key_value_storage_provider.dart';
 
 typedef KeyValueStorageErrorHandler = void Function(KeyValueStorageException error, StackTrace stackTrace);
 
-class KeyValueStorage with DescriptionProvider {
-  final KeyValueStorageProvider provider;
-  KeyValueStorageErrorHandler? onError;
-
-  KeyValueStorage({required this.provider, this.onError});
-
+class KeyValueStorage({required final KeyValueStorageProvider provider, var KeyValueStorageErrorHandler? onError})
+    with DescriptionProvider {
   void _onError(String message, Object error, StackTrace stackTrace) {
     final e = KeyValueStorageException('$this: $message: $error');
     final onError = this.onError;

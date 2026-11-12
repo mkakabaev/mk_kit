@@ -14,16 +14,9 @@ class ChildLayoutId<ID extends Object> extends ParentDataWidget<ChildLayoutParen
   // Any external data to be passed to the layout.
   final Object? data;
 
-  const ChildLayoutId.keyed({
-    required this.id,
-    required super.child,
-    this.padding = EdgeInsets.zero,
-    this.data,
-    super.key,
-  });
+  const new keyed({required this.id, required super.child, this.padding = EdgeInsets.zero, this.data, super.key});
 
-  ChildLayoutId({required this.id, required super.child, this.padding = EdgeInsets.zero, this.data})
-    : super(key: ValueKey(id));
+  new({required this.id, required super.child, this.padding = EdgeInsets.zero, this.data}) : super(key: ValueKey(id));
 
   @override
   void applyParentData(RenderObject renderObject) {

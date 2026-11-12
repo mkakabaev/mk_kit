@@ -14,11 +14,7 @@ import '../multi_child_layout/widget.dart';
 import 'column_spacer.dart';
 
 @immutable
-class SpacerColumn extends StatelessWidget {
-  final List<Widget> children;
-
-  const SpacerColumn({super.key, required this.children});
-
+class const SpacerColumn({super.key, required final List<Widget> children}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -61,12 +57,8 @@ class SpacerColumn extends StatelessWidget {
 }
 
 @immutable
-class _Data with Diagnosticable {
-  final double height;
-  final double minHeight;
-  final bool isExpandable;
-  const _Data({required this.height, required this.minHeight, required this.isExpandable});
-
+class const _Data({required final double height, required final double minHeight, required final bool isExpandable})
+    with Diagnosticable {
   @override
   String toStringShort() => '_SpacerColumnData';
 
@@ -79,20 +71,16 @@ class _Data with Diagnosticable {
   }
 }
 
-class _LayoutInfo {
-  final ChildLayout<int> child;
+class _LayoutInfo(final ChildLayout<int> child) {
   double height = 0.0;
   double minHeight = 0.0;
   bool isHandled = false;
-  _LayoutInfo(this.child);
 }
 
 @immutable
-class _LayoutDelegate with Diagnosticable implements ChildLayoutDelegate<int> {
-  final double viewportHeight;
-
-  const _LayoutDelegate({required this.viewportHeight});
-
+class const _LayoutDelegate({required final double viewportHeight})
+    with Diagnosticable
+    implements ChildLayoutDelegate<int> {
   @override
   Size performLayout(Map<int, ChildLayout<int>> children, BoxConstraints constraints) {
     final boundedViewport = viewportHeight.isFinite;

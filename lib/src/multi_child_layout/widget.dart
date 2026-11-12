@@ -1,27 +1,21 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
+import 'delegate.dart';
 import 'layout.dart';
 import 'layout_id.dart';
-import 'delegate.dart';
 import 'layout_parent_data.dart';
 
 ///
 /// Extended version of [CustomMultiChildLayout] that allows to layout children
 ///
-class CustomChildLayout<ID extends Object> extends MultiChildRenderObjectWidget {
-  final ChildLayoutDelegate<ID> delegate;
-  final bool isOpaqueToHits;
-  final bool shouldClip;
-
-  const CustomChildLayout({
-    super.key,
-    required this.delegate,
-    this.isOpaqueToHits = false,
-    this.shouldClip = false,
-    required List<ChildLayoutId<ID>> super.children,
-  });
-
+class const CustomChildLayout<ID extends Object>({
+  super.key,
+  required final ChildLayoutDelegate<ID> delegate,
+  final bool isOpaqueToHits = false,
+  final bool shouldClip = false,
+  required List<ChildLayoutId<ID>> super.children,
+}) extends MultiChildRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) {
     return _RenderLayout<ID>(delegate: delegate, isOpaqueToHits: isOpaqueToHits, shouldClip: shouldClip);
@@ -40,16 +34,14 @@ class CustomChildLayout<ID extends Object> extends MultiChildRenderObjectWidget 
   }
 }
 
-class _RenderLayout<ID extends Object> extends RenderBox
+class _RenderLayout<ID extends Object>({
+  required var ChildLayoutDelegate<ID> delegate,
+  required var bool isOpaqueToHits,
+  required var bool shouldClip,
+}) extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, ChildLayoutParentData<ID>>,
         RenderBoxContainerDefaultsMixin<RenderBox, ChildLayoutParentData<ID>> {
-  ChildLayoutDelegate<ID> delegate;
-  bool isOpaqueToHits;
-  bool shouldClip;
-
-  _RenderLayout({required this.delegate, required this.isOpaqueToHits, required this.shouldClip});
-
   void setDelegate(ChildLayoutDelegate<ID> delegate, bool isOpaqueToHits, bool shouldClip) {
     final oldDelegate = this.delegate;
     if (isOpaqueToHits != this.isOpaqueToHits ||

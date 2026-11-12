@@ -1,18 +1,17 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mk_kit/mk_kit.dart';
 
-class SecureStorageProvider implements KeyValueStorageProvider {
+class SecureStorageProvider({
   /// Prepended to every key. The default is empty, so keys are stored unchanged.
   ///
   /// An empty prefix makes [clear] delete every key in [FlutterSecureStorage].
   /// A non-empty prefix stores keys as `keyPrefix + key` and makes [clear] delete only keys that start with it.
-  final String keyPrefix;
+  final String keyPrefix = '',
+  String? accountName, // macOS only
+}) implements KeyValueStorageProvider {
   final FlutterSecureStorage _backedStorage;
 
-  SecureStorageProvider({
-    this.keyPrefix = '',
-    String? accountName, // macOS only
-  }) : _backedStorage = FlutterSecureStorage(mOptions: MacOsOptions(accountName: accountName));
+  this : _backedStorage = FlutterSecureStorage(mOptions: MacOsOptions(accountName: accountName));
 
   String _storageKey(String key) => '$keyPrefix$key';
 

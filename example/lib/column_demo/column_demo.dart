@@ -4,9 +4,7 @@ import 'package:mk_kit/mk_kit.dart';
 
 import 'splitter.dart';
 
-class ColumnDemo extends StatelessWidget {
-  const ColumnDemo({super.key});
-
+class const ColumnDemo({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,12 +64,8 @@ class ColumnDemo extends StatelessWidget {
 ///
 /// Fixed size component.
 ///
-class FixedHeightChild extends StatelessWidget {
-  final Color color;
-  final double height;
-
-  const FixedHeightChild({super.key, required this.color, required this.height});
-
+class const FixedHeightChild({super.key, required final Color color, required final double height})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(color: color, height: height, alignment: Alignment.center, child: Text('Fixed $height'));
@@ -82,21 +76,12 @@ class FixedHeightChild extends StatelessWidget {
 /// Spacer content. ColumnSpacer does not require a child, this is just for demo purposes
 /// to show real height of the spacer.
 ///
-class SpacerChild extends StatelessWidget {
-  final Color color;
-  final String label;
-
-  const SpacerChild({super.key, required this.color, required this.label});
-
+class const SpacerChild({super.key, required final Color color, required final String label}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (ctx, constraints) {
-        return Container(
-          color: color,
-          alignment: Alignment.center,
-          child: Text('$label | ${constraints.maxHeight}'),
-        );
+        return Container(color: color, alignment: Alignment.center, child: Text('$label | ${constraints.maxHeight}'));
       },
     );
   }

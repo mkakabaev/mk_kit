@@ -72,7 +72,6 @@ void main() {
       final mar25 = Date.fromYMD(2025, 3, 15);
       final may24 = Date.fromYMD(2024, 5, 15);
       final jan24 = Date.fromYMD(2024, 1, 15);
-      
 
       void expectDifferenceInMonths(Date a, Date b, int expected) {
         expect(a.differenceInMonths(b), expected);

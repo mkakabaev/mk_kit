@@ -2,11 +2,11 @@ import 'package:flutter/foundation.dart';
 
 import 'misc.dart';
 
-class DescriptionBuilder {
+class DescriptionBuilder(Object? target) {
   final _items = <String>[];
   String? targetName;
 
-  DescriptionBuilder(Object? target) {
+  this {
     if (target != null) {
       targetName = target is String ? target : '${target.runtimeType}';
     }

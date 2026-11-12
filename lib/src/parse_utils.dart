@@ -1,6 +1,6 @@
 import './misc.dart';
 
-abstract final class ParseUtils {
+abstract final class ParseUtils() {
   static Map<dynamic, dynamic> parseMap(
     Object? value, {
     bool allowEmpty = true,

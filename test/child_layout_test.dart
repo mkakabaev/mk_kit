@@ -80,9 +80,7 @@ void main() {
   });
 }
 
-class _TightDelegate extends ChildLayoutDelegate<String> {
-  const _TightDelegate();
-
+class const _TightDelegate() extends ChildLayoutDelegate<String> {
   @override
   Size performLayout(Map<String, ChildLayout<String>> children, BoxConstraints constraints) {
     final child = children['child']!;
@@ -97,9 +95,7 @@ class _TightDelegate extends ChildLayoutDelegate<String> {
   }
 }
 
-class _HideReferenceDelegate extends ChildLayoutDelegate<String> {
-  const _HideReferenceDelegate();
-
+class const _HideReferenceDelegate() extends ChildLayoutDelegate<String> {
   @override
   Size performLayout(Map<String, ChildLayout<String>> children, BoxConstraints constraints) {
     final reference = children['reference']!;
@@ -113,11 +109,8 @@ class _HideReferenceDelegate extends ChildLayoutDelegate<String> {
   }
 }
 
-class _BaselineProbe extends SingleChildRenderObjectWidget {
-  const _BaselineProbe({required this.onBaseline, required super.child});
-
-  final ValueChanged<double?> onBaseline;
-
+class const _BaselineProbe({required final ValueChanged<double?> onBaseline, required super.child})
+    extends SingleChildRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) => _RenderBaselineProbe(onBaseline);
 
@@ -127,11 +120,7 @@ class _BaselineProbe extends SingleChildRenderObjectWidget {
   }
 }
 
-class _RenderBaselineProbe extends RenderProxyBox {
-  _RenderBaselineProbe(this.onBaseline);
-
-  ValueChanged<double?> onBaseline;
-
+class _RenderBaselineProbe(var ValueChanged<double?> onBaseline) extends RenderProxyBox {
   @override
   void performLayout() {
     final child = this.child;

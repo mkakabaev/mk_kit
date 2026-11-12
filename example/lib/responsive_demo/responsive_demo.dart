@@ -6,14 +6,12 @@ import 'package:mk_kit/mk_kit.dart';
 
 // ignore_for_file: avoid-returning-widgets
 
-class ResponsiveDemo extends StatefulWidget {
-  const ResponsiveDemo({super.key});
-
+class const ResponsiveDemo({super.key}) extends StatefulWidget {
   @override
   State<ResponsiveDemo> createState() => _ResponsiveDemoState();
 }
 
-class _ResponsiveDemoState extends State<ResponsiveDemo> {
+class _ResponsiveDemoState() extends State<ResponsiveDemo> {
   final _controller = TransformationController();
   final _screenSizes = <(Size, String)>[];
   var _currentScreenSizeIndex = 0;
@@ -55,7 +53,7 @@ class _ResponsiveDemoState extends State<ResponsiveDemo> {
           }
 
           // Get child screen size and calculate boundary margin to center the child screen if it is small
-          final currentScreenSize = _screenSizes[_currentScreenSizeIndex].$1; 
+          final currentScreenSize = _screenSizes[_currentScreenSizeIndex].$1;
           final boundaryMargin = EdgeInsets.symmetric(
             horizontal: max(10, (constraints.maxWidth - currentScreenSize.width) / 2),
             vertical: max(10, (constraints.maxHeight - currentScreenSize.height) / 2),
@@ -127,18 +125,13 @@ extension on Size {
   String get shortDescription => '${width.toInt()} x ${height.toInt()}';
 }
 
-class _Screen extends StatelessWidget {
-  const _Screen();
-
+class const _Screen() extends StatelessWidget {
   Widget _buildContainer(double spacing, String text) {
     return Container(
       padding: EdgeInsets.fromLTRB(spacing, spacing, spacing, spacing),
       color: Colors.blue.shade100,
 
-      child: Container(
-        color: Colors.blue,
-        child: Text("$text → ${spacing.toInt()}"),
-      ),
+      child: Container(color: Colors.blue, child: Text("$text → ${spacing.toInt()}")),
     );
   }
 

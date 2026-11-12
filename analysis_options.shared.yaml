@@ -13,6 +13,12 @@ linter:
     prefer_const_literals_to_create_immutables: true
     unawaited_futures: true
     unnecessary_await_in_return: true
+    use_declaring_parameters: true
+    use_primary_constructors: true
+    empty_container_bodies: true
+    unnecessary_const_in_enum_constructor: true
+    unnecessary_primary_constructor_body: true
+    unnecessary_type_name_in_constructor: true
 
 analyzer:
   language:

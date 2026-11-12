@@ -4,17 +4,11 @@ import 'package:flutter/rendering.dart';
 
 import 'layout_parent_data.dart';
 
-class ChildLayout<ID extends Object> {
-  final RenderBox _child;
-  final ChildLayoutParentData<ID> _parentData;
+class ChildLayout<ID extends Object>(final RenderBox _child, final ChildLayoutParentData<ID> _parentData) {
   final EdgeInsets padding;
   var _laidOut = false;
 
-  ChildLayout(RenderBox child, ChildLayoutParentData<ID> parentData)
-    : assert(parentData.padding != null),
-      _child = child,
-      _parentData = parentData,
-      padding = parentData.padding ?? EdgeInsets.zero {
+  this : assert(_parentData.padding != null), padding = _parentData.padding ?? EdgeInsets.zero {
     _parentData.shouldPaint = true;
   }
 

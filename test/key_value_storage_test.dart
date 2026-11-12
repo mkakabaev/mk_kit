@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mk_kit/mk_kit.dart';
 
-class _FailingStorage implements KeyValueStorageProvider {
+class _FailingStorage() implements KeyValueStorageProvider {
   @override
   Future<void> clear() async {}
 

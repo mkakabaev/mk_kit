@@ -1,6 +1,6 @@
 import 'key_value_storage_provider.dart';
 
-class MemoryKeyValueStorageProvider implements KeyValueStorageProvider {
+class MemoryKeyValueStorageProvider() implements KeyValueStorageProvider {
   final _data = <String, dynamic>{};
 
   @override

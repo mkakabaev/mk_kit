@@ -2,25 +2,18 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class Splitter extends StatefulWidget {
-  final Widget top;
-  final Widget bottomPanel;
-  final double minTopHeight;
-  final double minBottomHeight;
-
-  const Splitter({
-    super.key,
-    required this.top,
-    required this.bottomPanel,
-    required this.minTopHeight,
-    required this.minBottomHeight,
-  });
-
+class const Splitter({
+  super.key,
+  required final Widget top,
+  required final Widget bottomPanel,
+  required final double minTopHeight,
+  required final double minBottomHeight,
+}) extends StatefulWidget {
   @override
   State createState() => _SplitterState();
 }
 
-class _SplitterState extends State<Splitter> {
+class _SplitterState() extends State<Splitter> {
   var _split = 0.5;
   var _initY = 0.0;
   var _initY0 = 0.0;

@@ -122,12 +122,7 @@ void main() {
   });
 }
 
-class _Host extends StatelessWidget {
-  const _Host({required this.constraints, required this.child});
-
-  final BoxConstraints constraints;
-  final Widget child;
-
+class const _Host({required final BoxConstraints constraints, required final Widget child}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -139,12 +134,7 @@ class _Host extends StatelessWidget {
   }
 }
 
-class _RangeRule implements ReferenceSize {
-  const _RangeRule({required this.minSize, required this.maxSize});
-
-  final double minSize;
-  final double maxSize;
-
+class const _RangeRule({required final double minSize, required final double maxSize}) implements ReferenceSize {
   @override
   ReferenceSizeResult getSize(double extent) => (minSize: minSize, maxSize: maxSize);
 }

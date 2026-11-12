@@ -29,7 +29,7 @@ void main() {
 
     // ignore: avoid-late-keyword
     late void Function(bool success) finish;
-    
+
     final task = Task(
       name: 'restart',
       retrySuccessInterval: const Duration(hours: 1),
